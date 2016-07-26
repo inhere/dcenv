@@ -34,6 +34,15 @@ $ docker-compose up
 
 That's it! You can now access your configured sites via the IP address of the Docker Machine or locally if you're running a Linux flavour and using Docker natively.
 
+我的:
+
+```sh
+$ docker-compose up
+// 若配置文件不是默认的名称`docker-compose.yml`,可使用`-f {filename}`参数。`-d` 后台运行
+$ docker-compose -f docker-compose-my.yml up -d
+```
+
+
 ## License
 
 Copyright &copy; 2014-2016 [Kasper Kronborg Isager](http://github.com/kasperisager). Licensed under the terms of the [MIT license](LICENSE.md).
