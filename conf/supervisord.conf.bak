@@ -11,3 +11,7 @@ command = /usr/sbin/php5-fpm -FR
 user = root
 autostart = true
 
+[program:hhvm-fastcgi]
+command = hhvm --mode server -vServer.Type=fastcgi -vServer.FileSocket=/var/run/hhvm/hhvm.sock
+user = root
+autostart = true

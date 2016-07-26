@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -my \
   php5-curl \
   php5-fpm \
   php5-gd \
+  php5-redis \
   php5-memcached \
   php5-mysql \
   php5-mcrypt \
@@ -42,10 +43,10 @@ RUN sed -i '/^;pm\.status_path/s/^;//' /etc/php5/fpm/pool.d/www.conf
 # XDebug loaded with the core
 RUN sed -i '/.*xdebug.so$/s/^/;/' /etc/php5/mods-available/xdebug.ini
 
-# Install HHVM
-RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
-RUN echo deb http://dl.hhvm.com/debian jessie main | tee /etc/apt/sources.list.d/hhvm.list
-RUN apt-get update && apt-get install -y hhvm
+# Install HHVM 去除hhvm的安装
+# RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
+# RUN echo deb http://dl.hhvm.com/debian jessie main | tee /etc/apt/sources.list.d/hhvm.list
+# RUN apt-get update && apt-get install -y hhvm
 
 # Add configuration files
 COPY conf/nginx.conf /etc/nginx/
