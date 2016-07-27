@@ -37,9 +37,28 @@ That's it! You can now access your configured sites via the IP address of the Do
 我的:
 
 ```sh
+$ docker-machine start default # 可省略 default
 $ docker-compose up
-// 若配置文件不是默认的名称`docker-compose.yml`,可使用`-f {filename}`参数。`-d` 后台运行
-$ docker-compose -f docker-compose-my.yml up -d
+# 若配置文件不是默认的名称`docker-compose.yml`,可使用`-f {filename}`参数。`-d` 后台运行
+# docker-compose -f docker-compose-my.yml up -d
+$ docker-machine env [default] # 查看default虚拟机信息 得到虚拟机的ip 192.168.99.100
+export DOCKER_TLS_VERIFY="1"
+export DOCKER_HOST="tcp://192.168.99.100:2376"
+export DOCKER_CERT_PATH="/Users/inhere/.docker/machine/machines/default"
+export DOCKER_MACHINE_NAME="default"
+# Run this command to configure your shell:
+# eval $(docker-machine env)
+
+# 现在可通过 浏览器访问 192.168.99.100
+
+## 其他命名使用
+
+$ eval $(docker-machine env default) # 连上机器，不然无法执行下面的命令
+$ docker ps // 查看正在运行的容器列表
+
+# 在 web 容器中运行 curl --HEAD localhost:80 检查php 是否运行成功
+# phpdockerized_web_1 是正在运行的web容器(通过 Dockerfile 构建的镜像)
+$ docker exec -ti phpdockerized_web_1 curl --HEAD localhost:80 
 ```
 
 
