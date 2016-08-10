@@ -1,5 +1,5 @@
 web:
-  build: .
+  build: ./docker
   ports:
     - "80:80"
     - "443:443"
@@ -10,9 +10,10 @@ web:
     - redis:redis
     - elasticsearch:elasticsearch
   volumes:
-    - ./www:/var/www
+    - /Users/inhere/Workspace/php:/var/www
     - ./sites:/etc/nginx/conf.d
-    - ./logs:/var/log/supervisor
+    - ./logs/supervisor:/var/log/supervisor
+    - ./logs/nginx:/var/log/nginx
 
 mysql:
   image: mysql
