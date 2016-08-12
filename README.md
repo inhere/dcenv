@@ -1,5 +1,9 @@
 # PHP Dockerized
 
+>Forked form [kasperisager/php-dockerized](https://github.com/kasperisager/php-dockerized.git)
+
+---------------
+
 > Dockerized PHP development stack: Nginx, MySQL, MongoDB, PHP-FPM, HHVM, Memcached, Redis, Elasticsearch and RabbitMQ
 
 [![Build Status](https://travis-ci.org/kasperisager/php-dockerized.svg)](https://travis-ci.org/kasperisager/php-dockerized)
@@ -11,12 +15,12 @@ PHP Dockerized gives you everything you need for developing PHP applications loc
 * [Nginx](http://nginx.org/)
 * [MySQL](http://www.mysql.com/)
 * [MongoDB](http://www.mongodb.org/)
-* [PHP-FPM](http://php-fpm.org/)
-* [HHVM](http://www.hhvm.com/)
+* [PHP-FPM](http://php-fpm.org/) -- 5.6
+* ~~[HHVM](http://www.hhvm.com/)~~
 * [Memcached](http://memcached.org/)
 * [Redis](http://redis.io/)
 * [Elasticsearch](http://www.elasticsearch.org/)
-* [RabbitMQ](https://www.rabbitmq.com/)
+* ~~[RabbitMQ](https://www.rabbitmq.com/)~~
 
 ## Requirements
 
