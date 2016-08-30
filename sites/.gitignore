@@ -1,3 +1,4 @@
 *
 !.gitignore
-!default.vhost
+!default.conf
+!local.y2.conf
