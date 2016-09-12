@@ -1,5 +1,6 @@
 web:
   build: ./docker
+  container_name: ug-web
   ports:
     - "80:80"
     - "443:443"
@@ -10,30 +11,47 @@ web:
     - redis:redis
     - elasticsearch:elasticsearch
   volumes:
-    - /Users/inhere/Workspace/php:/var/www
+    - ./www:/var/www
     - ./sites:/etc/nginx/conf.d
     - ./logs/supervisor:/var/log/supervisor
     - ./logs/nginx:/var/log/nginx
 
 mysql:
-  image: mysql
+  image: mysql:5.6
+  container_name: ug-mysql
   ports:
     - "3306:3306"
+  volumes:
+    - ./data/volumes/mysql-56:/var/lib/mysql
   environment:
     MYSQL_ROOT_PASSWORD: password
 
 memcached:
   image: memcached
+  container_name: ug-mem
   ports:
     - "11211:11211"
 
 redis:
   image: redis
+  container_name: ug-redis
+  volumes:
+    - ./data/volumes/redis-latest:/data
   ports:
     - "6379:6379"
 
+gearman:
+    build: ./gearman
+    ports:
+      - "4730:4730"
+    volumes:
+      - ~/opt:/opt
+
 elasticsearch:
   image: elasticsearch
+  container_name: ug-es
+  volumes:
+    - ./data/volumes/es-latest:/usr/share/elasticsearch/data
   ports:
     - "9200:9200"
     - "9300:9300"
