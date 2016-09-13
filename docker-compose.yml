@@ -1,5 +1,6 @@
 web:
-  build: ./docker
+  build: .
+  dockerfile: ./nginx-php/Dockerfile
   container_name: ug-web
   ports:
     - "80:80"
@@ -12,7 +13,7 @@ web:
     - elasticsearch:elasticsearch
   volumes:
     - ./www:/var/www
-    - ./sites:/etc/nginx/conf.d
+    - ./vhosts:/etc/nginx/conf.d
     - ./logs/supervisor:/var/log/supervisor
     - ./logs/nginx:/var/log/nginx
 
@@ -41,11 +42,12 @@ redis:
     - "6379:6379"
 
 gearman:
-    build: ./gearman
+    build: .
+    dockerfile: ./gearman/Dockerfile
     ports:
       - "4730:4730"
     volumes:
-      - ~/opt:/opt
+      - ./data/volumes/gearman-latest:/data
 
 elasticsearch:
   image: elasticsearch
