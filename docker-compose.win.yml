@@ -48,7 +48,7 @@ redis:
 #    ports:
 #      - "4730:4730"
 #    volumes:
-#      - ./data/volumes/gearman-latest:/data
+#      - /Users/php-dockerized/data/volumes/gearman-latest:/data
 
 elasticsearch:
   image: elasticsearch
