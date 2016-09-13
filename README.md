@@ -61,10 +61,38 @@ $ eval $(docker-machine env default) # 连上机器，不然无法执行下面�
 $ docker ps // 查看正在运行的容器列表
 
 # 在 web 容器中运行 curl --HEAD localhost:80 检查php 是否运行成功
+# 也可以直接 curl 192.168.99.100:80
 # phpdockerized_web_1 是正在运行的web容器(通过 Dockerfile 构建的镜像)
 $ docker exec -ti phpdockerized_web_1 curl --HEAD localhost:80 
 ```
 
+## 问题
+
+- 在windows下的 Docker Toolbox 搭建的环境有些问题，挂载的数据文件夹无法同步数据
+
+需要先在 VirtualBox > 设置 > 共享文件夹 挂载windows下的文件夹到虚拟机内部 
+
+```
+E:\workenv ===> Users # 挂载本机的 E:\workenv 到虚拟机的 /Users 上
+```
+
+这样后 在docker-compose.yml 中配置挂载卷，就直接使用 `/Users/xxx` 这样的绝对路径，
+
+```
+mysql:
+  image: mysql:5.6
+  container_name: ug-mysql
+  ports:
+    - "3306:3306"
+  volumes:
+    # - ./data/volumes/mysql-56:/var/lib/mysql
+    - /Users/php-dockerized/data/volumes/mysql-56:/var/lib/mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: password
+```
+
+> 挂载点 `Users` 好像不能随意命名，否则可能会挂载不成功 
+看这篇[文章](http://blog.csdn.net/jam_lee/article/details/40947429) 说是有几个固定的挂载点才可以用
 
 ## License
 

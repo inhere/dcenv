@@ -1,6 +1,6 @@
 web:
   build: .
-  dockerfile: ./nginx-php/Dockerfile
+  dockerfile: ./nginx-php/5.6/Dockerfile
   container_name: web-server
   ports:
     - "80:80"
@@ -20,6 +20,7 @@ web:
     - ./logs/supervisor:/var/log/supervisor
     - ./logs/nginx:/var/log/nginx
 
+# 在生产环境不推荐暴露 mysql redis elasticsearch 等服务的端口
 mysql:
   image: mysql
   container_name: mysql
