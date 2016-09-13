@@ -51,6 +51,22 @@ RUN apt-get update \
     && echo 'PHP 7 installed.'
 
 # copy configuration files. there is relative the 'docker-compose.yml > build:.' path
-COPY php-fpm/php-ini-overrides.ini /etc/php/7.0/fpm/conf.d/99-overrides.ini
+COPY nginx-php/7/php-ini-overrides.ini /etc/php/7.0/fpm/conf.d/99-overrides.ini
 
-WORKDIR "/var/www/workenv"
+# install composer
+ADD nginx-php/tools/composer.phar /usr/local/bin/composer
+RUN chmod 755 /usr/local/bin/composer
+
+# WORKDIR "/var/www/workenv"
+
+################################################################################
+# Volumes
+################################################################################
+
+VOLUME ["/var/www", "/etc/nginx/conf.d"]
+
+################################################################################
+# Ports
+################################################################################
+
+EXPOSE 80 443 9000
