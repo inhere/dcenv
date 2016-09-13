@@ -9,8 +9,9 @@ web:
     - "9000:9000"
   links:
     - mysql:mysql
-    - memcached:memcached
     - redis:redis
+    - memcached:memcached
+    - gearman:gearman
     - elasticsearch:elasticsearch
   volumes:
     - /Users/php-dockerized/www:/var/www
@@ -42,13 +43,13 @@ redis:
   ports:
     - "6379:6379"
 
-#gearman:
-#    build: .
-#    dockerfile: ./gearman/Dockerfile
-#    ports:
-#      - "4730:4730"
-#    volumes:
-#      - ./data/volumes/gearman-latest:/data
+gearman:
+   build: .
+   dockerfile: ./gearman/Dockerfile
+   ports:
+     - "4730:4730"
+   volumes:
+     - ./data/volumes/gearman-latest:/data
 
 elasticsearch:
   image: elasticsearch
