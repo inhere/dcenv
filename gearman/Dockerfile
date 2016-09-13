@@ -1,7 +1,7 @@
-FROM ubuntu:14.04
+FROM ubuntu:16.04
 # from thenotable/ubuntu-gearman
 
-MAINTAINER inhere
+MAINTAINER inhere<cloud798@126.com>
 
 RUN apt-get update && apt-get install -y \
     build-essential \
@@ -26,8 +26,7 @@ RUN wget https://launchpad.net/gearmand/1.2/1.1.12/+download/gearmand-1.1.12.tar
     mkdir /usr/local/var/log \
     touch /usr/local/var/log/gearmand.log
 
-# WORKDIR /opt
-VOLUME ["/data"]
+VOLUME /data
 
 # RUN
 RUN usermod -u 1000 gearman
@@ -35,3 +34,4 @@ RUN usermod -u 1000 gearman
 EXPOSE 4730
 
 CMD "gearmand"
+# CMD gearmand -q libsqlite3 --libsqlite3-db /var/lib/gearman/data.sqlite3 -l /dev/stdout

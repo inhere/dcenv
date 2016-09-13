@@ -1,0 +1,73 @@
+web-app:
+  build: .
+  # dockerfile: ./php/7.0/alpine/Dockerfile
+  dockerfile: ./php/7.0/Dockerfile
+  container_name: web-app
+  ports:
+    - "9000:9000"
+  links:
+    - nginx:nginx
+    - mysql:mysql
+    - gearman:gearman
+    - memcached:memcached
+    - redis:redis
+    - elasticsearch:elasticsearch
+  volumes:
+    - ./www:/var/www
+
+nginx:
+  build: .
+  #dockerfile: ./nginx/alpine/Dockerfile
+  dockerfile: ./nginx/Dockerfile
+  container_name: web-server
+  ports:
+    - "80:80"
+    - "443:443"
+  links:
+    - web-app:web-app
+  volumes:
+    - ./www:/var/www
+    - ./vhosts:/etc/nginx/conf.d
+    - ./logs/nginx:/var/log/nginx
+
+mysql:
+  image: mysql
+  # image: mysql
+  container_name: mysql
+  ports:
+    - "3306:3306"
+  volumes:
+    - ./data/volumes/mysql-latest:/var/lib/mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: password
+
+memcached:
+  image: memcached
+  container_name: memcached
+  ports:
+    - "11211:11211"
+
+redis:
+  image: redis
+  container_name: redis
+  volumes:
+    - ./data/volumes/redis-latest:/data
+  ports:
+    - "6379:6379"
+
+gearman:
+   build: .
+   dockerfile: ./gearman/Dockerfile
+   ports:
+     - "4730:4730"
+   volumes:
+     - ./data/volumes/gearman-latest:/data
+
+elasticsearch:
+  image: elasticsearch
+  container_name: elasticsearch
+  volumes:
+    - ./data/volumes/es-latest:/usr/share/elasticsearch/data
+  ports:
+    - "9200:9200"
+    - "9300:9300"

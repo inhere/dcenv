@@ -1,7 +1,7 @@
 FROM debian:jessie
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/sources.list    /etc/apt/sources.list
+ADD data/resources/debian8.sources.list    /etc/apt/sources.list
 
 # manual install :
 #   1 . install depends library
@@ -35,8 +35,7 @@ RUN apt-get update && apt-get install -y gearman-job-server && rm -r /var/lib/ap
 # chown gearman:gearman /var/run/gearman /var/log/gearman-job-server \
 # vi /etc/init.d/gearman-job-server
 
-# WORKDIR /opt
-VOLUME ["/data"]
+VOLUME /data
 
 # RUN
 RUN usermod -u 1000 gearman
