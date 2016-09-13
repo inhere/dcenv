@@ -17,31 +17,30 @@ ADD data/resources/sources.list    /etc/apt/sources.list
 
 # Install packages
 RUN apt-get update && apt-get install -my \
-  supervisor \
-#  openssl \
-  curl \
-  wget \
+  supervisor openssl curl wget \
 
+  # 如果需要手动编译扩展就需要它
   php5-dev \
-  php5-cli \
-  php5-fpm \
-  # common 包含了大部分公共的包
-  php5-common \
+
+  # 若需要使用 pecl 安装扩展，可启用它。 依赖 php5-dev
   php-pear \
 
-  php5-mysql \
-  php5-sqlite \
+  # common 包含了大部分公共的扩展
+  php5-cli php5-fpm php5-common \
+
+  php5-mysql php5-sqlite \
 
   php5-mcrypt \
   php5-gd \
   php5-curl \
   php5-ssh2 \
 
-  php5-apcu \
-  php5-redis \
-  php5-memcached \
+  php5-apcu php5-redis php5-memcached \
 
   php5-xdebug \
+
+  # gearman job queue
+  php5-gearman \
 
   && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
@@ -63,6 +62,11 @@ RUN sed -i '/.*xdebug.so$/s/^/;/' /etc/php5/mods-available/xdebug.ini
 
 ADD nginx-php/tools/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
+
+# RUN pecl install /home/memcache.tgz \
+#   echo "extension=memcache.so" > /etc/php5/mods-available/memcache.ini \
+# Enable php modules
+#   php5enmod memcache
 
 # Install HHVM 去除hhvm的安装
 # RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
