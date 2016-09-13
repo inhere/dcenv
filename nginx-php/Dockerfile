@@ -13,7 +13,7 @@ RUN rm -f /etc/nginx/conf.d/*
 
 # 更换(debain 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD conf/sources.list    /etc/apt/sources.list
+ADD data/resources/sources.list    /etc/apt/sources.list
 
 # Install packages
 RUN apt-get update && apt-get install -my \
@@ -61,7 +61,7 @@ RUN sed -i '/^;pm\.status_path/s/^;//' /etc/php5/fpm/pool.d/www.conf
 # XDebug loaded with the core
 RUN sed -i '/.*xdebug.so$/s/^/;/' /etc/php5/mods-available/xdebug.ini
 
-ADD tools/composer.phar /usr/local/bin/composer
+ADD nginx-php/tools/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
 
 # Install HHVM 去除hhvm的安装
@@ -70,9 +70,9 @@ RUN chmod 755 /usr/local/bin/composer
 # RUN apt-get update && apt-get install -y hhvm
 
 # Add configuration files
-COPY conf/nginx.conf /etc/nginx/
-COPY conf/supervisord.conf /etc/supervisor/conf.d/
-COPY conf/php.ini /etc/php5/fpm/conf.d/40-custom.ini
+COPY nginx-php/conf/nginx.conf /etc/nginx/
+COPY nginx-php/conf/supervisord.conf /etc/supervisor/conf.d/
+COPY nginx-php/conf/php.ini /etc/php5/fpm/conf.d/40-custom.ini
 
 ################################################################################
 # Volumes
