@@ -3,6 +3,10 @@ FROM php:7.0-fpm
 
 MAINTAINER inhere<cloud798@126.com>
 
+# 更换(debian 8)软件源
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
+ADD data/resources/debian8.sources    /etc/apt/sources.list
+
 # Now,Install
 RUN apt-get update && apt-get -y --no-install-recommends install \
      openssl vim curl telnet \
@@ -19,13 +23,9 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
 
      # php7.0-openssl php7.0-ssh2 php7.0-ftp php7.0-sockets \
 
-     # php7.0-pear \
-     # php7.0-phar \
-
-     # php7.0-dbg php7.0-phpdbg php7.0-xdebug \
-    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-
-    && echo 'PHP 7.0 installed.'
+     # php7.0-pear php7.0-phar php7.0-dbg php7.0-phpdbg php7.0-xdebug \
+     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
+     && echo 'PHP 7.0 installed.'
 
 # copy configuration files. there is relative the 'docker-compose.yml > build:.' path
 COPY php-ini-overrides.ini /etc/php/7.0/fpm/conf.d/99-overrides.ini
@@ -34,7 +34,7 @@ COPY php-ini-overrides.ini /etc/php/7.0/fpm/conf.d/99-overrides.ini
 # ADD nginx-php/tools/composer.phar /usr/local/bin/composer
 # RUN chmod 755 /usr/local/bin/composer
 
-# WORKDIR "/var/www/workenv"
+WORKDIR "/var/www"
 
 ################################################################################
 # Volumes
@@ -42,10 +42,6 @@ COPY php-ini-overrides.ini /etc/php/7.0/fpm/conf.d/99-overrides.ini
 
 VOLUME ["/var/www"]
 
-################################################################################
-# Ports
-################################################################################
-
-EXPOSE 9000
-
-CMD ["php-fpm"]
+# extends from parent
+# EXPOSE 9000
+# CMD ["php-fpm"]
