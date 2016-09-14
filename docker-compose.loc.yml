@@ -46,12 +46,13 @@ services:
       - "6379:6379"
 
   gearman:
-     build:
+    build:
       context: .
       dockerfile: ./services/gearman/Dockerfile
-     ports:
+    container_name: ug-gearman
+    ports:
        - "4730:4730"
-     volumes:
+    volumes:
        - ./data/volumes/gearman-latest:/data
 
   elasticsearch:
