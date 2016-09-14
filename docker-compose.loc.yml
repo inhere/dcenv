@@ -53,7 +53,8 @@ services:
     ports:
        - "4730:4730"
     volumes:
-       - ./data/volumes/gearman-latest:/data
+      - ./data/volumes/gearman-latest:/data
+      - ./logs/gearman:/usr/local/var/log
 
   elasticsearch:
     image: elasticsearch

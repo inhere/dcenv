@@ -1,9 +1,10 @@
 version: '2'
 services:
   webapp:
-    build: .
-    # dockerfile: ./services/php/5.6/alpine/Dockerfile
-    dockerfile: ./services/php/5.6/Dockerfile
+    build:
+      context: .
+      # dockerfile: ./services/php/5.6/alpine/Dockerfile
+      dockerfile: ./services/php/5.6/Dockerfile
     container_name: webapp
     ports:
       - "9000:9000"
