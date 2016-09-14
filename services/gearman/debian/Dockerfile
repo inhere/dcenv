@@ -1,7 +1,7 @@
 FROM debian:jessie
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/debian8.sources.list    /etc/apt/sources.list
+ADD data/resources/debian8.sources    /etc/apt/sources.list
 
 # manual install :
 #   1 . install depends library

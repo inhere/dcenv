@@ -11,9 +11,9 @@ FROM nginx
 # Remove default nginx configs.
 RUN rm -f /etc/nginx/conf.d/*
 
-# 更换(debain 8)软件源
+# 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/sources.list    /etc/apt/sources.list
+ADD data/resources/debian8.sources    /etc/apt/sources.list
 
 # Install packages
 RUN apt-get update && apt-get install -my \
