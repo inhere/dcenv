@@ -22,12 +22,14 @@ RUN apt-get update && apt-get install -y \
     libdrizzle-dev
 
 # Install Gearman Job Server
-RUN wget https://launchpad.net/gearmand/1.2/1.1.12/+download/gearmand-1.1.12.tar.gz \
+RUN cd /tmp \
+    && wget https://launchpad.net/gearmand/1.2/1.1.12/+download/gearmand-1.1.12.tar.gz \
     && tar xzf gearmand-1.1.12.tar.gz \
     && cd gearmand-1.1.12 && ./configure && make && make install \
     && mkdir /usr/local/var \
     && mkdir /usr/local/var/log \
-    && touch /usr/local/var/log/gearmand.log
+    && touch /usr/local/var/log/gearmand.log \
+    && echo "Gearman Installed."
 
 VOLUME /data
 
@@ -36,5 +38,6 @@ VOLUME /data
 
 EXPOSE 4730
 
-CMD "gearmand"
+# CMD "gearmand"
+CMD gearmand -vvv
 # CMD gearmand -q libsqlite3 --libsqlite3-db /var/lib/gearman/data.sqlite3 -l /dev/stdout
