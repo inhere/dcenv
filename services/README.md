@@ -1,7 +1,10 @@
+# service folder
 
-nginx 和 php 在一个容器中. 
+## 运行指定的单个服务
 
-**将会弃用它，使用分离的容器**
+```
+$ docker-compose run web bash
+```
 
 ## 更换(debain 8)软件源
 

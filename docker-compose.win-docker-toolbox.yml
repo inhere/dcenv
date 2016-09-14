@@ -1,3 +1,6 @@
+#
+# 需要先按 README 中说明的，配置好 virtualBox 挂载
+#
 
 web:
   build: .
@@ -13,10 +16,10 @@ web:
     - redis:redis
     - elasticsearch:elasticsearch
   volumes:
-    - ./www:/var/www
-    - ./vhosts:/etc/nginx/conf.d
-    - ./logs/supervisor:/var/log/supervisor
-    - ./logs/nginx:/var/log/nginx
+    - /Users/php-dockerized/www:/var/www
+    - /Users/php-dockerized/vhosts:/etc/nginx/conf.d
+    - /Users/php-dockerized/logs/supervisor:/var/log/supervisor
+    - /Users/php-dockerized/logs/nginx:/var/log/nginx
 
 mysql:
   image: mysql:5.6
@@ -24,7 +27,7 @@ mysql:
   ports:
     - "3306:3306"
   volumes:
-    - ./data/volumes/mysql-56:/var/lib/mysql
+    - /Users/php-dockerized/data/volumes/mysql-56:/var/lib/mysql
   environment:
     MYSQL_ROOT_PASSWORD: password
 
@@ -38,7 +41,7 @@ redis:
   image: redis
   container_name: ug-redis
   volumes:
-    - ./data/volumes/redis-latest:/data
+    - /Users/php-dockerized/data/volumes/redis-latest:/data
   ports:
     - "6379:6379"
 
@@ -48,13 +51,13 @@ redis:
 #    ports:
 #      - "4730:4730"
 #    volumes:
-#      - ./data/volumes/gearman-latest:/data
+#      - /Users/php-dockerized/data/volumes/gearman-latest:/data
 
 elasticsearch:
   image: elasticsearch
   container_name: ug-es
   volumes:
-    - ./data/volumes/es-latest:/usr/share/elasticsearch/data
+    - /Users/php-dockerized/data/volumes/es-latest:/usr/share/elasticsearch/data
   ports:
     - "9200:9200"
     - "9300:9300"

@@ -1,8 +1,9 @@
 version: '2'
 services:
   web:
-    build: .
-    dockerfile: ./nginx-php/5.6/Dockerfile
+    build:
+      context: .
+      dockerfile: ./nginx-php/5.6/Dockerfile
     container_name: ug-web
     ports:
       - "80:80"
@@ -10,7 +11,6 @@ services:
       - "9000:9000"
     links:
       - mysql:mysql
-      - mongo:mongo
       - redis:redis
       - memcached:memcached
       - gearman:gearman
@@ -21,11 +21,6 @@ services:
       - ./logs/supervisor:/var/log/supervisor
       - ./logs/nginx:/var/log/nginx
 
-  webserver:
-    extends:
-      file: ./services/compose.common.yml
-      service: webserver
-
   mysql:
     image: mysql:5.6
     container_name: ug-mysql
@@ -35,15 +30,6 @@ services:
       - ./data/volumes/mysql-56:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
-
-  mongo:
-    image: mongo
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data/volumes/mongo-latest:/data/db
-      - ./data/volumes/mongo-latest-configdb:/data/configdb
 
   memcached:
     image: memcached
@@ -60,8 +46,9 @@ services:
       - "6379:6379"
 
   gearman:
-     build: .
-     dockerfile: ./gearman/Dockerfile
+     build:
+      context: .
+      dockerfile: ./services/gearman/Dockerfile
      ports:
        - "4730:4730"
      volumes:
@@ -75,3 +62,4 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+
