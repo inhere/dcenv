@@ -35,7 +35,7 @@ RUN apt-get update && apt-get install -my \
   php5-curl \
   php5-ssh2 \
 
-  php5-apcu php5-redis php5-memcached \
+  php5-apcu php5-redis php5-memcache php5-memcached \
 
   php5-xdebug \
 

@@ -27,7 +27,8 @@ ADD data/resources/debian8.sources    /etc/apt/sources.list
 
 # install from repo
 # in the php container: `apt-get install -y php5-gearman` or use `pecl install gearman`
-RUN apt-get update && apt-get install -y gearman-job-server && rm -r /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y gearman-job-server \
+     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # RUN useradd -M gearman -s /sbin/nologin -r \
 # mkdir /var/run/gearman /var/log/gearman-job-server \
