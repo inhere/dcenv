@@ -1,10 +1,10 @@
 # PHP Dockerized
 
->Forked form [kasperisager/php-dockerized](https://github.com/kasperisager/php-dockerized.git)
+>Form [kasperisager/php-dockerized](https://github.com/kasperisager/php-dockerized.git)
 
 ---------------
 
-> Dockerized PHP development stack: Nginx, MySQL, MongoDB, PHP-FPM, HHVM, Memcached, Redis, Elasticsearch and RabbitMQ
+> Dockerized PHP development stack: Nginx, MySQL, MongoDB, PHP-FPM, Gearman, Memcached, Redis, Elasticsearch and RabbitMQ
 
 [![Build Status](https://travis-ci.org/kasperisager/php-dockerized.svg)](https://travis-ci.org/kasperisager/php-dockerized)
 
@@ -15,12 +15,13 @@ PHP Dockerized gives you everything you need for developing PHP applications loc
 * [Nginx](http://nginx.org/)
 * [MySQL](http://www.mysql.com/)
 * [MongoDB](http://www.mongodb.org/)
-* [PHP-FPM](http://php-fpm.org/) -- 5.6
+* [PHP-FPM](http://php-fpm.org/) -- 5.6/7.0
 * ~~[HHVM](http://www.hhvm.com/)~~
+* [Gearman](http://gearman.org/)
 * [Memcached](http://memcached.org/)
 * [Redis](http://redis.io/)
 * [Elasticsearch](http://www.elasticsearch.org/)
-* ~~[RabbitMQ](https://www.rabbitmq.com/)~~
+* [RabbitMQ](https://www.rabbitmq.com/)
 
 ## Requirements
 
@@ -40,35 +41,77 @@ That's it! You can now access your configured sites via the IP address of the Do
 
 我的:
 
+## use Docker Toolbox
+
+windows 8/10 可以直接使用 `Docker For Windows`. 请跳过此节。
+
 ```sh
 $ docker-machine start default # 可省略 default
+$ git clone https://github.com/inhere/php-dockerized.git 
+$ cd php-dockerized && git checkout my
 $ docker-compose up
-# 若配置文件不是默认的名称`docker-compose.yml`,可使用`-f {filename}`参数。`-d` 后台运行
-# docker-compose -f docker-compose-my.yml up -d
-$ docker-machine env [default] # 查看default虚拟机信息 得到虚拟机的ip 192.168.99.100
+```
+
+查看default虚拟机信息 得到虚拟机的ip `192.168.99.100`, 现在可通过 浏览器访问 `192.168.99.100`
+
+```
+$ docker-machine env [default] 
 export DOCKER_TLS_VERIFY="1"
 export DOCKER_HOST="tcp://192.168.99.100:2376"
 export DOCKER_CERT_PATH="/Users/inhere/.docker/machine/machines/default"
 export DOCKER_MACHINE_NAME="default"
 # Run this command to configure your shell:
 # eval $(docker-machine env)
+```
 
-# 现在可通过 浏览器访问 192.168.99.100
 
-## 其他命名使用
+其他命令使用
 
+```
 $ eval $(docker-machine env default) # 连上机器，不然无法执行下面的命令
 $ docker ps // 查看正在运行的容器列表
 
-# 在 web 容器中运行 curl --HEAD localhost:80 检查php 是否运行成功
-# 也可以直接 curl 192.168.99.100:80
-# phpdockerized_web_1 是正在运行的web容器(通过 Dockerfile 构建的镜像)
+# 可以直接 curl 192.168.99.100:80
+# 也可在 web 容器中运行 curl --HEAD localhost:80 检查php 是否运行成功
+# phpdockerized_web_1 是正在运行的webapp容器(通过 Dockerfile 构建的镜像)
 $ docker exec -ti phpdockerized_web_1 curl --HEAD localhost:80 
+```
+
+## use Docker For Windows/ Docker for Mac
+
+需要先下载 `Docker For Windows` 或者 `Docker for Mac`。
+
+> 需要较高的windows版本,并且需要开启 **Hyper-V**
+
+- [官网下载](https://www.docker.com/products/docker)
+- [daocloud下载](http://get.daocloud.io/#install-docker-for-mac-windows)
+
+直接运行 `Docker For Windows` / `Docker for Mac`, 这个版本不需要 `docker-machine`.
+
+```
+$ git clone https://github.com/inhere/php-dockerized.git 
+$ cd php-dockerized && git checkout my
+$ docker-compose up
+// $ docker-compose up -d
+$ docker ps // 查看正在运行的容器列表
+
 ```
 
 ## 问题
 
-- 在windows下的 Docker Toolbox 搭建的环境有些问题，挂载的数据文件夹无法同步数据
+### 若配置文件不是默认的名称`docker-compose.yml`
+
+可使用`-f {filename}`参数.
+
+```
+$ docker-compose -f docker-compose-my.yml up -d
+```
+
+- `-f {filename}` 指定 compose 配置文件
+- `-p {project name}` 指定项目名称，默认是文件夹的名称
+- `-d` 后台运行
+
+### 在windows下的 Docker Toolbox 搭建的环境有些问题，挂载的数据文件夹无法同步数据
 
 需要先在 VirtualBox > 设置 > 共享文件夹 挂载windows下的文件夹到虚拟机内部 
 
@@ -96,4 +139,4 @@ mysql:
 
 ## License
 
-Copyright &copy; 2014-2016 [Kasper Kronborg Isager](http://github.com/kasperisager). Licensed under the terms of the [MIT license](LICENSE.md).
+Licensed under the terms of the [MIT license](LICENSE.md).

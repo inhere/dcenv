@@ -1,0 +1,101 @@
+#
+# 在生产环境不推荐暴露 mysql redis elasticsearch 等服务的端口
+#
+
+version: '2'
+services:
+  webapp:
+    build:
+      context: .
+      # dockerfile: ./services/php/7.0/alpine/Dockerfile
+      dockerfile: ./services/php/7.0/Dockerfile
+    container_name: webapp
+    ports:
+      - "9000:9000"
+    links:
+      - webserver:webserver
+      - mysql:mysql
+      - mongo:mongo
+      - gearman:gearman
+      - memcached:memcached
+      - redis:redis
+      - rabbitmq:rabbitmq
+      - elasticsearch:elasticsearch
+    volumes:
+      - ./www:/var/www
+
+  webserver:
+    build:
+      context: .
+      #dockerfile: ./services/nginx/alpine/Dockerfile
+      dockerfile: ./services/nginx/Dockerfile
+    container_name: webserver
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - webapp:webapp
+    volumes:
+      - ./www:/var/www
+      - ./vhosts:/etc/nginx/conf.d
+      - ./logs/nginx:/var/log/nginx
+
+  mysql:
+    image: mysql
+    container_name: mysql
+    # ports:
+    #   - "3306:3306"
+    # volumes:
+    #   - ./data/volumes/mysql-latest:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    # ports:
+    #   - "27017:27017"
+    # volumes:
+    #   - ./data/volumes/mongo-latest:/data/db
+    #   - ./data/volumes/mongo-latest-configdb:/data/configdb
+
+  memcached:
+    image: memcached
+    container_name: memcached
+    # ports:
+    #   - "11211:11211"
+
+  redis:
+    image: redis
+    container_name: redis
+    # volumes:
+    #   - ./data/volumes/redis-latest:/data
+    # ports:
+    #   - "6379:6379"
+
+  gearman:
+     build:
+      context: .
+      dockerfile: ./services/gearman/Dockerfile
+     # ports:
+     #   - "4730:4730"
+     # volumes:
+     #   - ./data/volumes/gearman-latest:/data
+
+  elasticsearch:
+    image: elasticsearch
+    container_name: elasticsearch
+    # volumes:
+    #   - ./data/volumes/es-latest:/usr/share/elasticsearch/data
+    # ports:
+    #   - "9200:9200"
+    #   - "9300:9300"
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    # volumes:
+    #   - ./data/volumes/rabbitmq-latest:/var/lib/rabbitmq
+    # ports:
+    #   - "15672:15672"
+    #   - "5672:5672"
