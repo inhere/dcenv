@@ -97,6 +97,25 @@ $ docker ps // 查看正在运行的容器列表
 
 ```
 
+## 一些有用的
+
+- bash alias 
+
+in the `~/.bashrc`
+
+```
+alias dcm=docker-machine
+alias dcc=docker-compose
+# 指定了配置的 docker-compose
+alias dccloc='docker-compose -f docker-compose.loc.yml -p ugirls'
+# 杀死所有正在运行的容器.
+alias dockerkill='docker kill $(docker ps -a -q)'
+# 删除所有已经停止的容器.
+alias dockercleanc='docker rm $(docker ps -a -q)'
+# 删除所有未打标签的镜像.
+alias dockercleani='docker rmi $(docker images -q -f dangling=true)'
+```
+
 ## 问题
 
 ### 若配置文件不是默认的名称`docker-compose.yml`
