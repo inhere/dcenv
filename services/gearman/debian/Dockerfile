@@ -39,6 +39,6 @@ RUN apt-get update && apt-get install -y gearman-job-server \
 VOLUME /data
 
 # RUN
-RUN usermod -u 1000 gearman
+# RUN usermod -u 1000 gearman
 
 CMD "gearmand"

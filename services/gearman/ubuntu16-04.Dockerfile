@@ -21,4 +21,5 @@ EXPOSE 4730
 
 # CMD "gearmand"
 # CMD gearmand -q libsqlite3 --libsqlite3-db /var/lib/gearman/data.sqlite3 -l /dev/stdout
-CMD gearmand -vvv
+
+CMD gearmand -l /dev/stdout

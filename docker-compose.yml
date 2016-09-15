@@ -51,6 +51,11 @@ services:
     container_name: inhere-webserver
     links:
       - webapp:webapp
+    volumes:
+      # custom difine the www directory.
+      - ~/Workspace/php:/var/www
+      - ./vhosts:/etc/nginx/conf.d
+      - ./logs/nginx:/var/log/nginx
 
   webapp:
     extends:
@@ -66,3 +71,8 @@ services:
       - memcached:memcached
       - gearman:gearman
       - elasticsearch:elasticsearch
+    volumes:
+      # custom difine the www directory.
+      - ~/Workspace/php:/var/www
+
+
