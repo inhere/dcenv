@@ -31,8 +31,8 @@ RUN apt-get update && apt-get -y --no-install-recommends install \
 COPY php-ini-overrides.ini /etc/php/7.0/fpm/conf.d/99-overrides.ini
 
 # install composer
-# ADD nginx-php/tools/composer.phar /usr/local/bin/composer
-# RUN chmod 755 /usr/local/bin/composer
+ADD data/packages/php-tools/composer.phar /usr/local/bin/composer
+RUN chmod 755 /usr/local/bin/composer
 
 WORKDIR "/var/www"
 
