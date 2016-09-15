@@ -8,15 +8,20 @@ ADD data/resources/debian8.sources    /etc/apt/sources.list
 
 # Now,Install
 RUN apt-get update && apt-get -y --no-install-recommends install \
-    openssl vim curl telnet \
+    vim curl telnet \
     php-pear php5-phar php5-dev php5-common\
 
     php5-mysql php5-mcrypt php5-gd php-gettext \
+
     php5-apcu php5-redis php5-memcache php5-memcached php5-gearman\
+
     php5-xdebug php5-xhprof \
 
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
     && echo 'PHP 5.6 installed.'
+
+ADD data/packages/php-tools/composer.phar /usr/local/bin/composer
+RUN chmod 755 /usr/local/bin/composer
 
 WORKDIR "/var/www"
 
