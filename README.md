@@ -39,7 +39,27 @@ $ docker-compose up
 
 That's it! You can now access your configured sites via the IP address of the Docker Machine or locally if you're running a Linux flavour and using Docker natively.
 
-我的:
+## Services exposed outside your environment
+
+You can access your application via **`localhost`**, if you're running the containers directly, or through **`192.168.33.152`** when run on a vm. nginx and mailhog both respond to any hostname, in case you want to add your own hostname on your `/etc/hosts` 
+
+Service|Address outside containers|Address outside VM
+------|---------|-----------
+Webserver|[localhost](http://localhost)|[192.168.33.152](http://192.168.33.152)
+
+## Hosts within your environment
+
+You'll need to configure your application to use any services you enabled:
+
+Service|Hostname|Port number
+------|---------|-----------
+webapp(php-fpm)|webapp|`9000`
+webserver(nginx)|webserver|`80` (http) / `443` (ssl)
+MySQL|mysql|`3306` (default)
+Gearman|gearman|`4730` (default)
+Memcached|memcached|`11211` (default)
+Redis|redis|`6379` (default)
+Elasticsearch|elasticsearch|`9200` (HTTP default) / `9300` (ES transport default)
 
 ## use Docker Toolbox
 
@@ -116,7 +136,7 @@ alias dockercleanc='docker rm $(docker ps -a -q)'
 alias dockercleani='docker rmi $(docker images -q -f dangling=true)'
 ```
 
-## 问题
+## Questions - 问题
 
 ### 若配置文件不是默认的名称`docker-compose.yml`
 
@@ -129,6 +149,21 @@ $ docker-compose -f docker-compose-my.yml up -d
 - `-f {filename}` 指定 compose 配置文件
 - `-p {project name}` 指定项目名称，默认是文件夹的名称
 - `-d` 后台运行
+
+### 若使用的是nginx和php分开的服务容器
+
+注意站点配置中
+
+```
+    fastcgi_pass  unix:/var/run/php5-fpm.sock;
+```
+
+要换成访问php容器的9000端口
+
+```
+    fastcgi_pass  webapp:9000;
+```
+
 
 ### 在windows下的 Docker Toolbox 搭建的环境有些问题，挂载的数据文件夹无法同步数据
 

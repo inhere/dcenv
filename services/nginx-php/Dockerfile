@@ -74,9 +74,9 @@ RUN chmod 755 /usr/local/bin/composer
 # RUN apt-get update && apt-get install -y hhvm
 
 # Add configuration files
-COPY nginx-php/conf/nginx.conf /etc/nginx/
-COPY nginx-php/conf/supervisord.conf /etc/supervisor/conf.d/
-COPY nginx-php/5.6/php-custom.ini /etc/php5/fpm/conf.d/40-custom.ini
+COPY services/nginx-php/conf/nginx.conf /etc/nginx/
+COPY services/nginx-php/conf/supervisord.conf /etc/supervisor/conf.d/
+COPY services/nginx-php/php-custom.ini /etc/php5/fpm/conf.d/40-custom.ini
 
 ################################################################################
 # Volumes
