@@ -1,30 +1,5 @@
 version: '2'
 services:
-  webapp:
-    extends:
-      file: ./services/compose.common.yml
-      service: webapp
-    build:
-      context: .
-      dockerfile: ./services/php/5.6/Dockerfile
-    container_name: inhere-web
-    links:
-      - mysql:mysql
-      - redis:redis
-      - memcached:memcached
-      - gearman:gearman
-      - elasticsearch:elasticsearch
-    volumes:
-      - ./www:/var/www
-      - ./vhosts:/etc/nginx/conf.d
-      - ./logs/supervisor:/var/log/supervisor
-      - ./logs/nginx:/var/log/nginx
-
-  webserver:
-    extends:
-      file: ./services/compose.common.yml
-      service: webserver
-
   mysql:
     image: mysql
     container_name: inhere-mysql
@@ -69,3 +44,25 @@ services:
       - "9200:9200"
       - "9300:9300"
 
+  webserver:
+    extends:
+      file: ./services/compose.common.yml
+      service: webserver
+    container_name: inhere-webserver
+    links:
+      - webapp:webapp
+
+  webapp:
+    extends:
+      file: ./services/compose.common.yml
+      service: webapp
+    build:
+      context: .
+      dockerfile: ./services/php/5.6/Dockerfile
+    container_name: inhere-webapp
+    links:
+      - mysql:mysql
+      - redis:redis
+      - memcached:memcached
+      - gearman:gearman
+      - elasticsearch:elasticsearch

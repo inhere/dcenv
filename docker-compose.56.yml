@@ -1,28 +1,5 @@
 version: '2'
 services:
-  webapp:
-    build:
-      context: .
-      # dockerfile: ./services/php/5.6/alpine/Dockerfile
-      dockerfile: ./services/php/5.6/Dockerfile
-    container_name: webapp
-    ports:
-      - "9000:9000"
-    links:
-      - webserver:webserver
-      - mysql:mysql
-      - gearman:gearman
-      - memcached:memcached
-      - redis:redis
-      - elasticsearch:elasticsearch
-    volumes:
-      - ./www:/var/www
-
-  webserver:
-    extends:
-      file: ./services/compose.common.yml
-      service: webserver
-
   mysql:
     image: mysql
     # image: mysql
@@ -68,3 +45,27 @@ services:
     ports:
       - "9200:9200"
       - "9300:9300"
+
+  webserver:
+    extends:
+      file: ./services/compose.common.yml
+      service: webserver
+    links:
+      - webapp:webapp
+
+  webapp:
+    extends:
+      file: ./services/compose.common.yml
+      service: webapp
+    build:
+      context: .
+      # dockerfile: ./services/php/5.6/alpine/Dockerfile
+      dockerfile: ./services/php/5.6/Dockerfile
+    links:
+      - mysql:mysql
+      - gearman:gearman
+      - memcached:memcached
+      - redis:redis
+      - elasticsearch:elasticsearch
+    volumes:
+      - ./www:/var/www

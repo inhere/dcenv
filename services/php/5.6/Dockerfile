@@ -9,7 +9,7 @@ ADD data/resources/debian8.sources    /etc/apt/sources.list
 # Now,Install
 RUN apt-get update && apt-get -y --no-install-recommends install \
     vim curl telnet \
-    php-pear php5-phar php5-dev php5-common\
+    php-pear php5-dev php5-common\
 
     php5-mysql php5-mcrypt php5-gd php-gettext \
 

@@ -1,47 +1,10 @@
 #
 # 在生产环境不推荐暴露 mysql redis elasticsearch 等服务的端口
+# the service links can not be extended.
 #
 
 version: '2'
 services:
-  webapp:
-    build:
-      context: .
-      # dockerfile: ./services/php/7.0/alpine/Dockerfile
-      # dockerfile: ./services/php/7.0/Dockerfile
-      dockerfile: ./services/php/5.6/Dockerfile
-    container_name: webapp
-    ports:
-      - "9000:9000"
-    # the links can not be extended.
-    # links:
-    #   - webserver:webserver
-    #   - mysql:mysql
-    #   - mongo:mongo
-    #   - gearman:gearman
-    #   - memcached:memcached
-    #   - redis:redis
-    #   - rabbitmq:rabbitmq
-    #   - elasticsearch:elasticsearch
-    volumes:
-      - ./www:/var/www
-
-  webserver:
-    build:
-      context: .
-      #dockerfile: ./services/nginx/alpine/Dockerfile
-      dockerfile: ./services/nginx/Dockerfile
-    container_name: webserver
-    ports:
-      - "80:80"
-      - "443:443"
-    # links:
-    #   - webapp:webapp
-    volumes:
-      - ./www:/var/www
-      - ./vhosts:/etc/nginx/conf.d
-      - ./logs/nginx:/var/log/nginx
-
   mysql:
     image: mysql
     container_name: mysql
@@ -102,3 +65,41 @@ services:
     # ports:
     #   - "15672:15672"
     #   - "5672:5672"
+
+  webserver:
+    build:
+      context: .
+      #dockerfile: ./nginx/alpine/Dockerfile
+      dockerfile: ./nginx/Dockerfile
+    container_name: webserver
+    ports:
+      - "80:80"
+      - "443:443"
+    # links:
+    #   - webapp:webapp
+    volumes:
+      - ./../www:/var/www
+      - ./../vhosts:/etc/nginx/conf.d
+      - ./../logs/nginx:/var/log/nginx
+
+  webapp:
+    build:
+      context: .
+      # dockerfile: ./php/7.0/alpine/Dockerfile
+      # dockerfile: ./php/7.0/Dockerfile
+      dockerfile: ./php/5.6/Dockerfile
+    container_name: webapp
+    ports:
+      - "9000:9000"
+    # the links can not be extended.
+    # links:
+    #   - mysql:mysql
+    #   - mongo:mongo
+    #   - gearman:gearman
+    #   - memcached:memcached
+    #   - redis:redis
+    #   - rabbitmq:rabbitmq
+    #   - elasticsearch:elasticsearch
+    volumes:
+      - ./../www:/var/www
+
