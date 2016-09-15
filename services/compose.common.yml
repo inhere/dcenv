@@ -8,7 +8,8 @@ services:
     build:
       context: .
       # dockerfile: ./services/php/7.0/alpine/Dockerfile
-      dockerfile: ./services/php/7.0/Dockerfile
+      # dockerfile: ./services/php/7.0/Dockerfile
+      dockerfile: ./services/php/5.6/Dockerfile
     container_name: webapp
     ports:
       - "9000:9000"

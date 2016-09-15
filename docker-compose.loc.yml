@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: ./nginx-php/5.6/Dockerfile
-    container_name: ug-web
+    container_name: inhere-web
     ports:
       - "80:80"
       - "443:443"
@@ -22,24 +22,24 @@ services:
       - ./logs/nginx:/var/log/nginx
 
   mysql:
-    image: mysql:5.6
-    container_name: ug-mysql
+    image: mysql
+    container_name: inhere-mysql
     ports:
       - "3306:3306"
     volumes:
-      - ./data/volumes/mysql-56:/var/lib/mysql
+      - ./data/volumes/mysql-latest:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
 
   memcached:
     image: memcached
-    container_name: ug-mem
+    container_name: inhere-mem
     ports:
       - "11211:11211"
 
   redis:
     image: redis
-    container_name: ug-redis
+    container_name: inhere-redis
     volumes:
       - ./data/volumes/redis-latest:/data
     ports:
@@ -48,8 +48,8 @@ services:
   gearman:
     build:
       context: .
-      dockerfile: ./services/gearman/Dockerfile
-    container_name: ug-gearman
+      dockerfile: ./services/gearman/ubuntu16-04.Dockerfile
+    container_name: inhere-gearman
     ports:
        - "4730:4730"
     volumes:
@@ -58,7 +58,7 @@ services:
 
   elasticsearch:
     image: elasticsearch
-    container_name: ug-es
+    container_name: inhere-es
     volumes:
       - ./data/volumes/es-latest:/usr/share/elasticsearch/data
     ports:
