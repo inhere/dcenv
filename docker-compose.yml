@@ -1,14 +1,13 @@
 version: '2'
 services:
-  web:
+  webapp:
+    extends:
+      file: ./services/compose.common.yml
+      service: webapp
     build:
       context: .
-      dockerfile: ./nginx-php/5.6/Dockerfile
-    container_name: ug-web
-    ports:
-      - "80:80"
-      - "443:443"
-      - "9000:9000"
+      dockerfile: ./services/php/5.6/Dockerfile
+    container_name: inhere-web
     links:
       - mysql:mysql
       - mongo:mongo
@@ -28,52 +27,46 @@ services:
       service: webserver
 
   mysql:
-    image: mysql:5.6
-    container_name: ug-mysql
+    image: mysql
+    container_name: inhere-mysql
     ports:
       - "3306:3306"
     volumes:
-      - ./data/volumes/mysql-56:/var/lib/mysql
+      - ./data/volumes/mysql-latest:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
 
-  mongo:
-    image: mongo
-    container_name: mongo
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./data/volumes/mongo-latest:/data/db
-      - ./data/volumes/mongo-latest-configdb:/data/configdb
-
   memcached:
     image: memcached
-    container_name: ug-mem
+    container_name: inhere-mem
     ports:
       - "11211:11211"
 
   redis:
     image: redis
-    container_name: ug-redis
+    container_name: inhere-redis
     volumes:
       - ./data/volumes/redis-latest:/data
     ports:
       - "6379:6379"
 
   gearman:
-     build:
+    build:
       context: .
-      dockerfile: ./gearman/Dockerfile
-     ports:
+      dockerfile: ./services/gearman/ubuntu16-04.Dockerfile
+    container_name: inhere-gearman
+    ports:
        - "4730:4730"
-     volumes:
-       - ./data/volumes/gearman-latest:/data
+    volumes:
+      - ./data/volumes/gearman-latest:/data
+      - ./logs/gearman:/usr/local/var/log
 
   elasticsearch:
     image: elasticsearch
-    container_name: ug-es
+    container_name: inhere-es
     volumes:
       - ./data/volumes/es-latest:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"
+

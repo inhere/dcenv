@@ -7,19 +7,11 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 ADD data/resources/ubuntu14.04.sources  /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    binutils-doc \
+    build-essential binutils-doc libboost-all-dev \
     software-properties-common \
-    libboost-all-dev \
-    gperf \
-    libevent-dev \
-    uuid-dev \
-    wget \
-    libmysqlclient-dev \
-    libmemcached-dev \
-    libsqlite3-dev \
-    libpq-dev \
-    libdrizzle-dev \
+    gperf libevent-dev uuid-dev wget \
+    libmysqlclient-dev libmemcached-dev libsqlite3-dev \
+    libpq-dev libdrizzle-dev \
      && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 # Install Gearman Job Server
@@ -30,7 +22,7 @@ RUN cd /tmp \
     && mkdir /usr/local/var \
     && mkdir /usr/local/var/log \
     && touch /usr/local/var/log/gearmand.log \
-    && echo "Gearman Installed."
+    && echo "   Gearman Installed."
 
 VOLUME /data
 
