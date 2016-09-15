@@ -13,15 +13,16 @@ services:
     container_name: webapp
     ports:
       - "9000:9000"
-    links:
-      - webserver:webserver
-      - mysql:mysql
-      - mongo:mongo
-      - gearman:gearman
-      - memcached:memcached
-      - redis:redis
-      - rabbitmq:rabbitmq
-      - elasticsearch:elasticsearch
+    # the links can not be extended.
+    # links:
+    #   - webserver:webserver
+    #   - mysql:mysql
+    #   - mongo:mongo
+    #   - gearman:gearman
+    #   - memcached:memcached
+    #   - redis:redis
+    #   - rabbitmq:rabbitmq
+    #   - elasticsearch:elasticsearch
     volumes:
       - ./www:/var/www
 
@@ -34,8 +35,8 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    links:
-      - webapp:webapp
+    # links:
+    #   - webapp:webapp
     volumes:
       - ./www:/var/www
       - ./vhosts:/etc/nginx/conf.d
