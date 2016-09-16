@@ -2,6 +2,11 @@ FROM nginx
 
 MAINTAINER inhere<cloud798@126.com>
 
+# Remove default nginx configs.
+RUN rm -f /etc/nginx/conf.d/*
+
+COPY services/nginx-php/conf/nginx.conf /etc/nginx/
+
 ################################################################################
 # Volumes
 ################################################################################
