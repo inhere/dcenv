@@ -68,10 +68,11 @@ RUN apt-get install -y \
 #     && docker-php-ext-enable xcache
 
 # open pid file
-RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf \
+RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf
 
-    # add php-fpm to service
-    && cp services/php/5.6/php-fpm /etc/init.d/php-fpm && chmod +x /etc/init.d/php-fpm
+# add php-fpm to service
+COPY services/php/5.6/php-fpm /etc/init.d/php-fpm
+RUN chmod +x /etc/init.d/php-fpm
     # && chkconfig --add php-fpm
 
 # clear temp files
