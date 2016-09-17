@@ -7,8 +7,10 @@ RUN rm -f /etc/nginx/conf.d/*
 
 # change some config
 RUN sed -i '/^\s*#gzip\s*/s/#//g' /etc/nginx/nginx.conf \
-    && sed -i '/^\s*#tcp_nopush\s*/s/#//g' /etc/nginx/nginx.conf
+    && sed -i '/^\s*#tcp_nopush\s*/s/#//g' /etc/nginx/nginx.conf \
+    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
+WORKDIR "/var/www"
 
 ################################################################################
 # Volumes
