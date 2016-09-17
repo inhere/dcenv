@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
         libpng12-dev \
-    && docker-php-ext-install -j$(nproc) iconv mcrypt \
+    && docker-php-ext-install -j$(nproc) mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
 
@@ -33,10 +33,13 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get install -y \
 
     # for memcache
-    libmemcache-dev \
+    zlib1g-dev \
 
     # for memcached
     libmemcached-dev \
+
+    # for gearman
+    libgearman7 libgearman-dev \
 
     && pecl install memcache && docker-php-ext-enable memcache \
     && pecl install memcached && docker-php-ext-enable memcached \
@@ -44,12 +47,10 @@ RUN apt-get install -y \
 
 
     && pecl install xdebug && docker-php-ext-enable xdebug \
-    && pecl install redis && docker-php-ext-enable redis \
-    && pecl install xhprof && docker-php-ext-enable xhprof \
+    && pecl install redis-2.2.8 && docker-php-ext-enable redis \
+    # && pecl install xhprof && docker-php-ext-enable xhprof
+    && pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
 
-    && docker-php-source delete \
-    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-    && echo 'PHP 5.6 installed.'
 
 # Other extensions
 # RUN curl -fsSL 'https://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz' -o xcache.tar.gz \
@@ -66,12 +67,17 @@ RUN apt-get install -y \
 #     && rm -r xcache \
 #     && docker-php-ext-enable xcache
 
-    # open pid file
+# open pid file
 RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf \
 
     # add php-fpm to service
     && cp services/php/5.6/php-fpm /etc/init.d/php-fpm && chmod +x /etc/init.d/php-fpm
     # && chkconfig --add php-fpm
+
+# clear temp files
+RUN docker-php-source delete \
+    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
+    && echo 'PHP 5.6 installed.'
 
 ADD data/packages/php-tools/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
