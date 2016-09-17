@@ -5,7 +5,10 @@ MAINTAINER inhere<cloud798@126.com>
 # Remove default nginx configs.
 RUN rm -f /etc/nginx/conf.d/*
 
-COPY services/nginx-php/conf/nginx.conf /etc/nginx/
+# change some config
+RUN sed -i '/^\s*#gzip\s*/s/#//g' /etc/nginx/nginx.conf \
+    && sed -i '/^\s*#tcp_nopush\s*/s/#//g' /etc/nginx/nginx.conf
+
 
 ################################################################################
 # Volumes
