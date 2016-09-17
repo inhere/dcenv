@@ -53,6 +53,7 @@ services:
       - webapp:webapp
     volumes:
       # custom difine the www directory.
+      # - ./www:/var/www
       - ~/Workspace/php:/var/www
       - ./vhosts:/etc/nginx/conf.d
       - ./logs/nginx:/var/log/nginx
@@ -73,6 +74,7 @@ services:
       - elasticsearch:elasticsearch
     volumes:
       # custom difine the www directory.
+      # - ./www:/var/www
       - ~/Workspace/php:/var/www
 
 
