@@ -2,5 +2,6 @@
 .idea
 .phpintel
 # https://cbiol22u.mirror.aliyuncs.com
-/data/volumes/
+data/volumes/
+vhosts
 docker-compose.loc.yml
