@@ -1,5 +1,11 @@
 <?php
 // from http://gearman.org/examples/reverse/
+
+/*
+NOTICE:
+    Please run `php gearman-worker.php` at command, before run the file.
+ */
+
 // Create our client object
 $client = new GearmanClient();
 //var_dump($_SERVER);die;
