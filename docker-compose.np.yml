@@ -52,10 +52,10 @@ services:
   gearman:
     build:
       context: .
-      dockerfile: ./services/gearman/ubuntu16-04.Dockerfile
-    container_name: inhere-gearman
+      dockerfile: ./services/gearman/Dockerfile
+    container_name: gearman
     ports:
-       - "4730:4730"
+      - "4730:4730"
     volumes:
       - ./data/volumes/gearman-latest:/data
       - ./logs/gearman:/usr/local/var/log

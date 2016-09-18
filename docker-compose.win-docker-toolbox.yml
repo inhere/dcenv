@@ -1,64 +1,69 @@
 #
 # 需要先按 README 中说明的，配置好 virtualBox 挂载
 #
+version: '2'
+services:
+  web:
+    build:
+      context: .
+      dockerfile: ./nginx-php/5.6/Dockerfile
+    container_name: ug-web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9000:9000"
+    links:
+      - mysql:mysql
+      - memcached:memcached
+      - redis:redis
+      - elasticsearch:elasticsearch
+    volumes:
+      - /Users/php-dockerized/www:/var/www
+      - /Users/php-dockerized/vhosts:/etc/nginx/conf.d
+      - /Users/php-dockerized/logs/supervisor:/var/log/supervisor
+      - /Users/php-dockerized/logs/nginx:/var/log/nginx
 
-web:
-  build: .
-  dockerfile: ./nginx-php/5.6/Dockerfile
-  container_name: ug-web
-  ports:
-    - "80:80"
-    - "443:443"
-    - "9000:9000"
-  links:
-    - mysql:mysql
-    - memcached:memcached
-    - redis:redis
-    - elasticsearch:elasticsearch
-  volumes:
-    - /Users/php-dockerized/www:/var/www
-    - /Users/php-dockerized/vhosts:/etc/nginx/conf.d
-    - /Users/php-dockerized/logs/supervisor:/var/log/supervisor
-    - /Users/php-dockerized/logs/nginx:/var/log/nginx
+  mysql:
+    image: mysql:5.6
+    container_name: ug-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - /Users/php-dockerized/data/volumes/mysql-56:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
 
-mysql:
-  image: mysql:5.6
-  container_name: ug-mysql
-  ports:
-    - "3306:3306"
-  volumes:
-    - /Users/php-dockerized/data/volumes/mysql-56:/var/lib/mysql
-  environment:
-    MYSQL_ROOT_PASSWORD: password
+  memcached:
+    image: memcached
+    container_name: ug-mem
+    ports:
+      - "11211:11211"
 
-memcached:
-  image: memcached
-  container_name: ug-mem
-  ports:
-    - "11211:11211"
+  redis:
+    image: redis
+    container_name: ug-redis
+    volumes:
+      - /Users/php-dockerized/data/volumes/redis-latest:/data
+    ports:
+      - "6379:6379"
 
-redis:
-  image: redis
-  container_name: ug-redis
-  volumes:
-    - /Users/php-dockerized/data/volumes/redis-latest:/data
-  ports:
-    - "6379:6379"
+  gearman:
+    build:
+      context: .
+      dockerfile: ./services/gearman/Dockerfile
+    container_name: gearman
+    ports:
+      - "4730:4730"
+    volumes:
+      - ./data/volumes/gearman-latest:/data
+      - ./logs/gearman:/usr/local/var/log
 
-#gearman:
-#    build: .
-#    dockerfile: ./gearman/Dockerfile
-#    ports:
-#      - "4730:4730"
-#    volumes:
-#      - /Users/php-dockerized/data/volumes/gearman-latest:/data
-
-elasticsearch:
-  image: elasticsearch
-  container_name: ug-es
-  volumes:
-    - /Users/php-dockerized/data/volumes/es-latest:/usr/share/elasticsearch/data
-  ports:
-    - "9200:9200"
-    - "9300:9300"
+  elasticsearch:
+    image: elasticsearch
+    container_name: ug-es
+    volumes:
+      - /Users/php-dockerized/data/volumes/es-latest:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 

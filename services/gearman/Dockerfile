@@ -1,36 +1,38 @@
-FROM ubuntu:14.04
-# from thenotable/ubuntu-gearman
+FROM debian:jessie
 
 MAINTAINER inhere<cloud798@126.com>
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/ubuntu14.04.sources  /etc/apt/sources.list
+ADD data/resources/debian8.sources    /etc/apt/sources.list
 
+# manual install :
+#   1 . install depends library
 RUN apt-get update && apt-get install -y \
-    build-essential binutils-doc libboost-all-dev \
-    software-properties-common \
-    gperf libevent-dev uuid-dev wget \
-    libmysqlclient-dev libmemcached-dev libsqlite3-dev \
-    libpq-dev libdrizzle-dev \
-     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    make gcc g++ \
+    libboost-all-dev libmemcached-dev libsqlite3-dev libmysqlclient-dev \
+    gperf libevent-dev uuid-dev
 
-# Install Gearman Job Server
-RUN cd /tmp \
-    && wget https://launchpad.net/gearmand/1.2/1.1.12/+download/gearmand-1.1.12.tar.gz \
-    && tar xzf gearmand-1.1.12.tar.gz \
-    && cd gearmand-1.1.12 && ./configure && make && make install \
+#   2 . do install gearman
+# wget https://launchpad.net/gearmand/1.2/1.1.12/+download/gearmand-1.1.12.tar.gz -O /tmp/gearmand.tar.gz
+COPY data/packages/gearmand-1.1.12.tar.gz /tmp/gearmand.tar.gz
+RUN cd /tmp && tar -zxvf gearmand.tar.gz \
+    && cd gearmand-1.1.12 \
+    && ./configure \
+    # && ./configure --with-boost-libdir=/usr/lib/x86_64-linux-gnu \
+    && make \
+    && make install
+
+# install from repo
+# in the php container: `apt-get install -y php5-gearman` or use `pecl install gearman`
+# RUN apt-get update && apt-get install -y gearman-job-server
+
+RUN ldconfig \
     && mkdir /usr/local/var \
     && mkdir /usr/local/var/log \
     && touch /usr/local/var/log/gearmand.log \
-    && echo "   Gearman Installed."
+    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    && gearmand -V && echo "   Gearman Installed."
 
 VOLUME /data
 
-# RUN
-#RUN usermod -u 1000 gearman
-
-EXPOSE 4730
-
-# CMD "gearmand"
-CMD gearmand -vvv
-# CMD gearmand -q libsqlite3 --libsqlite3-db /var/lib/gearman/data.sqlite3 -l /dev/stdout
+CMD "gearmand"

@@ -39,15 +39,16 @@ services:
     # ports:
     #   - "6379:6379"
 
-  gearman:
-     build:
-      context: .
-      dockerfile: ./services/gearman/Dockerfile
-     # ports:
-     #   - "4730:4730"
-     # volumes:
-     #   - ./data/volumes/gearman-latest:/data
-     #   - ./logs/gearman:/usr/local/var/log
+  # gearman:
+    # build:
+    #   context: .
+    #   dockerfile: ./gearman/Dockerfile
+    # container_name: gearman
+    # ports:
+    #   - "4730:4730"
+    # volumes:
+    #   - ./data/volumes/gearman-latest:/data
+    #   - ./logs/gearman:/usr/local/var/log
 
   elasticsearch:
     image: elasticsearch
