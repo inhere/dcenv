@@ -67,6 +67,9 @@ RUN apt-get install -y \
 # open pid file
 RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf
 
+# Configurtion
+COPY data/packages/php-ext/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 # add php-fpm to service
 COPY services/php/5.6/php-fpm /etc/init.d/php-fpm
 RUN chmod +x /etc/init.d/php-fpm

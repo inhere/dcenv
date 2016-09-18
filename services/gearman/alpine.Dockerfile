@@ -1,6 +1,8 @@
 FROM alpine:3.4
 
-RUN echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
+RUN { echo "http://mirrors.ustc.edu.cn/alpine/latest-stable/main/"; cat /etc/apk/repositories; } \
+    | tee /etc/apk/repositories && \
+    echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
     apk update && \
     apk add --no-cache gearmand@testing
 
