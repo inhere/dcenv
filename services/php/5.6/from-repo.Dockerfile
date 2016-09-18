@@ -1,8 +1,6 @@
-################################################################################
-# Base image
-################################################################################
+FROM debian:jessie
 
-FROM nginx
+MAINTAINER inhere<cloud798@126.com>
 
 ################################################################################
 # Build instructions
@@ -10,7 +8,7 @@ FROM nginx
 
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/debian8.sources    /etc/apt/sources.list
+COPY data/resources/debian8.sources    /etc/apt/sources.list
 
 # Install packages
 RUN apt-get update && apt-get install -my \
@@ -45,11 +43,10 @@ RUN sed -i '/^;ping\.path/s/^;//' /etc/php5/fpm/pool.d/www.conf
 # Get access to FPM_Status page /status
 RUN sed -i '/^;pm\.status_path/s/^;//' /etc/php5/fpm/pool.d/www.conf
 
-# Prevent PHP Warning: 'xdebug' already loaded.
-# XDebug loaded with the core
-RUN sed -i '/.*xdebug.so$/s/^/;/' /etc/php5/mods-available/xdebug.ini
+# Configurtion extension
+COPY data/packages/php-ext/php-xdebug.ini /etc/php5/mods-available/xdebug.ini
 
-ADD data/packages/php-tools/composer.phar /usr/local/bin/composer
+COPY data/packages/php-tools/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
 
 # RUN pecl install /home/memcache.tgz \
