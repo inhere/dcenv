@@ -18,10 +18,7 @@ ADD data/resources/debian8.sources    /etc/apt/sources.list
 #
 # Must install dependencies for your extensions manually, if need.
 RUN apt-get update && apt-get install -y \
-        libfreetype6-dev \
-        libjpeg62-turbo-dev \
-        libmcrypt-dev \
-        libpng12-dev \
+    libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng12-dev \
     && docker-php-ext-install -j$(nproc) mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
@@ -39,13 +36,13 @@ RUN apt-get install -y \
     libmemcached-dev \
 
     # for gearman
-    libgearman7 libgearman-dev \
+    libgearman-dev \
 
     && pecl install memcache && docker-php-ext-enable memcache \
     && pecl install memcached && docker-php-ext-enable memcached \
     && pecl install gearman && docker-php-ext-enable gearman \
 
-
+    # no dependency
     && pecl install xdebug && docker-php-ext-enable xdebug \
     && pecl install redis-2.2.8 && docker-php-ext-enable redis \
     # && pecl install xhprof && docker-php-ext-enable xhprof
@@ -84,10 +81,6 @@ ADD data/packages/php-tools/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
 
 WORKDIR "/var/www"
-
-################################################################################
-# Volumes
-################################################################################
 
 VOLUME ["/var/www"]
 

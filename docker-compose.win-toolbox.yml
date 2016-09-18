@@ -1,4 +1,5 @@
 #
+# use docker-toolbox at windows
 # 需要先按 README 中说明的，配置好 virtualBox 挂载
 #
 version: '2'

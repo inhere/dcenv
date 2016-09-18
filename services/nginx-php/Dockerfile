@@ -13,7 +13,7 @@ RUN rm -f /etc/nginx/conf.d/*
 
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/debian8.sources    /etc/apt/sources.list
+COPY data/resources/debian8.sources    /etc/apt/sources.list
 
 # Install packages
 RUN apt-get update && apt-get install -my \
@@ -57,13 +57,12 @@ RUN sed -i '/^;pm\.status_path/s/^;//' /etc/php5/fpm/pool.d/www.conf
 # XDebug loaded with the core
 RUN sed -i '/.*xdebug.so$/s/^/;/' /etc/php5/mods-available/xdebug.ini
 
-ADD data/packages/php-tools/composer.phar /usr/local/bin/composer
+COPY data/packages/php-tools/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
 
-# RUN pecl install /home/memcache.tgz \
-#   echo "extension=memcache.so" > /etc/php5/mods-available/memcache.ini \
-# Enable php modules
-#   php5enmod memcache
+# Manual Install PECL extension memcache and Enable php-memcache
+# RUN pecl install /tmp/php-ext/memcache-2.2.7.tgz \
+#   && echo "extension=memcache.so" > /etc/php5/mods-available/memcache.ini && php5enmod memcache
 
 # Install HHVM 去除hhvm的安装
 # RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0x5a16e7281be7a449
@@ -80,20 +79,10 @@ COPY data/resources/vhosts/default.conf /etc/nginx/conf.d/default.conf
 RUN sed -i '/^\s*# fastcgi_pass unix\s*/s/# //g' /etc/nginx/conf.d/default.conf \
     && sed -i '/\s*fastcgi_pass webapp/s/\s*f/    # f/g' /etc/nginx/conf.d/default.conf
 
-################################################################################
-# Volumes
-################################################################################
+WORKDIR "/var/www"
 
 VOLUME ["/var/www", "/etc/nginx/conf.d"]
 
-################################################################################
-# Ports
-################################################################################
-
 EXPOSE 80 443 9000
-
-################################################################################
-# Entrypoint
-################################################################################
 
 ENTRYPOINT ["/usr/bin/supervisord"]
