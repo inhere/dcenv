@@ -4,7 +4,7 @@ FROM ubuntu:14.04
 MAINTAINER inhere<cloud798@126.com>
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/ubuntu14.04.sources  /etc/apt/sources.list
+COPY data/resources/ubuntu14.04.sources  /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y \
     build-essential binutils-doc libboost-all-dev \

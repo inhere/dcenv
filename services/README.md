@@ -13,7 +13,8 @@ $ docker-compose run web bash
 拷贝配置：
 
 ```
-ADD conf/sources.list    /etc/apt/sources.list
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
+COPY data/resources/debian8.sources    /etc/apt/sources.list
 ```
 
 也可直接写入：

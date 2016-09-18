@@ -3,7 +3,7 @@ FROM ubuntu:16.04
 MAINTAINER inhere<cloud798@126.com>
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/ubuntu16.04.sources  /etc/apt/sources.list
+COPY data/resources/ubuntu16.04.sources  /etc/apt/sources.list
 
 # Install Gearman Job Server
 RUN apt-get update && apt-get install -y gearman-job-server \
