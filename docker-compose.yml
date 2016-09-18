@@ -27,7 +27,7 @@ services:
   gearman:
     build:
       context: .
-      dockerfile: ./services/gearman/ubuntu16-04.Dockerfile
+      dockerfile: ./services/gearman/Dockerfile
     container_name: inhere-gearman
     ports:
        - "4730:4730"

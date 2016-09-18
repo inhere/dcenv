@@ -7,10 +7,12 @@ ADD data/resources/ubuntu16.04.sources  /etc/apt/sources.list
 
 # Install Gearman Job Server
 RUN apt-get update && apt-get install -y gearman-job-server \
+    && ldconfig \
     && mkdir /usr/local/var \
     && mkdir /usr/local/var/log \
     && touch /usr/local/var/log/gearmand.log \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    && gearmand -V && echo "   Gearman Installed."
 
 VOLUME /data
 

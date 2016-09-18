@@ -28,13 +28,15 @@ services:
       - "6379:6379"
 
   gearman:
-    extends:
-      file: ./services/compose.common.yml
-      service: gearman
+    build:
+      context: .
+      dockerfile: ./services/gearman/Dockerfile
+    container_name: gearman
     ports:
       - "4730:4730"
     volumes:
       - ./data/volumes/gearman-latest:/data
+      - ./logs/gearman:/usr/local/var/log
 
   elasticsearch:
     extends:
