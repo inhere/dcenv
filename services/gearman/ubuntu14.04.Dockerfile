@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     build-essential binutils-doc libboost-all-dev \
     software-properties-common \
     gperf libevent-dev uuid-dev wget \
-    libmysqlclient-dev libmemcached-dev libsqlite3-dev \
+    libmysqlclient-dev libmemcached-dev libsqlite3-dev libdrizzle-dev \
     libpq-dev libdrizzle-dev \
     && ldconfig
 
