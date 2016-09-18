@@ -10,7 +10,7 @@ $worker->addServer('gearman');
 // Inform the server that this worker can process "reverse" function calls
 $worker->addFunction("reverse", "reverse_fn");
 
-echo 'Version ' . gearman_version() . PHP_EOL;
+echo 'Extension Version: ' . gearman_version() . PHP_EOL;
 
 while (1) {
   print "Waiting for job...\n";

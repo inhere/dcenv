@@ -1,8 +1,6 @@
 
 nginx 和 php 在一个容器中. 
 
-**将会弃用它，使用分离的容器**
-
 ## 更换(debain 8)软件源
 
 在 Dockerfile 中添加

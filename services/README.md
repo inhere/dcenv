@@ -53,9 +53,11 @@ kill -INT `cat /usr/local/php/var/run/php-fpm.pid`
 kill -USR2 `cat /usr/local/php/var/run/php-fpm.pid`
 ```
 
-## 继承基础php镜像的一些信息
+## 一些信息
 
-### php 5.6
+继承自基础php镜像创建的容器中的php，与通过系统安装的php有些不太一样的地方。
+
+**继承基础php镜像的php 5.6**
 
 - php execute file: `/usr/local/bin/php`
 - php-fpm execute file: `/usr/local/sbin/php-fpm`
@@ -64,3 +66,13 @@ kill -USR2 `cat /usr/local/php/var/run/php-fpm.pid`
 - 扩展编译配置：`/usr/local/etc/php/conf.d/`
 - 扩展编译目录：`/usr/local/lib/php/extensions/no-debug-non-zts-20131226/`
 
+## some command
+
+```
+// install php by command(apt-get).
+service php5-fpm reload
+// if from base php image
+service php-fpm reload
+
+service nginx reload
+```
