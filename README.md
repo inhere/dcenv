@@ -193,6 +193,23 @@ mysql:
 > 挂载点 `Users` 好像不能随意命名，否则可能会挂载不成功 
 看这篇[文章](http://blog.csdn.net/jam_lee/article/details/40947429) 说是有几个固定的挂载点才可以用
 
+## 推荐php库
+
+### GearmanManager
+
+[GearmanManager](https://github.com/brianlmoon/GearmanManager)
+
+运行Gearman的Worker是项比较让人讨厌的任务。千篇一律的代码...GearmanManager的目标是让运行worker成为一项运维性任务而不是开发任务。
+文件名直接对应于Gearmand服务器中的function，这种方式极大简化了function在worker中的注册。
+
+[中文介绍](http://www.cnblogs.com/x3d/p/gearman-worker-manager.html)
+
+### nrk/predis
+
+php 的redis客户端，提供更方便丰富的redis操作
+
+[nrk/predis](https://github.com/nrk/predis)
+
 ## License
 
 Licensed under the terms of the [MIT license](LICENSE.md).

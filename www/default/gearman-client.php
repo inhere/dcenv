@@ -8,10 +8,11 @@ NOTICE:
 
 // Create our client object
 $client = new GearmanClient();
-//var_dump($_SERVER);die;
 
 // Add a server
 $client->addServer('gearman'); // by default host/port will be "localhost" & 4730
+
+//var_dump($client->ping('test'), $client);die;
 
 echo "Sending job\n";
 
@@ -20,5 +21,7 @@ $result = $client->doNormal("reverse", "Hello!");
 
 if ($result) {
   echo "Success: $result\n";
+} else {
+     echo "Failure: $result\n";
 }
 

@@ -27,7 +27,6 @@ Sending job
 Success: !olleH
 ```
 
-
 ## 异步同步数据
 
 reference [通过Gearman实现MySQL到Redis的数据复制](http://avnpc.com/pages/mysql-replication-to-redis-by-gearman)
