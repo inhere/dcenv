@@ -10,6 +10,8 @@ RUN sed -i '/^\s*#gzip\s*/s/#//g' /etc/nginx/nginx.conf \
     && sed -i '/^\s*#tcp_nopush\s*/s/#//g' /etc/nginx/nginx.conf \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
+COPY data/resources/vhosts/default.conf /etc/nginx/conf.d/default.conf
+
 WORKDIR "/var/www"
 
 ################################################################################

@@ -1,6 +1,7 @@
 #
 # 在生产环境不推荐暴露 mysql redis elasticsearch 等服务的端口
 # the service links can not be extended.
+# 注意： 相对路径是相对于当前配置文件
 #
 
 version: '2'

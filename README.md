@@ -27,7 +27,7 @@ PHP Dockerized gives you everything you need for developing PHP applications loc
 
 * [Docker Engine](https://docs.docker.com/installation/)
 * [Docker Compose](https://docs.docker.com/compose/)
-* [Docker Machine](https://docs.docker.com/machine/) (Mac and Windows only)
+* [Docker Machine](https://docs.docker.com/machine/) (If use Docker Toolbox)
 
 ## Running
 
@@ -63,7 +63,9 @@ Elasticsearch|elasticsearch|`9200` (HTTP default) / `9300` (ES transport default
 
 ## use Docker Toolbox
 
-windows 8/10 可以直接使用 `Docker For Windows`. 请跳过此节。
+windows 10 x64 可以直接使用 `Docker For Windows`. Mac OS X 10.10.3 或者更高版本的可用`Docker for Mac `, 请跳过此节。
+
+电脑版本过旧，就可以使用 `Docker Toolbox` 在Windows或者Mac上运行Docker。适用于Mac OS X 10.8+ 或者 Windows 7/8.1。
 
 ```sh
 $ docker-machine start default # 可省略 default
@@ -101,10 +103,10 @@ $ docker exec -ti phpdockerized_web_1 curl --HEAD localhost:80
 
 需要先下载 `Docker For Windows` 或者 `Docker for Mac`。
 
-> 需要较高的windows版本,并且需要开启 **Hyper-V**
-
 - [官网下载](https://www.docker.com/products/docker)
 - [daocloud下载](http://get.daocloud.io/#install-docker-for-mac-windows)
+
+> 需要windows 10 x64版本,并且需要开启 **Hyper-V**. Mac 则需要 OS X 10.10.3 或者更高版本
 
 直接运行 `Docker For Windows` / `Docker for Mac`, 这个版本不需要 `docker-machine`.
 
@@ -150,9 +152,9 @@ $ docker-compose -f docker-compose-my.yml up -d
 - `-p {project name}` 指定项目名称，默认是文件夹的名称
 - `-d` 后台运行
 
-### 若使用的是nginx和php分开的服务容器
+### nginx 站点配置
 
-注意站点配置中
+若使用的是nginx和php分开的服务容器，注意站点配置中
 
 ```
     fastcgi_pass  unix:/var/run/php5-fpm.sock;
