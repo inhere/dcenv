@@ -35,4 +35,4 @@ RUN ldconfig \
 
 VOLUME /data
 
-CMD "gearmand"
+CMD "gearmand --log-file=/usr/local/var/log/gearmand.log"
