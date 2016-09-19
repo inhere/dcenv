@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -my \
   # common 包含了大部分公共的扩展
   php5-cli php5-fpm php5-common \
 
-  php5-mysql php5-sqlite \
+  php5-mysql php5-sqlite php5-mongo \
 
   php5-mcrypt php5-gd php5-curl php5-ssh2 \
 

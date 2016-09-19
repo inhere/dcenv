@@ -8,3 +8,10 @@ $redis->connect('redis');
 $redis->set('test', 'test value');
 
 var_dump($redis->get('test'), $redis);
+
+$slave = new \Redis();
+$slave->connect('redis', 6380);
+
+// $slave->set('test', 'test value');
+
+var_dump($slave->get('test'), $slave);
