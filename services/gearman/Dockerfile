@@ -30,9 +30,10 @@ RUN ldconfig \
     && mkdir /usr/local/var \
     && mkdir /usr/local/var/log \
     && touch /usr/local/var/log/gearmand.log \
-    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
     && gearmand -V && echo "   Gearman Installed."
 
 VOLUME /data
 
-CMD "gearmand --log-file=/usr/local/var/log/gearmand.log"
+CMD gearmand -l /dev/stdout
+# CMD gearmand --log-file=/usr/local/var/log/gearmand.log

@@ -33,5 +33,6 @@ VOLUME /data
 EXPOSE 4730
 
 # CMD "gearmand"
-CMD "gearmand --log-file=/usr/local/var/log/gearmand.log"
+CMD gearmand -l /dev/stdout
+# CMD gearmand --log-file=/usr/local/var/log/gearmand.log
 # CMD gearmand -q libsqlite3 --libsqlite3-db /var/lib/gearman/data.sqlite3 -l /dev/stdout

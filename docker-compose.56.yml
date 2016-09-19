@@ -48,6 +48,9 @@ services:
     extends:
       file: ./services/compose.common.yml
       service: webserver
+    build:
+      context: .
+      dockerfile: ./services/nginx/Dockerfile
     container_name: inhere-webserver
     links:
       - webapp:webapp
