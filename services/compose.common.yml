@@ -69,10 +69,10 @@ services:
     #   - "5672:5672"
 
   webserver:
-    build:
-      context: .
-      #dockerfile: ./nginx/alpine/Dockerfile
-      dockerfile: ./nginx/Dockerfile
+    # build:
+    #   context: .
+    #   #dockerfile: ./nginx/alpine/Dockerfile
+    #   dockerfile: ./nginx/Dockerfile
     container_name: webserver
     ports:
       - "80:80"
@@ -85,11 +85,11 @@ services:
       - ./../logs/nginx:/var/log/nginx
 
   webapp:
-    build:
-      context: .
-      # dockerfile: ./php/7.0/alpine/Dockerfile
-      # dockerfile: ./php/7.0/Dockerfile
-      dockerfile: ./php/5.6/Dockerfile
+    # build:
+    #   context: .
+    #   # dockerfile: ./php/7.0/alpine/Dockerfile
+    #   # dockerfile: ./php/7.0/Dockerfile
+    #   dockerfile: ./php/5.6/Dockerfile
     container_name: webapp
     ports:
       - "9000:9000"

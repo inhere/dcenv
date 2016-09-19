@@ -8,4 +8,5 @@ RUN { echo "http://mirrors.ustc.edu.cn/alpine/latest-stable/main/"; cat /etc/apk
 
 EXPOSE 4730
 
-CMD "gearmand --log-file=/usr/local/var/log/gearmand.log"
+CMD gearmand -l /dev/stdout
+# CMD gearmand --log-file=/usr/local/var/log/gearmand.log
