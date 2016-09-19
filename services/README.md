@@ -57,7 +57,7 @@ kill -USR2 `cat /usr/local/php/var/run/php-fpm.pid`
 
 继承自基础php镜像创建的容器中的php，与通过系统安装的php有些不太一样的地方。
 
-**继承基础php镜像的php 5.6**
+**继承基础php镜像的php**
 
 - php execute file: `/usr/local/bin/php`
 - php-fpm execute file: `/usr/local/sbin/php-fpm`

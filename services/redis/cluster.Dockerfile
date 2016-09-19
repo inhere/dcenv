@@ -4,7 +4,7 @@ MAINTAINER inhere<cloud798@126.com>
 
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/debian8.sources    /etc/apt/sources.list
+COPY data/resources/debian8.sources    /etc/apt/sources.list
 
 RUN apt-get install ruby rubygem \
     gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ \
