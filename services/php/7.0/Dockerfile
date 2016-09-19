@@ -5,30 +5,71 @@ MAINTAINER inhere<cloud798@126.com>
 
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/debian8.sources    /etc/apt/sources.list
+ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install
-RUN apt-get update && apt-get -y --no-install-recommends install \
-     openssl vim curl telnet \
-     # php7.0-cli php7.0-fpm php7.0-apcu php7.0-apcu-bc php7.0-curl php7.0-json \
-     # php7.0-mcrypt php7.0-opcache php7.0-readline php7.0-xml php7.0-zip \
+RUN apt-get update && apt-get -y install openssl vim curl telnet
 
-     # php7.0-mysql php7.0-mysqli php7.0-sqlite3 php7.0-pdo_sqlite php7.0-pdo_pgsql php7.0-pdo_mysql \
+RUN apt-get install -y \
+    libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng12-dev \
+    && docker-php-ext-install -j$(nproc) mcrypt \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
 
-     # php7.0-memcache php7.0-memcached php7.0-redis php7.0-session \
+    # no dependency extension
+    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets
 
-     # php7.0-bz2 php7.0-dom php7.0-gd php7.0-gmp php7.0-interbase php7.0-intl \
-     # php7.0-ldap php7.0-mbstring php7.0-mcrypt php7.0-msgpack php7.0-snmp php7.0-soap \
-     # # php7.0-zlib \
+# Install PECL extensions
+RUN apt-get install -y \
 
-     # php7.0-openssl php7.0-ssh2 php7.0-ftp php7.0-sockets \
+    # for memcache
+    zlib1g-dev \
 
-     # php7.0-pear php7.0-phar php7.0-dbg php7.0-phpdbg php7.0-xdebug \
-     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-     && echo 'PHP 7.0 installed.'
+    # for memcached
+    libmemcached-dev \
 
-# copy configuration files. there is relative the 'docker-compose.yml > build:.' path
-COPY php-ini-overrides.ini /etc/php/7.0/fpm/conf.d/99-overrides.ini
+    # for gearman
+    libgearman-dev \
+
+    && pecl install memcache && docker-php-ext-enable memcache \
+    && pecl install memcached && docker-php-ext-enable memcached \
+    && pecl install gearman && docker-php-ext-enable gearman \
+
+    # no dependency
+    && pecl install xdebug && docker-php-ext-enable xdebug \
+    && pecl install redis && docker-php-ext-enable redis \
+    # && pecl install xhprof && docker-php-ext-enable xhprof
+    && pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
+
+# Other extensions
+# RUN curl -fsSL 'https://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz' -o xcache.tar.gz \
+#     && mkdir -p xcache \
+#     && tar -xf xcache.tar.gz -C xcache --strip-components=1 \
+#     && rm xcache.tar.gz \
+#     && ( \
+#         cd xcache \
+#         && phpize && ./configure --enable-xcache \
+#         && make -j$(nproc) && make install \
+#     ) \
+#     && rm -r xcache \
+#     && docker-php-ext-enable xcache
+
+# open pid file
+RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.conf
+
+# Configurtion
+COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
+
+# add php-fpm to service
+COPY data/resources/php/init.d.php-fpm /etc/init.d/php-fpm
+RUN chmod +x /etc/init.d/php-fpm
+    # && chkconfig --add php-fpm
+
+# clear temp files
+RUN docker-php-source delete \
+    && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
+    && echo 'PHP 7.0 installed.'
 
 # install composer
 ADD data/packages/php-tools/composer.phar /usr/local/bin/composer

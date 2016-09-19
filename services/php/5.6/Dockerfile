@@ -48,7 +48,6 @@ RUN apt-get install -y \
     # && pecl install xhprof && docker-php-ext-enable xhprof
     && pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
 
-
 # Other extensions
 # RUN curl -fsSL 'https://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz' -o xcache.tar.gz \
 #     && mkdir -p xcache \
@@ -56,10 +55,8 @@ RUN apt-get install -y \
 #     && rm xcache.tar.gz \
 #     && ( \
 #         cd xcache \
-#         && phpize \
-#         && ./configure --enable-xcache \
-#         && make -j$(nproc) \
-#         && make install \
+#         && phpize && ./configure --enable-xcache \
+#         && make -j$(nproc) && make install \
 #     ) \
 #     && rm -r xcache \
 #     && docker-php-ext-enable xcache
@@ -68,10 +65,11 @@ RUN apt-get install -y \
 RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf
 
 # Configurtion
-COPY data/packages/php-ext/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
 
 # add php-fpm to service
-COPY services/php/5.6/php-fpm /etc/init.d/php-fpm
+COPY data/resources/php/init.d.php-fpm /etc/init.d/php-fpm
 RUN chmod +x /etc/init.d/php-fpm
     # && chkconfig --add php-fpm
 

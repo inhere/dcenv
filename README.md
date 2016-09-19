@@ -39,28 +39,6 @@ $ docker-compose up
 
 That's it! You can now access your configured sites via the IP address of the Docker Machine or locally if you're running a Linux flavour and using Docker natively.
 
-## Services exposed outside your environment
-
-You can access your application via **`localhost`**, if you're running the containers directly, or through **`192.168.33.152`** when run on a vm. nginx and mailhog both respond to any hostname, in case you want to add your own hostname on your `/etc/hosts` 
-
-Service|Address outside containers|Address outside VM
-------|---------|-----------
-Webserver|[localhost](http://localhost)|[192.168.33.152](http://192.168.33.152)
-
-## Hosts within your environment
-
-You'll need to configure your application to use any services you enabled:
-
-Service|Hostname|Port number
-------|---------|-----------
-webapp(php-fpm)|webapp|`9000`
-webserver(nginx)|webserver|`80` (http) / `443` (ssl)
-MySQL|mysql|`3306` (default)
-Gearman|gearman|`4730` (default)
-Memcached|memcached|`11211` (default)
-Redis|redis|`6379` (default)
-Elasticsearch|elasticsearch|`9200` (HTTP default) / `9300` (ES transport default)
-
 ## use Docker Toolbox
 
 windows 10 x64 可以直接使用 `Docker For Windows`. Mac OS X 10.10.3 或者更高版本的可用`Docker for Mac `, 请跳过此节。
@@ -71,6 +49,7 @@ windows 10 x64 可以直接使用 `Docker For Windows`. Mac OS X 10.10.3 或者�
 $ docker-machine start default # 可省略 default
 $ git clone https://github.com/inhere/php-dockerized.git 
 $ cd php-dockerized && git checkout my
+$ cp docker-compose.56.yml docker-compose.yml # 拷贝需要的配置
 $ docker-compose up
 ```
 
@@ -113,11 +92,34 @@ $ docker exec -ti phpdockerized_web_1 curl --HEAD localhost:80
 ```
 $ git clone https://github.com/inhere/php-dockerized.git 
 $ cd php-dockerized && git checkout my
+$ cp docker-compose.56.yml docker-compose.yml # 拷贝需要的配置
 $ docker-compose up
 // $ docker-compose up -d
 $ docker ps // 查看正在运行的容器列表
 
 ```
+
+## Services exposed outside your environment
+
+You can access your application via **`localhost`**, if you're running the containers directly, or through **`192.168.33.152`** when run on a vm. nginx and mailhog both respond to any hostname, in case you want to add your own hostname on your `/etc/hosts` 
+
+Service|Address outside containers|Address outside VM
+------|---------|-----------
+Webserver|[localhost](http://localhost)|[192.168.33.152](http://192.168.33.152)
+
+## Hosts within your environment
+
+You'll need to configure your application to use any services you enabled:
+
+Service|Hostname|Port number
+------|---------|-----------
+webapp(php-fpm)|webapp|`9000`
+webserver(nginx)|webserver|`80` (http) / `443` (ssl)
+MySQL|mysql|`3306` (default)
+Gearman|gearman|`4730` (default)
+Memcached|memcached|`11211` (default)
+Redis|redis|`6379` (default)
+Elasticsearch|elasticsearch|`9200` (HTTP default) / `9300` (ES transport default)
 
 ## 一些有用的
 
@@ -140,12 +142,13 @@ alias dockercleani='docker rmi $(docker images -q -f dangling=true)'
 
 ## Questions - 问题
 
-### 若配置文件不是默认的名称`docker-compose.yml`
+### 配置文件不是默认的名称
 
-可使用`-f {filename}`参数.
+若要使用配置文件不是默认名称`docker-compose.yml`的，除了拷贝重命名为默认名称 `docker-compose.yml` 外，
+也可使用`-f {filename}`参数.
 
 ```
-$ docker-compose -f docker-compose-my.yml up -d
+$ docker-compose -f docker-compose.70.yml up -d
 ```
 
 - `-f {filename}` 指定 compose 配置文件

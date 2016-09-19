@@ -59,7 +59,7 @@ RUN mkdir -p ${SPHINX_INDEX_DIR} && \
     mkdir -p ${SPHINX_DIZ_DIR}
 
 # dicts
-ADD data/packages/sphinx/dicts ${SPHINX_DIZ_DIR}
+COPY data/packages/sphinx/dicts ${SPHINX_DIZ_DIR}
 
 # scripts
 COPY searchd.sh /bin/
