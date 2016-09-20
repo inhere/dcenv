@@ -9,7 +9,7 @@ COPY data/resources/debian8.sources /etc/apt/sources.list
 #   1 . install depends library
 RUN apt-get update && apt-get install -y \
     make gcc g++ libboost-all-dev \
-    libmemcached-dev libsqlite3-dev libmysqlclient-dev \
+    libmemcached-dev libsqlite3-dev libmysqlclient-dev libpq-dev \
     gperf libevent-dev uuid-dev
 
 #   2 . do install gearman

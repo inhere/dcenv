@@ -32,7 +32,13 @@ Success: !olleH
 reference [通过Gearman实现MySQL到Redis的数据复制](http://avnpc.com/pages/mysql-replication-to-redis-by-gearman)
 
 
-## gearman 持久化队列启动示例
+## gearman 启动示例
+
+```
+gearmand --pid-file=/var/run/gearmand/gearmand.pid --user=gearmand --daemon --log-file=/var/log/gearmand/gearmand.log 
+```
+
+### 持久化队列启动
 
 - sqlite 示例
 
@@ -45,6 +51,16 @@ $ gearmand -q libsqlite3 --libsqlite3-db /var/lib/gearman/data.sqlite3 -l /dev/s
 ```
 
 - mysql 示例
+
+```
+gearmand --user=gearmand --daemon \
+    --pid-file=/var/run/gearmand/gearmand.pid \
+    --log-file=/var/log/gearmand/gearmand.log \
+    -L 127.0.0.1 --verbose=DEBUG \
+    -q mysql --mysql-host=localhost --mysql-user=gearman --mysql-password=DJW55RbdvazpmLuN --mysql-db=gearman --mysql-table=queue --mysql-port=3306
+```
+
+ubuntu 有 libdrizzle， debian 没有
 
 ```
 $ gearmand -q libdrizzle --libdrizzle-host=127.0.0.1 --libdrizzle-user=gearman --libdrizzle-password=password --libdrizzle-db=gearman --libdrizzle-table=gearman_queue --libdrizzle-mysql
