@@ -1,7 +1,3 @@
-################################################################################
-# Base image
-################################################################################
-
 FROM nginx
 
 MAINTAINER inhere<cloud798@126.com>
@@ -10,12 +6,12 @@ MAINTAINER inhere<cloud798@126.com>
 # Build instructions
 ################################################################################
 
-# Remove default nginx configs.
-RUN rm -f /etc/nginx/conf.d/*
+ENV PHP_VERSION=5.6.24
 
-# 更换(debian 8)软件源
-RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-COPY data/resources/debian8.sources    /etc/apt/sources.list
+# Remove default nginx configs.
+RUN rm -f /etc/nginx/conf.d/* \
+    && mv /etc/apt/sources.list /etc/apt/sources.list.bak
+COPY data/resources/debian8.sources  /etc/apt/sources.list
 
 # Install packages
 RUN apt-get update && apt-get install -my \

@@ -3,7 +3,7 @@ FROM debian:jessie
 MAINTAINER inhere<cloud798@126.com>
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-COPY data/resources/debian8.sources    /etc/apt/sources.list
+COPY data/resources/debian8.sources /etc/apt/sources.list
 
 # manual install :
 #   1 . install depends library
@@ -22,18 +22,16 @@ RUN cd /tmp && tar -zxvf gearmand.tar.gz \
     && make \
     && make install
 
-# install from repo
-# in the php container: `apt-get install -y php5-gearman` or use `pecl install gearman`
-# RUN apt-get update && apt-get install -y gearman-job-server
-
 RUN ldconfig \
-    && mkdir /usr/local/var \
-    && mkdir /usr/local/var/log \
+    && mkdir -p /usr/local/var/log \
     && touch /usr/local/var/log/gearmand.log \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-    && gearmand -V && echo "   Gearman Installed."
+    && gearmand -V && echo "   \n    Gearman Install Successful.\n"
 
 VOLUME /data
 
+# Open persistent queue for product env.
+# CMD gearmand -q libsqlite3 --libsqlite3-db /persistent-data.db3 -l /usr/local/var/log/gearmand.log
+
+# If use for local test.
 CMD gearmand -l /dev/stdout
-# CMD gearmand --log-file=/usr/local/var/log/gearmand.log

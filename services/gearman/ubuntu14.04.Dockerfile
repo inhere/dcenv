@@ -1,11 +1,11 @@
 FROM ubuntu:14.04
-# from thenotable/ubuntu-gearman
 
 MAINTAINER inhere<cloud798@126.com>
 
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/ubuntu14.04.sources  /etc/apt/sources.list
 
+# Install Gearman Dependency Library
 RUN apt-get update && apt-get install -y \
     build-essential binutils-doc libboost-all-dev \
     software-properties-common \
@@ -15,24 +15,21 @@ RUN apt-get update && apt-get install -y \
     && ldconfig
 
 # Install Gearman Job Server
-RUN cd /tmp \
-    && wget https://launchpad.net/gearmand/1.2/1.1.12/+download/gearmand-1.1.12.tar.gz \
-    && tar xzf gearmand-1.1.12.tar.gz \
-    && cd gearmand-1.1.12 && ./configure && make && make install \
-    && mkdir /usr/local/var \
-    && mkdir /usr/local/var/log \
+COPY data/packages/gearmand-1.1.12.tar.gz /tmp/gearmand.tar.gz
+RUN cd /tmp && tar xzf gearmand-1.1.12.tar.gz \
+    && cd gearmand-1.1.12 \
+    && ./configure && make && make install \
+    && mkdir -p /usr/local/var/log \
     && touch /usr/local/var/log/gearmand.log \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
-    && gearmand -V && echo "   Gearman Installed."
+    && gearmand -V && echo "   \n    Gearman Install Successful.\n"
 
 VOLUME /data
 
-# RUN
-#RUN usermod -u 1000 gearman
-
 EXPOSE 4730
 
-# CMD "gearmand"
+# open persistent queue for product env.
+# CMD gearmand -q libsqlite3 --libsqlite3-db /persistent-data.db3 -l /usr/local/var/log/gearmand.log
+
+# if use for local test.
 CMD gearmand -l /dev/stdout
-# CMD gearmand --log-file=/usr/local/var/log/gearmand.log
-# CMD gearmand -q libsqlite3 --libsqlite3-db /var/lib/gearman/data.sqlite3 -l /dev/stdout
