@@ -1,0 +1,40 @@
+#
+# multi machine
+# 多机器的redis集群
+# 依据官网介绍，最低部署6个redis节点，为3主3从。
+# 3台物理机每台都创建2个redis节点（一主一从）
+#
+
+version: '2'
+services:
+  redis_1:
+    build:
+      context: .
+      dockerfile: ./redis/cluster.Dockerfile
+    volumes:
+      - ./data/volumes/redis-cluster/redis_1:/data
+    ports:
+      - "7000:7000"
+      - "7001:7001"
+
+  redis_2:
+    build:
+      context: .
+      dockerfile: ./redis/cluster.Dockerfile
+    volumes:
+      - ./data/volumes/redis-cluster/redis_2:/data
+    ports:
+      - "7002:7002"
+      - "7003:7003"
+
+  redis_3:
+    build:
+      context: .
+      dockerfile: ./redis/cluster.Dockerfile
+    volumes:
+      - ./data/volumes/redis-cluster/redis_3:/data
+    ports:
+      - "7004:7004"
+      - "7005:7005"
+
+

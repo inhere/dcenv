@@ -1,0 +1,18 @@
+# redis
+
+## single machine sluster
+
+配置： `single-machine-cluster.Dockerfile`
+
+单机器多实例的redis集群
+创建6个redis实例，3主3从
+
+------------------Container---------------------
+|    ......
+|    : M 
+|
+|
+|
+|
+|
+|
