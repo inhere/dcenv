@@ -6,18 +6,18 @@ MAINTAINER inhere<cloud798@126.com>
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/debian8.sources /etc/apt/sources.list
 
+# Instal redis cluster toool
 RUN apt-get update && apt-get install ruby rubygem \
-    gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ \
-    gem sources -l && gem install redis \
-    # create redis config directory. e.g: /etc/redis/6379.conf /etc/redis/6380.conf
-    mkdir /etc/redis
-
-VOLUME [ "/data", "/etc/redis" ]
-
-# simple add a slave redis instance
-CMD redis-server --port 6379 && redis-server --port 6380 --slaveof 127.0.0.1 6379 \
-    redis-server --port 6381 && redis-server --port 6382 --slaveof 127.0.0.1 6381 \
-    redis-server --port 6383 && redis-server --port 6384 --slaveof 127.0.0.1 6383 \
+    && gem sources --add https://gems.ruby-china.org/ --remove https://rubygems.org/ \
+    && gem sources -l && gem install redis
 
 # use config for add a slave instance
-# CMD redis-server /etc/redis/6379.conf && redis-server /etc/redis/6380.conf
+COPY services/redis/scripts/master-slave-by-conf.sh /bin/redis-start.sh
+
+RUN chmod a+x /bin/redis-start.sh && mkdir /etc/redis /var/log/redis
+
+# EXPOSE 6379
+
+VOLUME [ "/data", "/etc/redis" , "/var/log/redis" ]
+
+CMD redis-start.sh

@@ -35,6 +35,8 @@ reference [通过Gearman实现MySQL到Redis的数据复制](http://avnpc.com/pag
 ## gearman 启动示例
 
 ```
+gearmand -l /dev/stdout
+// 输出日志到文件
 gearmand --pid-file=/var/run/gearmand/gearmand.pid --user=gearmand --daemon --log-file=/var/log/gearmand/gearmand.log 
 ```
 

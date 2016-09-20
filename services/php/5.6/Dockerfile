@@ -4,7 +4,7 @@ MAINTAINER inhere<cloud798@126.com>
 
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-ADD data/resources/debian8.sources    /etc/apt/sources.list
+COPY data/resources/debian8.sources    /etc/apt/sources.list
 
 # extions
 
@@ -78,7 +78,7 @@ RUN docker-php-source delete \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/* \
     && echo 'PHP 5.6 installed.'
 
-ADD data/packages/php-tools/composer.phar /usr/local/bin/composer
+COPY data/packages/php-tools/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
 
 WORKDIR "/var/www"
