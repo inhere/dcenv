@@ -12,7 +12,7 @@ VOLUME [ "/data", "/var/log/gearmand"]
 EXPOSE 4730
 
 # open persistent queue for produce env.
-# CMD gearmand -q libsqlite3 --libsqlite3-db /persistent-data.db3 -l /usr/local/var/log/gearmand.log
+# CMD gearmand -q libsqlite3 --libsqlite3-db /persistent-data.db3 -l /var/log/gearmand/gearmand.log
 
 # if use for local test.
 CMD gearmand -l /dev/stdout

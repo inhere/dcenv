@@ -30,7 +30,7 @@ RUN mkdir -p /var/log/gearmand && touch /var/log/gearmand/gearmand.log \
 VOLUME [ "/data", "/var/log/gearmand"]
 
 # Open persistent queue for produce env.
-# CMD gearmand -q libsqlite3 --libsqlite3-db /persistent-data.db3 -l /usr/local/var/log/gearmand.log
+# CMD gearmand -q libsqlite3 --libsqlite3-db /persistent-data.db3 -l /var/log/gearmand/gearmand.log
 
 # If use for local test.
 CMD gearmand -l /dev/stdout
