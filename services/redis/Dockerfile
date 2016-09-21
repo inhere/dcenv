@@ -11,11 +11,15 @@ MAINTAINER inhere<cloud798@126.com>
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/debian8.sources  /etc/apt/sources.list
 
+# download a redis package
+RUN wget -c http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz \
+    -O /usr/src/redis-${REDIS_VERSION}.tar.gz
+
 # simple add a slave redis instance
-COPY services/redis/scripts/master-slave-by-cmd.sh /bin/redis-start.sh
+# COPY services/redis/scripts/master-slave-by-cmd.sh /bin/redis-start.sh
 
 # can also, use config for add a slave instance
-# COPY services/redis/scripts/master-slave-by-conf.sh /bin/redis-start.sh
+COPY services/redis/scripts/master-slave-by-conf.sh /bin/redis-start.sh
 
 RUN chmod a+x /bin/redis-start.sh && mkdir /etc/redis /var/log/redis
 

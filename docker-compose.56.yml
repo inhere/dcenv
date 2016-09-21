@@ -17,23 +17,20 @@ services:
       - "11211:11211"
 
   redis:
-    image: redis
+    extends:
+      file: ./compose.common.yml
+      service: redis
     container_name: inhere-redis
-    volumes:
-      - ./data/volumes/redis-latest:/data
     ports:
       - "6379:6379"
 
   gearman:
-    build:
-      context: .
-      dockerfile: ./services/gearman/Dockerfile
+    extends:
+      file: ./compose.common.yml
+      service: gearman
     container_name: inhere-gearman
     ports:
        - "4730:4730"
-    volumes:
-      - ./data/volumes/gearman-latest:/data
-      - ./logs/gearman:/var/log/gearmand
 
   elasticsearch:
     image: elasticsearch
@@ -46,11 +43,8 @@ services:
 
   webserver:
     extends:
-      file: ./services/compose.common.yml
+      file: ./compose.common.yml
       service: webserver
-    build:
-      context: .
-      dockerfile: ./services/nginx/Dockerfile
     container_name: inhere-webserver
     links:
       - webapp:webapp
@@ -63,11 +57,8 @@ services:
 
   webapp:
     extends:
-      file: ./services/compose.common.yml
+      file: ./compose.common.yml
       service: webapp
-    build:
-      context: .
-      dockerfile: ./services/php/5.6/Dockerfile
     container_name: inhere-webapp
     links:
       - mysql:mysql
