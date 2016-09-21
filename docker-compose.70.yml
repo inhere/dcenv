@@ -36,7 +36,7 @@ services:
       - "4730:4730"
     volumes:
       - ./data/volumes/gearman-latest:/data
-      - ./logs/gearman:/usr/local/var/log
+      - ./logs/gearman:/var/log/gearmand
 
   elasticsearch:
     extends:
