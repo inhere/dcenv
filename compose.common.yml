@@ -34,21 +34,22 @@ services:
   redis:
     image: redis
     container_name: redis
-    # volumes:
-    #   - ./data/volumes/redis-latest:/data
+    volumes:
+      - ./data/volumes/redis-latest:/data
+      - ./conf/redis:/etc/redis
     # ports:
     #   - "6379:6379"
 
-  # gearman:
-    # build:
-    #   context: .
-    #   dockerfile: ./gearman/Dockerfile
-    # container_name: gearman
+  gearman:
+    build:
+      context: .
+      dockerfile: ./services/gearman/Dockerfile
+    container_name: gearman
+    volumes:
+      - ./data/volumes/gearman-latest:/data
+      - ./logs/gearmand:/var/log/gearmand
     # ports:
     #   - "4730:4730"
-    # volumes:
-    #   - ./data/volumes/gearman-latest:/data
-    #   - ./logs/gearman:/usr/local/var/log
 
   elasticsearch:
     image: elasticsearch
@@ -69,10 +70,10 @@ services:
     #   - "5672:5672"
 
   webserver:
-    # build:
-    #   context: .
-    #   #dockerfile: ./nginx/alpine/Dockerfile
-    #   dockerfile: ./nginx/Dockerfile
+    build:
+      context: .
+      #dockerfile: ./services/nginx/alpine/Dockerfile
+      dockerfile: ./services/nginx/Dockerfile
     container_name: webserver
     ports:
       - "80:80"
@@ -80,17 +81,19 @@ services:
     # links:
     #   - webapp:webapp
     volumes:
-      - ./../www:/var/www
-      - ./../vhosts:/etc/nginx/conf.d
-      - ./../logs/nginx:/var/log/nginx
+      - ./www:/var/www
+      - ./conf/vhosts:/etc/nginx/conf.d
+      - ./logs/nginx:/var/log/nginx
 
   webapp:
-    # build:
-    #   context: .
-    #   # dockerfile: ./php/7.0/alpine/Dockerfile
-    #   # dockerfile: ./php/7.0/Dockerfile
-    #   dockerfile: ./php/5.6/Dockerfile
+    build:
+      context: .
+      # dockerfile: ./services/php/7.0/alpine/Dockerfile
+      # dockerfile: ./services/php/7.0/Dockerfile
+      dockerfile: ./services/php/5.6/Dockerfile
     container_name: webapp
+    volumes:
+      - ./www:/var/www
     ports:
       - "9000:9000"
     # the links can not be extended.
@@ -102,6 +105,4 @@ services:
     #   - redis:redis
     #   - rabbitmq:rabbitmq
     #   - elasticsearch:elasticsearch
-    volumes:
-      - ./../www:/var/www
 
