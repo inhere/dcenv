@@ -15,7 +15,8 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 
 # download a redis package
 RUN wget -c http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz \
-    -O /usr/src/redis-${REDIS_VERSION}.tar.gz
+    -O /usr/src/redis-${REDIS_VERSION}.tar.gz \
+    && mkdir /etc/redis /var/log/redis /var/tools
 
 # simple add a slave redis instance
 # COPY services/redis/scripts/master-slave-by-cmd.sh /var/tools/redis-start.sh
@@ -26,7 +27,7 @@ COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
 # tools
 COPY services/redis/scripts/install-RedisLive.sh /var/tools/install-RedisLive.sh
 
-RUN mkdir /etc/redis /var/log/redis /var/tools && chmod a+x /var/tools/*
+RUN chmod a+x /var/tools/*
 
 # EXPOSE 6379 6380
 
