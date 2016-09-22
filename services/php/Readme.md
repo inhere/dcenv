@@ -1,9 +1,15 @@
 # PHP service
 
-## 扩展
+## 额外扩展
 
 ```
-
+memcache
+memcached
+redis
+gearman -- 队列任务处理
+seaslog -- 日志扩展
+xhprof -- 性能分析
+xdebug -- 调试工具
 ```
 
 - add composer tool
