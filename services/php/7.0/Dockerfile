@@ -36,6 +36,7 @@ RUN apt-get install -y \
     && pecl install gearman && docker-php-ext-enable gearman \
 
     # no dependency
+    && pecl install seaslog && docker-php-ext-enable seaslog \
     && pecl install xdebug && docker-php-ext-enable xdebug \
     && pecl install redis && docker-php-ext-enable redis \
     # && pecl install xhprof && docker-php-ext-enable xhprof
