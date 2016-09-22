@@ -19,10 +19,10 @@ services:
       - redis:redis
       - elasticsearch:elasticsearch
     volumes:
-      - /Users/php-dockerized/www:/var/www
-      - /Users/php-dockerized/vhosts:/etc/nginx/conf.d
-      - /Users/php-dockerized/logs/supervisor:/var/log/supervisor
-      - /Users/php-dockerized/logs/nginx:/var/log/nginx
+      - /Users/dockerenv/www:/var/www
+      - /Users/dockerenv/vhosts:/etc/nginx/conf.d
+      - /Users/dockerenv/logs/supervisor:/var/log/supervisor
+      - /Users/dockerenv/logs/nginx:/var/log/nginx
 
   mysql:
     image: mysql:5.6
@@ -30,7 +30,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - /Users/php-dockerized/data/volumes/mysql-56:/var/lib/mysql
+      - /Users/dockerenv/data/volumes/mysql-56:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
 
@@ -44,14 +44,14 @@ services:
     image: redis
     container_name: ug-redis
     volumes:
-      - /Users/php-dockerized/data/volumes/redis-latest:/data
+      - /Users/dockerenv/data/volumes/redis-latest:/data
     ports:
       - "6379:6379"
 
   gearman:
     build:
       context: .
-      dockerfile: ./services/gearman/Dockerfile
+      dockerfile: ./gearman/Dockerfile
     container_name: gearman
     ports:
       - "4730:4730"
@@ -63,7 +63,7 @@ services:
     image: elasticsearch
     container_name: ug-es
     volumes:
-      - /Users/php-dockerized/data/volumes/es-latest:/usr/share/elasticsearch/data
+      - /Users/dockerenv/data/volumes/es-latest:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"

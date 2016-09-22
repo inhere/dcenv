@@ -32,7 +32,10 @@ services:
     #   - "11211:11211"
 
   redis:
-    image: redis
+    # image: redis
+    build:
+      context: .
+      dockerfile: ./services/redis/Dockerfile
     container_name: redis
     volumes:
       - ./data/volumes/redis-latest:/data

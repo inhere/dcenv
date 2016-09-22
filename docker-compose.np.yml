@@ -7,7 +7,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: ./services/nginx-php/5.6/Dockerfile
+      dockerfile: ./nginx-php/5.6/Dockerfile
     container_name: inhere-web
     ports:
       - "80:80"
