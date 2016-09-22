@@ -196,9 +196,15 @@ mysql:
 > 挂载点 `Users` 好像不能随意命名，否则可能会挂载不成功 
 看这篇[文章](http://blog.csdn.net/jam_lee/article/details/40947429) 说是有几个固定的挂载点才可以用
 
-## 推荐php库
+## 推荐库
 
-### GearmanManager
+### RedisLive (python)
+
+redis 运行监控工具
+
+在 `services/redis/scripts/` 提供了安装脚本 `install-RedisLive.sh`
+
+### GearmanManager(php)
 
 [GearmanManager](https://github.com/brianlmoon/GearmanManager)
 
@@ -212,6 +218,18 @@ mysql:
 php 的redis客户端，提供更方便丰富的redis操作
 
 [nrk/predis](https://github.com/nrk/predis)
+
+### solariumphp/solarium
+
+[solariumphp/solarium](https://github.com/solariumphp/solarium)
+
+搜索引擎solr的php客户端
+
+### elastic/elasticsearch-php
+
+[elastic/elasticsearch-php](https://github.com/elastic/elasticsearch-php)
+
+搜索引擎elasticsearch的官方php客户端
 
 ## License
 

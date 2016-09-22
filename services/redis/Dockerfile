@@ -7,6 +7,8 @@ FROM redis
 
 MAINTAINER inhere<cloud798@126.com>
 
+ENV PATH /var/tools:$PATH
+
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/debian8.sources  /etc/apt/sources.list
@@ -16,12 +18,15 @@ RUN wget -c http://download.redis.io/releases/redis-${REDIS_VERSION}.tar.gz \
     -O /usr/src/redis-${REDIS_VERSION}.tar.gz
 
 # simple add a slave redis instance
-# COPY services/redis/scripts/master-slave-by-cmd.sh /bin/redis-start.sh
+# COPY services/redis/scripts/master-slave-by-cmd.sh /var/tools/redis-start.sh
 
 # can also, use config for add a slave instance
-COPY services/redis/scripts/master-slave-by-conf.sh /bin/redis-start.sh
+COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
 
-RUN chmod a+x /bin/redis-start.sh && mkdir /etc/redis /var/log/redis
+# tools
+COPY services/redis/scripts/install-RedisLive.sh /var/tools/install-RedisLive.sh
+
+RUN mkdir /etc/redis /var/log/redis /var/tools && chmod a+x /var/tools/*
 
 # EXPOSE 6379 6380
 

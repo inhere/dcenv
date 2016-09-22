@@ -1,5 +1,6 @@
 #!/bin/bash
 #
+# file: install-RedisLive.sh
 # install redis monitor tool: RedisLive
 #
 
