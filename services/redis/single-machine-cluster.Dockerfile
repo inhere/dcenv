@@ -14,7 +14,10 @@ RUN apt-get update && apt-get install ruby rubygem \
     && gem sources -l && gem install redis
     && mkdir /etc/redis /var/log/redis /var/tools
 
+# copy tools
+COPY services/redis/tools /var/tools
 COPY services/redis/scripts/single-machine-sluster.sh /var/tools/redis-start.sh
+
 # NOTICE: must be create dir before start the redis-server
 mkdir /data/7001 /data/7002 /data/7003 /data/7004 /data/7005 /data/7006
 
