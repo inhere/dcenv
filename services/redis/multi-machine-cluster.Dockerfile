@@ -14,7 +14,8 @@ RUN apt-get update && apt-get install ruby rubygem \
     && gem sources -l && gem install redis \
     && mkdir /etc/redis /var/log/redis /var/tools
 
-# use config for add a slave instance
+# copy tools
+COPY services/redis/tools /var/tools
 COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
 
 # NOTICE: must be create dir before start the redis-server
