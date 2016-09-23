@@ -40,6 +40,7 @@ services:
     volumes:
       - ./data/volumes/redis-latest:/data
       - ./conf/redis:/etc/redis
+      - ./logs/redis:/var/log/redis
     # ports:
     #   - "6379:6379"
 
@@ -65,10 +66,15 @@ services:
 
   kibana:
     image: kibana
+    container_name: kibana
     ports:
       - 5601:5601
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+
+  logstash:
+    image: logstash
+    container_name: logstash
 
   rabbitmq:
     image: rabbitmq:management

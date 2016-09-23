@@ -1,34 +1,59 @@
 version: '2'
 services:
+  web:
+    build:
+      context: .
+      dockerfile: ./services/nginx-php/5.6/Dockerfile
+    container_name: ug-web
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9000:9000"
+    links:
+      - mysql:mysql
+      - redis:redis
+      - memcached:memcached
+      - gearman:gearman
+      - elasticsearch:elasticsearch
+    volumes:
+      - ./www:/var/www
+      - ./vhosts:/etc/nginx/conf.d
+      - ./logs/supervisor:/var/log/supervisor
+      - ./logs/nginx:/var/log/nginx
+
   mysql:
-    image: mysql
-    container_name: inhere-mysql
+    image: mysql:5.6
+    container_name: ug-mysql
     ports:
       - "3306:3306"
     volumes:
-      - ./data/volumes/mysql-latest:/var/lib/mysql
+      - ./data/volumes/mysql-56:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: password
 
   memcached:
     image: memcached
-    container_name: inhere-mem
+    container_name: ug-mem
     ports:
       - "11211:11211"
 
   redis:
-    image: redis
-    container_name: inhere-redis
+    build:
+      context: .
+      dockerfile: ./services/redis/Dockerfile
+    container_name: ug-redis
     volumes:
       - ./data/volumes/redis-latest:/data
+      - ./conf/redis:/etc/redis
+      - ./logs/redis:/var/log/redis
     ports:
       - "6379:6379"
 
   gearman:
     build:
       context: .
-      dockerfile: ./gearman/Dockerfile
-    container_name: inhere-gearman
+      dockerfile: ./services/gearman/Dockerfile
+    container_name: ug-gearman
     ports:
        - "4730:4730"
     volumes:
@@ -37,47 +62,10 @@ services:
 
   elasticsearch:
     image: elasticsearch
-    container_name: inhere-es
+    container_name: ug-es
     volumes:
       - ./data/volumes/es-latest:/usr/share/elasticsearch/data
     ports:
       - "9200:9200"
       - "9300:9300"
-
-  webserver:
-    extends:
-      file: ./compose.common.yml
-      service: webserver
-    build:
-      context: .
-      dockerfile: ./nginx/Dockerfile
-    container_name: inhere-webserver
-    links:
-      - webapp:webapp
-    volumes:
-      # custom difine the www directory.
-      # - ./www:/var/www
-      - ~/Workspace/php:/var/www
-      - ./vhosts:/etc/nginx/conf.d
-      - ./logs/nginx:/var/log/nginx
-
-  webapp:
-    extends:
-      file: ./compose.common.yml
-      service: webapp
-    build:
-      context: .
-      dockerfile: ./php/5.6/Dockerfile
-    container_name: inhere-webapp
-    links:
-      - mysql:mysql
-      - redis:redis
-      - memcached:memcached
-      - gearman:gearman
-      - elasticsearch:elasticsearch
-    volumes:
-      # custom difine the www directory.
-      # - ./www:/var/www
-      - ~/Workspace/php:/var/www
-
 
