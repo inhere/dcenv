@@ -38,14 +38,15 @@ services:
       - "11211:11211"
 
   redis:
-    build:
-      context: .
-      dockerfile: ./services/redis/Dockerfile
+    image: redis
+    # build:
+    #   context: .
+    #   dockerfile: ./services/redis/Dockerfile
     container_name: ug-redis
     volumes:
       - ./data/volumes/redis-latest:/data
-      - ./conf/redis:/etc/redis
-      - ./logs/redis:/var/log/redis
+      # - ./conf/redis:/etc/redis
+      # - ./logs/redis:/var/log/redis
     ports:
       - "6379:6379"
 

@@ -15,8 +15,11 @@ RUN apt-get update && apt-get install ruby rubygem \
     && mkdir /etc/redis /var/log/redis /var/tools
 
 COPY services/redis/scripts/single-machine-sluster.sh /var/tools/redis-start.sh
+# NOTICE: must be create dir before start the redis-server
+mkdir /data/7001 /data/7002 /data/7003 /data/7004 /data/7005 /data/7006
+
 RUN chmod a+x /var/tools/*
 
 VOLUME [ "/data", "/etc/redis" , "/var/log/redis" ]
 
-CMD redis-start.sh
+ENTRYPOINT redis-start.sh

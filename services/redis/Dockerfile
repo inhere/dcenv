@@ -32,10 +32,13 @@ COPY data/resources/redis /etc/redis
 # can also, use config for add a slave instance
 COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
 
+# NOTICE: must be create dir before start the redis-server
+RUN mkdir /data/6379 /data/6380
+
 # tools
 COPY services/redis/scripts/install-RedisLive.sh /var/tools/install-RedisLive.sh
 
-RUN chmod a+x /var/tools/* \
+RUN chmod a+x /var/tools/* && chown -R redis:redis /etc/redis/* \
     # && echo never > /sys/kernel/mm/transparent_hugepage/enabled \
     && echo "# add by inhere \nvm.overcommit_memory = 1" >> /etc/sysctl.conf
 
@@ -43,4 +46,4 @@ RUN chmod a+x /var/tools/* \
 
 VOLUME [ "/data", "/etc/redis" , "/var/log/redis" ]
 
-CMD redis-start.sh
+ENTRYPOINT redis-start.sh
