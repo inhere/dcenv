@@ -71,11 +71,12 @@ RUN chmod 755 /usr/local/bin/composer
 COPY services/nginx-php/conf/nginx.conf /etc/nginx/
 COPY services/nginx-php/conf/supervisord.conf /etc/supervisor/conf.d/
 COPY services/nginx-php/php-custom.ini /etc/php5/fpm/conf.d/40-custom.ini
-COPY data/resources/vhosts/default.conf /etc/nginx/conf.d/default.conf
+
+# COPY data/resources/vhosts/default.conf /etc/nginx/conf.d/default.conf
 
 # Close port listen, enable unix sock listen
-RUN sed -i '/^\s*# fastcgi_pass unix\s*/s/# //g' /etc/nginx/conf.d/default.conf \
-    && sed -i '/\s*fastcgi_pass webapp/s/\s*f/    # f/g' /etc/nginx/conf.d/default.conf
+# RUN sed -i '/^\s*# fastcgi_pass unix\s*/s/# //g' /etc/nginx/conf.d/default.conf \
+#     && sed -i '/\s*fastcgi_pass webapp/s/\s*f/    # f/g' /etc/nginx/conf.d/default.conf
 
 WORKDIR "/var/www"
 
