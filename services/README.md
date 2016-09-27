@@ -38,3 +38,27 @@ echo "deb-src http://mirrors.aliyun.com/debian-security/ jessie/updates main non
 COPY packages/redis.tgz /tmp/redis.tgz
 RUN pecl install /tmp/redis.tgz && echo "extension=redis.so" > /etc/php5/mods-available/redis.ini
 ```
+
+## supervisor 管理进程
+
+```
+[program:php-worker]
+process_name=%(program_name)s_%(process_num)02d
+command=php /home/forge/app.com/artisan queue:work sqs --sleep=3 --tries=3 --daemon
+autostart=true
+autorestart=true
+user=forge
+numprocs=8
+redirect_stderr=true
+stdout_logfile=/home/forge/app.com/worker.log
+```
+
+manager:
+
+```
+sudo supervisorctl reread
+
+sudo supervisorctl update
+
+sudo supervisorctl start php-worker:*
+```
