@@ -1,0 +1,157 @@
+#!/bin/bash
+#
+# gearman_worker manages gearman workers
+#
+# chkconfig: - 90 74
+# description: gearman worker
+
+### BEGIN INIT INFO
+# Provides: gearman_worker
+# Required-Start: $network $local_fs $remote_fs
+# Required-Stop: $network $local_fs $remote_fs
+# Should-Start: $syslog $named ntpdate
+# Should-Stop: $syslog $named
+# Short-Description: start and stop gearman_worker
+# Description: gearman worker
+### END INIT INFO
+
+# Source function library.
+. /etc/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Source profile so that we get all the env vars
+. /etc/profile
+
+pid_file="/var/run/gearman-worker.pid"
+prog="php /var/www/html/bin/german-manager.php -d -P $pid_file"
+
+
+PATH=/sbin:/bin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+
+RETVAL=0
+
+is_running(){
+  [ -e $pid_file ]
+}
+
+is_deploying(){
+  [ -f /tmp/deployment-in-progress ]
+}
+
+start(){
+    echo -n $"Starting $prog: "
+    unset HOME MAIL USER USERNAME
+
+    echo $"Checking if deployment in progress ..."
+    if (is_deploying); then
+      echo " ... deployment in progress, unable to start, exiting"
+      exit 1;
+    fi
+
+    if (is_running); then
+      echo
+      echo $"$pid_file still exists ... "
+      echo -n " ... waiting "
+
+      counter=0
+      while (is_running); do
+        sleep 1
+        echo -n "."
+        let counter++
+        if [[ "$counter" -gt 15 ]]; then
+          echo
+          echo "ERROR: unable to start $pid_file still exists, exiting"
+          exit 1
+        fi
+      done
+    fi
+
+    $prog
+    RETVAL=$?
+    echo
+    return $RETVAL
+}
+
+stop(){
+    echo -n $"Stopping $prog: "
+    if (is_running); then
+      PID=`cat $pid_file`
+      kill $PID
+      RETVAL=$?
+
+      if [ $RETVAL = 0 ]; then
+        # Wait for process to die
+        STILL_ALIVE=1
+
+        while [ ! -z "$STILL_ALIVE" ]; do
+          let i=i+1
+          if [ $i -gt 60 ]; then
+            break
+          fi
+
+          sleep 1
+          STILL_ALIVE=`ps -o pid -p $PID --no-headers`
+          echo " ... still waiting for gearman_workers ($PID) to stop: $i"
+        done
+      fi
+
+      echo
+      return $RETVAL
+    else
+      echo "$pid_file not found"
+    fi
+}
+
+status(){
+    echo -n $"Checking for $pid_file: "
+
+    if (is_running); then
+      echo "found"
+    else
+      echo "not found"
+    fi
+}
+
+reload(){
+    restart
+}
+
+restart(){
+    stop
+    start
+}
+
+condrestart(){
+    is_running && restart
+    return 0
+}
+
+
+# See how we were called.
+case "$1" in
+    start)
+  start
+  ;;
+    stop)
+  stop
+  ;;
+    status)
+  status
+  ;;
+    restart)
+  restart
+  ;;
+    reload)
+  reload
+  ;;
+    condrestart)
+  condrestart
+  ;;
+    *)
+  echo $"Usage: $0 {start|stop|status|restart|condrestart|reload}"
+  RETVAL=1
+esac
+
+exit $RETVAL
