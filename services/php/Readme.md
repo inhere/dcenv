@@ -58,3 +58,16 @@ service nginx reload
 - [workerman](https://github.com/walkor/workerman)
 - [workerman-statistics](https://github.com/walkor/workerman-statistics)
 - [swoole](https://github.com/swoole/swoole-src)
+
+## 工具
+
+### ab 压力测试
+
+安装
+
+```
+// ubuntu
+apt-get install apache2-utils
+// centos
+yum install httpd-tools
+```
