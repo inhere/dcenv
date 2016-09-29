@@ -52,3 +52,9 @@ service php-fpm reload
 
 service nginx reload
 ```
+
+## 库推荐
+
+- [workerman](https://github.com/walkor/workerman)
+- [workerman-statistics](https://github.com/walkor/workerman-statistics)
+- [swoole](https://github.com/swoole/swoole-src)
