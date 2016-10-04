@@ -76,6 +76,15 @@ services:
     image: logstash
     container_name: logstash
 
+  gogs:
+    image: gogs/gogs
+    container_name: gogs
+    # volumes:
+    #   - ./data/volumes/gogs:/var/gogs
+    # ports:
+    #   - "10022:22"
+    #   - "10080:3000"
+
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
