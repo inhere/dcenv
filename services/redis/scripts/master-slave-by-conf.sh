@@ -22,7 +22,7 @@ done
 
 if [[ $?==0 ]]; then
     echo "  Redis server [$PORT_LIST] start successful!"
-    echo "New, will run: tail -f /var/log/redis/$1.log"
+    echo "Now, will run: tail -f /var/log/redis/$1.log"
     tail -f /var/log/redis/$1.log
 else
     echo "  Redis server [$PORT_LIST] start failure!"

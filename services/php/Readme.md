@@ -3,6 +3,7 @@
 ## 更改时区
 
 ```
+Asia/Shanghai
 RUN sed -i "s/;date.timezone =.*/date.timezone = America\/New_York/" /etc/php5/fpm/php.ini
 RUN sed -i "s/;date.timezone =.*/date.timezone = America\/New_York/" /etc/php5/cli/php.ini
 ```

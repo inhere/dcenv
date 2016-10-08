@@ -8,7 +8,7 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install
-RUN apt-get update && apt-get -y install openssl vim curl telnet
+RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip
 
 RUN apt-get install -y \
     libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng12-dev \
@@ -58,7 +58,11 @@ RUN apt-get install -y \
 # open pid file
 RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.conf
 
-# Override configurtion
+## PHP Configuration
+## Override configurtion
+
+RUN echo "memory_limit=1024M" >> /usr/local/etc/php/conf.d/memory-limit.ini
+RUN echo "date.timezone=Asia/Shanghai" >> /usr/local/etc/php/conf.d/timezone.ini
 COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
 COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
