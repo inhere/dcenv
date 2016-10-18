@@ -23,17 +23,17 @@ RUN apt-get install -y \
 RUN apt-get install -y \
 
     # for memcache
-    zlib1g-dev \
+    # zlib1g-dev \
 
-    # for memcached
-    libmemcached-dev \
+    # for memcached 此php扩展不支持 php7
+    # libmemcached-dev \
 
-    # for gearman
-    libgearman-dev \
+    # for gearman 此php扩展不支持 php7
+    # libgearman-dev \
 
-    && pecl install memcache && docker-php-ext-enable memcache \
-    && pecl install memcached && docker-php-ext-enable memcached \
-    && pecl install gearman && docker-php-ext-enable gearman \
+    # && pecl install memcache && docker-php-ext-enable memcache \
+    # && pecl install memcached && docker-php-ext-enable memcached \
+    # && pecl install gearman && docker-php-ext-enable gearman \
 
     # no dependency
     && pecl install seaslog && docker-php-ext-enable seaslog \
