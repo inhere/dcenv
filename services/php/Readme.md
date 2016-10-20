@@ -20,12 +20,39 @@ xhprof -- 性能分析
 xdebug -- 调试工具
 ```
 
-- add composer tool
+## add composer tool
 
 ```
 ADD tools/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
 ```
+
+## some tool use
+
+###重新生成 composer autoload
+
+```
+composer up nothing
+```
+
+## internal api generate
+
+### 使用 apigen
+
+```
+$ ./vendor/bin/apigen.phar -V
+$ ./vendor/bin/apigen.phar generate --help
+$ ./vendor/bin/apigen.phar generate -s {source code dir} -d {doc generate dir}
+```
+
+### 使用phpDocumentor
+
+```
+$ ./vendor/bin/phpDocumentor.phar -V
+phpDocumentor version v2.9.0
+$ ./vendor/bin/phpDocumentor.phar run -d {source code dir} -t {doc generate dir}
+```
+
 
 - how to operate php-fpm by command
 

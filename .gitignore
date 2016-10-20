@@ -6,3 +6,4 @@
 vhosts
 /docker-compose.loc.yml
 /docker-compose.yml
+/www/default
