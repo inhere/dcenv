@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+中文文档：http://www.phpunit.cn/manual/5.6/zh_cn/index.html
+phpunit 元素的属性用于配置 PHPUnit 的核心功能。
+
+属性:
+  printerFile="/path/to/ResultPrinter.php"
+  testSuiteLoaderFile="/path/to/StandardTestSuiteLoader.php"
+  printerClass="PHPUnit_TextUI_ResultPrinter"
+  testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
+-->
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/5.3/phpunit.xsd"
+        backupGlobals="false"
+        backupStaticAttributes="false"
+        bootstrap="./tests/bootstrap.php"
+        cacheTokens="false"
+        colors="auto"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        forceCoversAnnotation="false"
+        mapTestClassNameToCoveredClassName="false"
+        printerClass="tests\CustomResultPrinter"
+        processIsolation="false"
+        stopOnError="true"
+        stopOnFailure="false"
+        stopOnIncomplete="false"
+        stopOnSkipped="false"
+        stopOnRisky="false"
+        testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
+        timeoutForSmallTests="1"
+        timeoutForMediumTests="10"
+        timeoutForLargeTests="60"
+        verbose="true"
+        debug="true"
+>
+    <php>
+        <ini name="error_reporting" value="-1"/>
+        <!--<env name="DB_DSN" value="mysql:dbname=countinterfacetest;host=10.0.0.19"/>-->
+        <!--<env name="DB_USER" value="gameva"/>-->
+        <!--<env name="DB_PWD" value="123456"/>-->
+        <!--<var name="DB_USER" value="user" />-->
+    </php>
+
+    <testsuites>
+        <testsuite name="Demo-Test-Suite">
+            <directory>./tests/example</directory>
+        </testsuite>
+
+        <testsuite name="Redis-Unit-Test-Suite">
+            <directory>./tests/unit/redis</directory>
+        </testsuite>
+    </testsuites>
+
+    <!-- filter 元素及其子元素用于配置代码覆盖率报告所使用的白名单。 -->
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./vendor/ugirls/ugirls/redis</directory>
+            <directory suffix=".php">./vendor/ugirls/ugirls/enums</directory>
+            <directory suffix=".php">./vendor/ugirls/ugirls/utils</directory>
+            <!--<file>/path/to/file</file>-->
+            <exclude>
+                <directory suffix=".php">./vendor/ugirls/ugirls/src</directory>
+                <file>./vendor/ugirls/ugirls/utils/UgBase.php</file>
+                <file>./vendor/ugirls/ugirls/utils/Collection.php</file>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <!-- logging 元素及其 log 子元素用于配置测试执行期间的日志记录。-->
+    <logging>
+        <!-- <log type="coverage-html" target="./tests/temp/report" lowUpperBound="35" highLowerBound="70"/> -->
+        <!--<log type="coverage-clover" target="./tests/temp/coverage.xml"/>-->
+        <!--<log type="coverage-php" target="./tests/temp/coverage.serialized"/>-->
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
+        <!--<log type="json" target="./tests/temp/logfile.json"/>-->
+        <log type="tap" target="./tests/temp/logfile.tap"/>
+        <!--<log type="junit" target="./tests/temp/logfile.xml" logIncompleteSkipped="false"/>-->
+        <log type="testdox-html" target="./tests/temp/testdox.html"/>
+        <!--<log type="testdox-text" target="./tests/temp/testdox.txt"/>-->
+    </logging>
+
+    <!-- listeners 元素及其 listener 子元素用于在测试执行期间附加额外的测试监听器 -->
+    <listeners>
+        <!--<listener class="\\tests\\SimpleTestListener" file="./tests/SimpleTestListener.php">-->
+        <listener class="\tests\SimpleTestListener">
+            <arguments>
+                <array>
+                    <element key="0">
+                        <string>Sebastian</string>
+                    </element>
+                    <element key="author">
+                        <string>Inhere</string>
+                    </element>
+                </array>
+                <integer>22</integer>
+                <string>string</string>
+                <double>19.78</double>
+                <null/>
+                <object class="stdClass"/>
+            </arguments>
+        </listener>
+    </listeners>
+</phpunit>

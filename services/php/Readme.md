@@ -29,7 +29,16 @@ RUN chmod 755 /usr/local/bin/composer
 
 ## some tool use
 
-###重新生成 composer autoload
+### 工具列表
+
+- composer 包管理
+- phpunit 单元测试
+- phpmd 代码检查
+- apigen API文档生成
+- phpDocumentor API文档生成
+- sami API文档生成
+
+### 重新生成 composer autoload
 
 ```
 composer up nothing
@@ -53,6 +62,23 @@ phpDocumentor version v2.9.0
 $ ./vendor/bin/phpDocumentor.phar run -d {source code dir} -t {doc generate dir}
 ```
 
+### 使用 sami
+
+```
+$ ./vendor/bin/sami.phar -V
+ 
+// The parse command parses a project and generates a database
+$ php ./vendor/bin/sami.phar parse config/symfony.php
+
+// The render command renders a project as a static set of HTML files
+$ php ./vendor/bin/sami.phar render config/symfony.php
+```
+
+use:
+
+```
+$ php ./vendor/bin/sami.phar update build/sami.conf.php
+```
 
 - how to operate php-fpm by command
 
