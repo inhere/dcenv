@@ -18,10 +18,10 @@ services:
       - redis:redis
       - memcached:memcached
       - gearman:gearman
-      - elasticsearch:elasticsearch
+      # - elasticsearch:elasticsearch
     volumes:
       - ./www:/var/www
-      - ./vhosts:/etc/nginx/conf.d
+      - ./conf/vhosts:/etc/nginx/conf.d
       - ./logs/supervisor:/var/log/supervisor
       - ./logs/nginx:/var/log/nginx
 
@@ -57,12 +57,4 @@ services:
     ports:
        - "4730:4730"
 
-  elasticsearch:
-    image: elasticsearch
-    container_name: inhere-es
-    volumes:
-      - ./data/volumes/es-latest:/usr/share/elasticsearch/data
-    ports:
-      - "9200:9200"
-      - "9300:9300"
 
