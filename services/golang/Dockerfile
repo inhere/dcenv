@@ -6,8 +6,8 @@ RUN { echo "http://mirrors.aliyun.com/alpine/latest-stable/main"; \
     echo "http://mirrors.aliyun.com/alpine/edge/testing/"; \
     echo "http://mirrors.aliyun.com/alpine/edge/community/"; } \
     | tee /etc/apk/repositories \
-    && apk update && apk add git \
-    && git clone https://github.com/Masterminds/glide $GOPATH/src/github.com/Masterminds/glide \
-    && cd $GOPATH/src/github.com/Masterminds/glide && go install glide
+    && apk update && apk add git curl
+
+RUN curl https://glide.sh/get | sh
 
 VOLUME ["/go"]
