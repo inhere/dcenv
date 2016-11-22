@@ -1,0 +1,12 @@
+version: '2'
+services:
+  go-env:
+    image: inhere:go-env
+    # build:
+    #   context: ../../../
+    #   dockerfile: ./Dockerfile
+    container_name: go-env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./www:/var/www

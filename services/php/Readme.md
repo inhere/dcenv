@@ -37,6 +37,7 @@ RUN chmod 755 /usr/local/bin/composer
 - apigen API文档生成
 - phpDocumentor API文档生成
 - sami API文档生成
+- [deployer](https://deployer.org/releases/v4.0.1/deployer.phar) 一个用PHP编写的部署工具支持流行的框架
 
 ### 重新生成 composer autoload
 
