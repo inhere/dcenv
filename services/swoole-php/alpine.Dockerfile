@@ -4,10 +4,10 @@ FROM alpine
 
 MAINTAINER inhere<cloud798@126.com>
 
-RUN { echo "http://mirrors.aliyun.com/alpine/alpine/latest-stable/main"; \
-    | echo "http://mirrors.aliyun.com/alpine/alpine/edge/testing/"; \
-    | echo "http://mirrors.aliyun.com/alpine/alpine/edge/community/"; } \
-    | tee /etc/apk/repositories \
+RUN { echo "http://mirrors.aliyun.com/alpine/latest-stable/main"; \
+    echo "http://mirrors.aliyun.com/alpine/edge/testing/"; \
+    echo "http://mirrors.aliyun.com/alpine/edge/community/"; } \
+    | tee /etc/apk/repositories  \
     && echo "nameserver 8.8.8.8" >> /etc/resolv.conf \
     && apk update && apk upgrade \
     && apk add php7 && apk add php7-opcache
