@@ -1,4 +1,4 @@
-# PHP Dockerized
+# Dockerenv
 
 >Form [kasperisager/php-dockerized](https://github.com/kasperisager/php-dockerized.git)
 
@@ -139,6 +139,33 @@ alias dockercleanc='docker rm $(docker ps -a -q)'
 # 删除所有未打标签的镜像.
 alias dockercleani='docker rmi $(docker images -q -f dangling=true)'
 ```
+
+- 添加 `.dockerignore` 文件
+
+推荐添加 `.dockerignore` 文件,定义忽略文件/夹
+
+因为 docker build 时会发送 `context` 目录的所有文件到 Docker daemon, 
+若context目录下有很多文件会造成花费时间很长，甚至程序卡死。
+
+e.g 
+
+```
+node_modules/
+.git/
+www/
+# data/
+logs/
+# tools/
+# services/
+Dockerfile
+*.Dockerfile
+*.tar.gz
+*.tgz
+*.zip
+*.md
+```
+
+> 注意：若文件夹中有文件被 Dockerfile 使用，则不能将此文件夹加入忽略，否则 docker 构建时会报找不到文件
 
 ## Questions - 问题
 

@@ -1,0 +1,15 @@
+# 定义忽略文件
+# 因为 docker build时会发送 context 目录的所有文件到 Docker daemon
+node_modules/
+.git/
+www/
+# data/
+logs/
+# tools/
+# services/
+Dockerfile
+*.Dockerfile
+*.tar.gz
+*.tgz
+*.zip
+*.md

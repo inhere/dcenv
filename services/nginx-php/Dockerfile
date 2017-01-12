@@ -6,7 +6,7 @@ MAINTAINER inhere<cloud798@126.com>
 # Build instructions
 ################################################################################
 
-ENV PHP_VERSION=5.6.24
+ENV PHP_VERSION=5.6.29
 ENV TIME_ZONE=Asia/Shanghai
 
 # Remove default nginx configs.
@@ -30,7 +30,8 @@ RUN apt-get update && apt-get install -my \
   # common 包含了大部分公共的扩展
   php5-cli php5-fpm php5-common \
 
-  php5-mysql php5-sqlite php5-mongo \
+  # 数据库驱动 php5-mysqlnd 比 php5-mysql 更好
+  php5-mysqlnd php5-sqlite php5-mongo \
 
   php5-mcrypt php5-gd php5-curl php5-ssh2 \
 
@@ -40,6 +41,8 @@ RUN apt-get update && apt-get install -my \
 
   # gearman job queue
   php5-gearman \
+
+  && pecl install swoole && echo "extension=swoole.so" > /etc/php5/mods-available/swoole.ini && php5enmod swoole
 
   && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 

@@ -8,6 +8,7 @@ FROM redis
 MAINTAINER inhere<cloud798@126.com>
 
 ENV PATH /var/tools:$PATH
+# ENV REDIS_DOWNLOAD_URL http://download.redis.io/releases/redis-3.2.6.tar.gz
 
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -18,7 +19,7 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 #     -O /usr/src/redis-${REDIS_VERSION}.tar.gz
 
 # add a redis package from local
-COPY data/packages/redis-3.2.3.tar.gz /usr/src/redis-3.2.3.tar.gz
+# COPY data/packages/redis-3.2.3.tar.gz /usr/src/redis-3.2.3.tar.gz
 
 # create directory
 RUN mkdir /etc/redis /var/log/redis /var/tools
