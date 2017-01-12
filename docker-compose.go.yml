@@ -1,0 +1,13 @@
+version: '2'
+services:
+  go-env:
+    image: inhere:goenv
+    command: tail -f /var/log/bootstrap.log
+    # build:
+    #   context: ../../../
+    #   dockerfile: ./Dockerfile
+    container_name: go-env
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./www/golang:/go

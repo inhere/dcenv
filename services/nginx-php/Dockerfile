@@ -7,6 +7,7 @@ MAINTAINER inhere<cloud798@126.com>
 ################################################################################
 
 ENV PHP_VERSION=5.6.24
+ENV TIME_ZONE=Asia/Shanghai
 
 # Remove default nginx configs.
 RUN rm -f /etc/nginx/conf.d/* \
@@ -16,6 +17,9 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 # Install packages
 RUN apt-get update && apt-get install -my \
   supervisor openssl curl wget \
+
+  # 安装tzdata安装包
+  tzdata \
 
   # 如果需要手动编译扩展就需要它
   php5-dev \
@@ -38,6 +42,10 @@ RUN apt-get update && apt-get install -my \
   php5-gearman \
 
   && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+
+#设置时区
+RUN echo "${TIME_ZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
 
 # Ensure that PHP5 FPM is run as root.
 RUN sed -i "s/user = www-data/user = root/" /etc/php5/fpm/pool.d/www.conf
