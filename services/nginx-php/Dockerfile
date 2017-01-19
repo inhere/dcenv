@@ -16,7 +16,7 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 
 # Install packages
 RUN apt-get update && apt-get install -my \
-  supervisor openssl curl wget \
+  supervisor openssl curl wget vim \
 
   # 安装tzdata安装包
   tzdata \
@@ -42,7 +42,8 @@ RUN apt-get update && apt-get install -my \
   # gearman job queue
   php5-gearman \
 
-  && pecl install swoole && echo "extension=swoole.so" > /etc/php5/mods-available/swoole.ini && php5enmod swoole
+  && pecl install swoole && echo "extension=swoole.so" > /etc/php5/mods-available/swoole.ini && php5enmod swoole \
+  && pecl install trace && echo "extension=trace.so" > /etc/php5/mods-available/trace.ini && php5enmod trace \
 
   && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
@@ -51,16 +52,16 @@ RUN echo "${TIME_ZONE}" > /etc/timezone \
   && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
 
 # Ensure that PHP5 FPM is run as root.
-RUN sed -i "s/user = www-data/user = root/" /etc/php5/fpm/pool.d/www.conf
-RUN sed -i "s/group = www-data/group = root/" /etc/php5/fpm/pool.d/www.conf
+RUN sed -i "s/user = www-data/user = root/" /etc/php5/fpm/pool.d/www.conf \
+    && sed -i "s/group = www-data/group = root/" /etc/php5/fpm/pool.d/www.conf
 
 # Pass all docker environment
 RUN sed -i '/^;clear_env = no/s/^;//' /etc/php5/fpm/pool.d/www.conf
 
 # Get access to FPM-ping page /ping
-RUN sed -i '/^;ping\.path/s/^;//' /etc/php5/fpm/pool.d/www.conf
-# Get access to FPM_Status page /status
-RUN sed -i '/^;pm\.status_path/s/^;//' /etc/php5/fpm/pool.d/www.conf
+RUN sed -i '/^;ping\.path/s/^;//' /etc/php5/fpm/pool.d/www.conf \
+   # Get access to FPM_Status page /status
+    && sed -i '/^;pm\.status_path/s/^;//' /etc/php5/fpm/pool.d/www.conf
 
 # Prevent PHP Warning: 'xdebug' already loaded.
 # XDebug loaded with the core
