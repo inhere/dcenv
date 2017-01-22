@@ -49,7 +49,8 @@ RUN apt-get update && apt-get install -my \
 
 #设置时区
 RUN echo "${TIME_ZONE}" > /etc/timezone \
-  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime
+  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
+  && sed -i 's/^# alias/alias/g' ~/.bashrc
 
 # Ensure that PHP5 FPM is run as root.
 RUN sed -i "s/user = www-data/user = root/" /etc/php5/fpm/pool.d/www.conf \

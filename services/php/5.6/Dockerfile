@@ -65,7 +65,8 @@ RUN apt-get install -y \
 #     && docker-php-ext-enable xcache
 
 # open pid file
-RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf
+RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf \
+    && sed -i 's/^# alias/alias/g' ~/.bashrc
 
 # Override configurtion
 COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
