@@ -40,12 +40,12 @@ RUN apt-get update && apt-get install -my \
   php5-xdebug \
 
   # gearman job queue
-  php5-gearman \
+  php5-gearman
 
-  && pecl install swoole && echo "extension=swoole.so" > /etc/php5/mods-available/swoole.ini && php5enmod swoole \
-  && pecl install trace && echo "extension=trace.so" > /etc/php5/mods-available/trace.ini && php5enmod trace \
+RUN pecl install swoole && echo "extension=swoole.so" > /etc/php5/mods-available/swoole.ini && php5enmod swoole
+RUN pecl install trace && echo "extension=trace.so" > /etc/php5/mods-available/trace.ini && php5enmod trace
 
-  && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
+RUN apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 #设置时区
 RUN echo "${TIME_ZONE}" > /etc/timezone \

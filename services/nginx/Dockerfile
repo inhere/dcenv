@@ -5,10 +5,16 @@ MAINTAINER inhere<cloud798@126.com>
 # Remove default nginx configs.
 RUN rm -f /etc/nginx/conf.d/*
 
+##
+## Basic config
+##
+RUN echo "${TIME_ZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
+  && sed -i 's/^# alias/alias/g' ~/.bashrc
+
 # change some config
 RUN sed -i '/^\s*#gzip\s*/s/#//g' /etc/nginx/nginx.conf \
     && sed -i '/^\s*#tcp_nopush\s*/s/#//g' /etc/nginx/nginx.conf \
-    && sed -i 's/^# alias/alias/g' ~/.bashrc \
     && apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
 COPY data/resources/vhosts/default.conf /etc/nginx/conf.d/default.conf

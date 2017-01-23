@@ -3,11 +3,16 @@
 node_modules/
 .git/
 www/
-# data/
+conf/
 logs/
+# data/
 # tools/
 # services/
+data/volumes/
+data/images/
 Dockerfile
+*.log
+*.bak
 *.Dockerfile
 *.tar.gz
 *.tgz

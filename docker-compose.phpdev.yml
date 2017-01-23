@@ -41,34 +41,32 @@ services:
       - "9200:9200"
       - "9300:9300"
 
-  webserver:
+  nginx:
     extends:
       file: ./compose.common.yml
-      service: webserver
-    container_name: inhere-webserver
+      service: nginx
+    container_name: inhere-nginx
     links:
-      - webapp:webapp
+      - php:php
     volumes:
       # custom difine the www directory.
       - ./www:/var/www
       - ./conf/vhosts:/etc/nginx/conf.d
       - ./logs/nginx:/var/log/nginx
 
-  webapp:
-    extends:
-      file: ./compose.common.yml
-      service: webapp
+  php:
     build:
       context: .
-      # dockerfile: ./services/php/7.0/alpine/Dockerfile
-      dockerfile: ./services/php/7.0/Dockerfile
-    container_name: inhere-webapp
+      dockerfile: ./services/php/Dockerfile
+    container_name: inhere-php
     links:
       - mysql:mysql
       - redis:redis
       - memcached:memcached
       - gearman:gearman
       - elasticsearch:elasticsearch
+    ports:
+      - "9000:9000"
     volumes:
       # custom difine the www directory.
       - ./www:/var/www

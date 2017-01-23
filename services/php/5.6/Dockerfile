@@ -6,9 +6,9 @@ MAINTAINER inhere<cloud798@126.com>
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/debian8.sources    /etc/apt/sources.list
 
-# extensions
-
-# Install Core extension
+##
+# Install core extensions for php
+##
 #
 # bcmath bz2 calendar ctype curl dba dom enchant exif fileinfo filter ftp gd gettext gmp hash iconv
 # imap interbase intl json ldap mbstring mcrypt mssql mysql mysqli oci8 odbc opcache pcntl
@@ -26,7 +26,9 @@ RUN apt-get update && apt-get install -y \
     # no dependency extension
     && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets
 
-# Install PECL extensions
+##
+# Install PECL extensions, have dependency
+##
 RUN apt-get install -y \
 
     # for memcache
@@ -40,16 +42,18 @@ RUN apt-get install -y \
 
     && pecl install memcache && docker-php-ext-enable memcache \
     && pecl install memcached && docker-php-ext-enable memcached \
-    && pecl install gearman && docker-php-ext-enable gearman \
+    && pecl install gearman && docker-php-ext-enable gearman
 
-    # no dependency
-    && pecl install seaslog && docker-php-ext-enable seaslog \
-    && pecl install xdebug && docker-php-ext-enable xdebug \
-    && pecl install redis-2.2.8 && docker-php-ext-enable redis \
-    && pecl install swoole && docker-php-ext-enable swoole \
-    && pecl install trace && docker-php-ext-enable trace \
-    # && pecl install xhprof && docker-php-ext-enable xhprof
-    && pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
+##
+# PECL extensions, no dependency
+##
+RUN pecl install seaslog && docker-php-ext-enable seaslog
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+RUN pecl install redis-2.2.8 && docker-php-ext-enable redis
+RUN pecl install swoole && docker-php-ext-enable swoole
+RUN pecl install trace && docker-php-ext-enable trace
+# RUN pecl install xhprof && docker-php-ext-enable xhprof
+RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
 
 # Other extensions
 # RUN curl -fsSL 'https://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz' -o xcache.tar.gz \

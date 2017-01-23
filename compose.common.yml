@@ -94,29 +94,29 @@ services:
     #   - "15672:15672"
     #   - "5672:5672"
 
-  webserver:
+  nginx:
     build:
       context: .
       #dockerfile: ./services/nginx/alpine/Dockerfile
       dockerfile: ./services/nginx/Dockerfile
-    container_name: webserver
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
     # links:
-    #   - webapp:webapp
+    #   - php:php
     volumes:
       - ./www:/var/www
       - ./conf/vhosts:/etc/nginx/conf.d
       - ./logs/nginx:/var/log/nginx
 
-  webapp:
+  php:
     build:
       context: .
       # dockerfile: ./services/php/7.0/alpine/Dockerfile
       # dockerfile: ./services/php/7.0/Dockerfile
       dockerfile: ./services/php/5.6/Dockerfile
-    container_name: webapp
+    container_name: php
     volumes:
       - ./www:/var/www
     ports:
