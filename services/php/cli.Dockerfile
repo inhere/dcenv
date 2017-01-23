@@ -5,13 +5,14 @@ FROM php:latest
 MAINTAINER inhere<cloud798@126.com>
 
 ENV TIME_ZONE=Asia/Shanghai
+ENV HIREDIS_VERSION=0.13.3
 
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install basic tool
-RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip
+RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip wget
 
 ##
 # Install core extensions for php
@@ -44,10 +45,20 @@ RUN apt-get install -y \
     # && pecl install gearman && docker-php-ext-enable gearman \
 
 ##
+# Swoole extension
+##
+RUN pecl install swoole && docker-php-ext-enable swoole \
+
+# hiredis - redis C client, provide async operate redis support
+RUN cd /tmp \
+    # && curl -o hiredis-${HIREDIS_VERSION}.tar.gz https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
+    && wget -O 'hiredis-${HIREDIS_VERSION}.tar.gz' -c https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
+    && tar -zxvf hiredis-0.13.3.tar.gz && cd hiredis-${HIREDIS_VERSION} && make -j && make install && ldconfig
+
+##
 # PECL extensions, no dependency
 ##
 RUN pecl install seaslog && docker-php-ext-enable seaslog
-RUN pecl install swoole && docker-php-ext-enable swoole
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN pecl install redis && docker-php-ext-enable redis
 # RUN pecl install xhprof && docker-php-ext-enable xhprof

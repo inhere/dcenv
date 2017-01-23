@@ -6,6 +6,9 @@ MAINTAINER inhere<cloud798@126.com>
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/debian8.sources    /etc/apt/sources.list
 
+# Now,Install basic tool
+RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip wget
+
 ##
 # Install core extensions for php
 ##

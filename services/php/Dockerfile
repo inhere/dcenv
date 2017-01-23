@@ -11,7 +11,7 @@ RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install basic tool
-RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip
+RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip wget
 
 ##
 # Install core extensions for php
@@ -54,10 +54,16 @@ RUN apt-get install -y \
 ##
 # PECL extensions, no dependency
 ##
+# 日志扩展
 RUN pecl install seaslog && docker-php-ext-enable seaslog
+# 异步事件扩展
 RUN pecl install swoole && docker-php-ext-enable swoole
+# 调试扩展
 RUN pecl install xdebug && docker-php-ext-enable xdebug
+# redis缓存扩展
 RUN pecl install redis && docker-php-ext-enable redis
+# 文件变动监控扩展
+RUN pecl install inotify && docker-php-ext-enable inotify
 # RUN pecl install xhprof && docker-php-ext-enable xhprof
 # RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
 
