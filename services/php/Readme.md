@@ -16,6 +16,7 @@ memcached
 redis
 gearman -- 队列任务处理
 seaslog -- 日志扩展
+swoole -- 异步事件扩展
 xhprof -- 性能分析
 xdebug -- 调试工具
 ```
@@ -44,6 +45,38 @@ RUN chmod 755 /usr/local/bin/composer
 ```
 composer up nothing
 ```
+
+## install swoole 
+
+官网 swoole.com
+安装相关扩展 redis, zip, mbstring, inotify, pdo_mysql
+
+### 相关库 
+
+- hiredis https://github.com/redis/hiredis
+- nghttp2 https://github.com/tatsuhiro-t/nghttp2
+
+### 编译命令
+
+```
+# phpize
+# ./configure --enable-swoole-debug --enable-async-redis --enable-openssl --enable-sockets --enable-coroutine --with-php-config=/usr/local/bin/php-config
+# make clean
+# make -j
+# make install
+```
+
+### 更多选项说明
+
+使用 `./configure -h` 可以看到全部的选项
+
+- `--enable-swoole-debug`  // 打开调试日志，开启此选项后swoole将打印各类细节的调试日志。生产环境不要启用。
+- `--enable-sockets`       // 增加对sockets资源的支持，依赖sockets扩展
+- `--enable-async-redis`   // 增加异步Redis客户端支持， 依赖hiredis库
+- `--enable-openssl`       // 启用SSL支持
+- `--enable-http2`         // 增加对HTTP2的支持，依赖nghttp2库. 必须开启openssl
+- `--enable-coroutine`       // 启用协程能力
+
 
 ## internal api generate
 
@@ -122,6 +155,12 @@ service nginx reload
 - [swoole](https://github.com/swoole/swoole-src)
 
 ## 工具
+
+### 端口檢測 lsof
+
+```
+apt-get install lsof
+```
 
 ### ab 压力测试
 

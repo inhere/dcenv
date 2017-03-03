@@ -12,7 +12,7 @@ ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install basic tool
 # apache2-utils 包含 ab 压力测试工具
-RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip wget apache2-utils
+RUN apt-get update && apt-get -y install openssl vim lsof curl telnet git zip unzip wget apache2-utils
 
 ##
 # Install core extensions for php
@@ -32,7 +32,7 @@ RUN apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
 
     # no dependency extension
-    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets
+    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets zip
 
 ##
 # Install PECL extensions, have dependency
