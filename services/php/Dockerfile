@@ -12,7 +12,7 @@ ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install basic tool
 # apache2-utils 包含 ab 压力测试工具
-RUN apt-get update && apt-get -y install openssl vim lsof curl telnet git zip unzip wget apache2-utils
+RUN apt-get update && apt-get -y install openssl vim wget curl lsof telnet git zip unzip apache2-utils
 
 ##
 # Install core extensions for php

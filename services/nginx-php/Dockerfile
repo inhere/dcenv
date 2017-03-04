@@ -17,7 +17,7 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 # Install packages
 # apache2-utils 包含 ab 压力测试工具
 RUN apt-get update && apt-get install -my \
-  supervisor openssl curl wget vim apache2-utils \
+  supervisor openssl curl wget vim lsof apache2-utils \
 
   # 安装tzdata安装包
   tzdata \

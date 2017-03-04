@@ -5,6 +5,10 @@ MAINTAINER inhere<cloud798@126.com>
 # Remove default nginx configs.
 RUN rm -f /etc/nginx/conf.d/*
 
+# Install basic tools
+# apache2-utils 包含 ab 压力测试工具
+RUN apt-get update && apt-get install -my curl wget lsof vim apache2-utils
+
 ##
 ## Basic config
 ##
