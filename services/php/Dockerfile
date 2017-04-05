@@ -37,19 +37,19 @@ RUN apt-get install -y \
 ##
 # Install PECL extensions, have dependency
 ##
-# RUN apt-get install -y \
+RUN apt-get install -y \
 
     # for memcache
     # zlib1g-dev \
 
-    # for memcached 此php扩展不支持 php7
-    # libmemcached-dev \
+    # for memcached
+    libmemcached-dev \
 
     # for gearman 此php扩展不支持 php7
     # libgearman-dev \
 
     # && pecl install memcache && docker-php-ext-enable memcache \
-    # && pecl install memcached && docker-php-ext-enable memcached \
+    && pecl install memcached && docker-php-ext-enable memcached
     # && pecl install gearman && docker-php-ext-enable gearman \
 
 ##
@@ -57,16 +57,29 @@ RUN apt-get install -y \
 ##
 # 日志扩展
 RUN pecl install seaslog && docker-php-ext-enable seaslog
-# 异步事件扩展
-RUN pecl install swoole && docker-php-ext-enable swoole
 # 调试扩展
 RUN pecl install xdebug && docker-php-ext-enable xdebug
+# trace调试扩展
+# RUN pecl install trace-1.0.0 && docker-php-ext-enable trace
 # redis缓存扩展
 RUN pecl install redis && docker-php-ext-enable redis
 # 文件变动监控扩展
 RUN pecl install inotify && docker-php-ext-enable inotify
+# xhprof 与swoole有冲突
 # RUN pecl install xhprof && docker-php-ext-enable xhprof
 # RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
+
+##
+# Swoole extension
+# 异步事件扩展
+##
+RUN pecl install swoole && docker-php-ext-enable swoole \
+
+# hiredis - redis C client, provide async operate redis support
+RUN cd /tmp \
+    # && curl -o hiredis-${HIREDIS_VERSION}.tar.gz https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
+    && wget -O 'hiredis-${HIREDIS_VERSION}.tar.gz' -c https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
+    && tar -zxvf hiredis-0.13.3.tar.gz && cd hiredis-${HIREDIS_VERSION} && make -j && make install && ldconfig
 
 # Other extensions
 # RUN curl -fsSL 'https://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz' -o xcache.tar.gz \
