@@ -43,4 +43,4 @@ VOLUME [ "/data", "/etc/redis" , "/var/log/redis" ]
 
 # ENTRYPOINT redis-start.sh
 # CMD redis-server --port 7000
-CMD redis-start.sh 6379 6380
+CMD redis-start.sh 6380

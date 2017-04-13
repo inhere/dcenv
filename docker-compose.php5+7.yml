@@ -72,9 +72,9 @@ services:
       - ~/Workspace/php:/var/www
 
   php7:
-    build:
-      context: .
-      dockerfile: ./services/php/Dockerfile
+    extends:
+      file: ./compose.common.yml
+      service: php7
     container_name: dev-php7
     links:
       # - mysql:mysql

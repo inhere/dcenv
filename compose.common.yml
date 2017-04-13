@@ -14,6 +14,7 @@ services:
     # volumes:
     #   - ./data/volumes/mysql-latest:/var/lib/mysql
     environment:
+      TIME_ZONE: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: password
 
   mongo:
@@ -100,6 +101,8 @@ services:
       #dockerfile: ./services/nginx/alpine/Dockerfile
       dockerfile: ./services/nginx/Dockerfile
     container_name: nginx
+    environment:
+      TIME_ZONE: Asia/Shanghai
     ports:
       - "80:80"
       - "443:443"
@@ -117,6 +120,9 @@ services:
       # dockerfile: ./services/php/7.0/Dockerfile
       dockerfile: ./services/php/5.6/Dockerfile
     container_name: php5
+    environment:
+      TIME_ZONE: Asia/Shanghai
+      HOSTNAME: php5-service
     volumes:
       - ./www:/var/www
     # ports:
@@ -135,7 +141,10 @@ services:
     build:
       context: .
       dockerfile: ./services/php/Dockerfile
-    container_name: inhere-php7
+    container_name: php7
+    environment:
+      TIME_ZONE: Asia/Shanghai
+      HOSTNAME: php7-service
     links:
       # - mysql:mysql
       - redis:redis
