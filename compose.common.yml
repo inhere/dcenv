@@ -109,7 +109,7 @@ services:
     # links:
     #   - php5:php5
     volumes:
-      - ./www:/var/www
+      - www-volume:/var/www
       - ./conf/vhosts:/etc/nginx/conf.d
       - ./logs/nginx:/var/log/nginx
 
@@ -119,12 +119,14 @@ services:
       # dockerfile: ./services/php/7.0/alpine/Dockerfile
       # dockerfile: ./services/php/7.0/Dockerfile
       dockerfile: ./services/php/5.6/Dockerfile
+      args:
+        timezone: Asia/Shanghai
     container_name: php5
+    hostname: php5-dev
     environment:
       TIME_ZONE: Asia/Shanghai
-      HOSTNAME: php5-service
     volumes:
-      - ./www:/var/www
+      - www-volume:/var/www
     # ports:
     #   - "9000:9000"
     # the links can not be extended.
@@ -142,9 +144,9 @@ services:
       context: .
       dockerfile: ./services/php/Dockerfile
     container_name: php7
+    hostname: php7-dev
     environment:
       TIME_ZONE: Asia/Shanghai
-      HOSTNAME: php7-service
     links:
       # - mysql:mysql
       - redis:redis
@@ -153,7 +155,9 @@ services:
       # - elasticsearch:elasticsearch
     volumes:
       # custom difine the www directory.
-      - ./www:/var/www
+      - www-volume:/var/www
     # ports:
     #   - "9001:9000"
 
+volumes:
+  www-volume: ./www
