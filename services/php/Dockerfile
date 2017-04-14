@@ -4,7 +4,11 @@ FROM php:fpm
 
 MAINTAINER inhere<cloud798@126.com>
 
-ENV TIME_ZONE=Asia/Shanghai
+ARG timezone
+ARG fpmport
+
+ENV TIMEZONE=$timezone
+ENV HIREDIS_VERSION=0.13.3
 
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
@@ -12,7 +16,8 @@ ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install basic tool
 # apache2-utils 包含 ab 压力测试工具
-RUN apt-get update && apt-get -y install openssl pkg-config vim wget curl lsof telnet git zip unzip apache2-utils
+# 安装 mongodb 扩展 需要 libssl-dev pkg-config
+RUN apt-get update && apt-get -y install openssl libssl-dev pkg-config vim wget curl lsof telnet git zip unzip apache2-utils
 
 ##
 # Install core extensions for php
@@ -75,7 +80,7 @@ RUN pecl install inotify && docker-php-ext-enable inotify
 # Swoole extension
 # 异步事件扩展
 ##
-RUN pecl install swoole && docker-php-ext-enable swoole \
+RUN pecl install swoole && docker-php-ext-enable swoole
 
 # hiredis - redis C client, provide async operate redis support
 RUN cd /tmp \
@@ -98,9 +103,11 @@ RUN cd /tmp \
 
 ##
 # Basic config
+# 1. change Timezone
+# 2. open some command alias
 ##
-RUN echo "${TIME_ZONE}" > /etc/timezone \
-  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
+RUN echo "${TIMEZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
   && sed -i 's/^# alias/alias/g' ~/.bashrc
 
 ##
@@ -110,7 +117,7 @@ RUN echo "${TIME_ZONE}" > /etc/timezone \
 COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
 COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
-RUN echo "date.timezone=$TIME_ZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini
+RUN echo "date.timezone=$TIMEZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini
 
 ##
 # PHP-FPM Configuration
@@ -137,7 +144,9 @@ WORKDIR "/var/www"
 # Volumes
 ################################################################################
 
-VOLUME ["/var/www", "/var/log/php"]
+VOLUME ["/var/www", "/var/log/php7"]
+
+EXPOSE $fpmport
 
 # extends from parent
 # EXPOSE 9000

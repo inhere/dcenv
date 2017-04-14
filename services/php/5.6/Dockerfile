@@ -2,13 +2,18 @@ FROM php:5.6-fpm
 
 MAINTAINER inhere<cloud798@126.com>
 
+ARG timezone
+ARG fpmport
+
+ENV TIMEZONE=$timezone
+
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/debian8.sources    /etc/apt/sources.list
 
 # Now,Install basic tool
 # apache2-utils 包含 ab 压力测试工具
-RUN apt-get update && apt-get -y install openssl pkg-config vim curl telnet git zip unzip wget apache2-utils
+RUN apt-get update && apt-get -y install openssl libssl-dev pkg-config vim curl telnet git zip unzip wget apache2-utils
 
 ##
 # Install core extensions for php
@@ -72,14 +77,22 @@ RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xh
 #     && rm -r xcache \
 #     && docker-php-ext-enable xcache
 
-# open pid file
-RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/^# alias/alias/g' ~/.bashrc
+##
+# Basic config
+# 1. change Timezone
+# 2. open some command alias
+# 3. open php-fpm pid file
+##
+RUN echo "${TIMEZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
+  && sed -i 's/^# alias/alias/g' ~/.bashrc \
+  && sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf
 
 # Override configurtion
 COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
 COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
+RUN echo "date.timezone=$TIMEZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini
 
 # add php-fpm to service
 COPY data/resources/php/init.d.php-fpm /etc/init.d/php-fpm

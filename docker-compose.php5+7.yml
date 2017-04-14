@@ -1,14 +1,14 @@
-version: '2'
+version: '3'
 services:
-  # mysql:
-  #   image: mysql
-  #   container_name: dev-mysql
-  #   ports:
-  #     - "3306:3306"
-  #   volumes:
-  #     - ./data/volumes/mysql-latest:/var/lib/mysql
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: password
+  mysql:
+    image: mysql
+    container_name: dev-mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/volumes/mysql-latest:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: password
 
   memcached:
     image: memcached
@@ -18,7 +18,7 @@ services:
 
   redis:
     extends:
-      file: ./compose.common.yml
+      file: ./compose.common-v2.yml
       service: redis
     container_name: dev-redis
     ports:
@@ -27,7 +27,7 @@ services:
 
   # gearman:
   #   extends:
-  #     file: ./compose.common.yml
+  #     file: ./compose.common-v2.yml
   #     service: gearman
   #   container_name: dev-gearman
   #   ports:
@@ -44,7 +44,7 @@ services:
 
   nginx:
     extends:
-      file: ./compose.common.yml
+      file: ./compose.common-v2.yml
       service: nginx
     container_name: dev-nginx
     links:
@@ -52,38 +52,39 @@ services:
       - php7:php7
     volumes:
       # custom difine the www directory.
-      - ~/Workspace/php:/var/www
+      - www-data:/var/www
       - ./conf/vhosts:/etc/nginx/conf.d
       - ./logs/nginx:/var/log/nginx
 
   php5:
     extends:
-      file: ./compose.common.yml
+      file: ./compose.common-v2.yml
       service: php5
     container_name: dev-php5
     links:
       # - mysql:mysql
+      # - mongo:mongo
       - redis:redis
       - memcached:memcached
       # - gearman:gearman
       # - elasticsearch:elasticsearch
     volumes:
       # custom difine the www directory.
-      - ~/Workspace/php:/var/www
+      - www-data:/var/www
 
   php7:
     extends:
-      file: ./compose.common.yml
+      file: ./compose.common-v2.yml
       service: php7
     container_name: dev-php7
     links:
       # - mysql:mysql
+      # - mongo:mongo
       - redis:redis
       - memcached:memcached
       # - gearman:gearman
       # - elasticsearch:elasticsearch
     volumes:
       # custom difine the www directory.
-      - ~/Workspace/php:/var/www
-
+      - www-data:/var/www
 

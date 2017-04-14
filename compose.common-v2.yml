@@ -9,10 +9,10 @@ services:
   mysql:
     image: mysql
     container_name: mysql
-    # ports:
-    #   - "3306:3306"
-    # volumes:
-    #   - ./data/volumes/mysql-latest:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
     environment:
       TIME_ZONE: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: password
@@ -20,11 +20,13 @@ services:
   mongo:
     image: mongo
     container_name: mongo
-    # ports:
-    #   - "27017:27017"
-    # volumes:
-    #   - ./data/volumes/mongo-latest:/data/db
-    #   - ./data/volumes/mongo-latest-configdb:/data/configdb
+    environment:
+      TIME_ZONE: Asia/Shanghai
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - mongo-configdb:/data/configdb
 
   memcached:
     image: memcached
@@ -35,11 +37,12 @@ services:
   redis:
     # image: redis
     build:
+      # define the context dir, copy and move file will reference it on the Dockerfile.
       context: .
       dockerfile: ./services/redis/Dockerfile
     container_name: redis
     volumes:
-      - ./data/volumes/redis-latest:/data
+      - redis-data:/data
       - ./conf/redis:/etc/redis
       - ./logs/redis:/var/log/redis
     # ports:
@@ -59,11 +62,11 @@ services:
   elasticsearch:
     image: elasticsearch
     container_name: elasticsearch
-    # volumes:
-    #   - ./data/volumes/es-latest:/usr/share/elasticsearch/data
-    # ports:
-    #   - "9200:9200"
-    #   - "9300:9300"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 
   kibana:
     image: kibana
@@ -80,20 +83,20 @@ services:
   gogs:
     image: gogs/gogs
     container_name: gogs
-    # volumes:
-    #   - ./data/volumes/gogs:/var/gogs
-    # ports:
-    #   - "10022:22"
-    #   - "10080:3000"
+    volumes:
+      - ./data/volumes/gogs:/var/gogs
+    ports:
+      - "10022:22"
+      - "10080:3000"
 
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
-    # volumes:
-    #   - ./data/volumes/rabbitmq-latest:/var/lib/rabbitmq
-    # ports:
-    #   - "15672:15672"
-    #   - "5672:5672"
+    volumes:
+      - rq-data:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
 
   nginx:
     build:
@@ -109,27 +112,25 @@ services:
     # links:
     #   - php5:php5
     volumes:
-      - www-volume:/var/www
+      - www-data:/var/www
       - ./conf/vhosts:/etc/nginx/conf.d
       - ./logs/nginx:/var/log/nginx
 
   php5:
     build:
       context: .
-      # dockerfile: ./services/php/7.0/alpine/Dockerfile
-      # dockerfile: ./services/php/7.0/Dockerfile
       dockerfile: ./services/php/5.6/Dockerfile
       args:
         timezone: Asia/Shanghai
     container_name: php5
     hostname: php5-dev
     environment:
-      TIME_ZONE: Asia/Shanghai
+      HOSTNAME: php5-dev
     volumes:
-      - www-volume:/var/www
+      - www-data:/var/www
     # ports:
     #   - "9000:9000"
-    # the links can not be extended.
+    # NOTICE: the links can not be extended.
     # links:
     #   - mysql:mysql
     #   - mongo:mongo
@@ -143,21 +144,37 @@ services:
     build:
       context: .
       dockerfile: ./services/php/Dockerfile
+      args:
+        fpmport: "9001"
+        timezone: Asia/Shanghai
     container_name: php7
     hostname: php7-dev
     environment:
-      TIME_ZONE: Asia/Shanghai
-    links:
-      # - mysql:mysql
-      - redis:redis
-      - memcached:memcached
-      # - gearman:gearman
-      # - elasticsearch:elasticsearch
+      HOSTNAME: php7-dev
     volumes:
-      # custom difine the www directory.
-      - www-volume:/var/www
+      - www-data:/var/www
+    # NOTICE: the links can not be extended.
+    # links:
+    #   - mysql:mysql
+    #   - mongo:mongo
+    #   - redis:redis
+    #   - memcached:memcached
+    #   - gearman:gearman
+    #   - elasticsearch:elasticsearch
     # ports:
     #   - "9001:9000"
+    volumes:
+      # custom difine the www directory.
+      - www-data:/var/www
 
+# data volumes
 volumes:
-  www-volume: ./www
+  www-data: ./www
+  mysql-data: ./data/volumes/mysql-latest
+  mongo-data: ./data/volumes/mongo-latest
+  mongo-configdb: ./data/volumes/mongo-latest-configdb
+  redis-data: ./data/volumes/redis-latest
+  rq-data: ./data/volumes/rq-latest
+  es-data: ./data/volumes/es-latest
+# env config
+env_file: .env

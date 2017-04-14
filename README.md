@@ -39,45 +39,6 @@ $ docker-compose up
 
 That's it! You can now access your configured sites via the IP address of the Docker Machine or locally if you're running a Linux flavour and using Docker natively.
 
-## use Docker Toolbox
-
-windows 10 x64 可以直接使用 `Docker For Windows`. Mac OS X 10.10.3 或者更高版本的可用`Docker for Mac `, 请跳过此节。
-
-电脑版本过旧，就可以使用 `Docker Toolbox` 在Windows或者Mac上运行Docker。适用于Mac OS X 10.8+ 或者 Windows 7/8.1。
-
-```sh
-$ docker-machine start default # 可省略 default
-$ git clone https://github.com/inhere/php-dockerized.git 
-$ cd php-dockerized && git checkout my
-$ cp docker-compose.56.yml docker-compose.yml # 拷贝需要的配置
-$ docker-compose up
-```
-
-查看default虚拟机信息 得到虚拟机的ip `192.168.99.100`, 现在可通过 浏览器访问 `192.168.99.100`
-
-```
-$ docker-machine env [default] 
-export DOCKER_TLS_VERIFY="1"
-export DOCKER_HOST="tcp://192.168.99.100:2376"
-export DOCKER_CERT_PATH="/Users/inhere/.docker/machine/machines/default"
-export DOCKER_MACHINE_NAME="default"
-# Run this command to configure your shell:
-# eval $(docker-machine env)
-```
-
-
-其他命令使用
-
-```
-$ eval $(docker-machine env default) # 连上机器，不然无法执行下面的命令
-$ docker ps // 查看正在运行的容器列表
-
-# 可以直接 curl 192.168.99.100:80
-# 也可在 web 容器中运行 curl --HEAD localhost:80 检查php 是否运行成功
-# phpdockerized_web_1 是正在运行的webapp容器(通过 Dockerfile 构建的镜像)
-$ docker exec -ti phpdockerized_web_1 curl --HEAD localhost:80 
-```
-
 ## use Docker For Windows/ Docker for Mac
 
 需要先下载 `Docker For Windows` 或者 `Docker for Mac`。
@@ -168,6 +129,8 @@ Dockerfile
 > 注意：若文件夹中有文件被 Dockerfile 使用，则不能将此文件夹加入忽略，否则 docker 构建时会报找不到文件
 
 ## Questions - 问题
+
+- compose v3 版本不在支持 `extends` 项
 
 ### 配置文件不是默认的名称
 

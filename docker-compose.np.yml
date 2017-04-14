@@ -2,13 +2,18 @@
 # nginx php 在同一个容器
 #
 
-version: '2'
+version: '3'
 services:
   web:
     build:
       context: .
       dockerfile: ./services/nginx-php/Dockerfile
-    container_name: inhere-web
+      args:
+        timezone: Asia/Shanghai
+    container_name: dev-web
+    hostname: php5-dev
+    environment:
+      HOSTNAME: php5-dev
     ports:
       - "80:80"
       - "443:443"
@@ -25,9 +30,29 @@ services:
       - ./logs/supervisor:/var/log/supervisor
       - ./logs/nginx:/var/log/nginx
 
+  php7:
+    build:
+      context: .
+      dockerfile: ./services/php/Dockerfile
+      args:
+        fpmport: "9001"
+        timezone: Asia/Shanghai
+    container_name: dev-php7
+    hostname: php7-dev
+    environment:
+      HOSTNAME: php7-dev
+    links:
+      - mysql:mysql
+      - redis:redis
+    ports:
+      - "9001:9001"
+    volumes:
+      - ./www:/var/www
+      - ./logs/php7:/var/log/php
+
   mysql:
     image: mysql
-    container_name: inhere-mysql
+    container_name: dev-mysql
     ports:
       - "3306:3306"
     volumes:
@@ -37,7 +62,7 @@ services:
 
   memcached:
     image: memcached
-    container_name: inhere-mem
+    container_name: dev-mem
     ports:
       - "11211:11211"
 
@@ -45,7 +70,7 @@ services:
     extends:
       file: ./compose.common.yml
       service: redis
-    container_name: inhere-redis
+    container_name: dev-redis
     ports:
       - "6379:6379"
 
@@ -53,7 +78,7 @@ services:
     extends:
       file: ./compose.common.yml
       service: gearman
-    container_name: inhere-gearman
+    container_name: dev-gearman
     ports:
        - "4730:4730"
 
