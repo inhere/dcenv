@@ -19,15 +19,18 @@ echo "Now, will start redis master server. RUN: redis-server /etc/redis/${MASTER
 redis-server ${CONF_PATH}${MASTER_PORT}.conf
 
 echo "Now, will start redis slaves server. slaves: $SLAVES_PORT"
+# PORTS=$(echo $SLAVES_PORT|tr " " "\n")
+
 for PORT in $SLAVES_PORT; do
     [ ! -d $DATA_PATH$PORT ] && mkdir $DATA_PATH$PORT
 
+    echo "RUN: redis-server ${CONF_PATH}${PORT}.conf --slaveof 127.0.0.1 ${MASTER_PORT}"
     redis-server ${CONF_PATH}${PORT}.conf --slaveof 127.0.0.1 ${MASTER_PORT}
 done
 
 # start sentinel
-echo "Now, will start redis sentinel server. slaves: ${CONF_PATH}sentinel.conf"
-redis-server ${CONF_PATH}sentinel.conf  --sentinel
+# echo "Now, will start redis sentinel server. RUN: redis-server ${CONF_PATH}sentinel.conf  --sentinel"
+# redis-server ${CONF_PATH}sentinel.conf  --sentinel
 
 if [[ $?==0 ]]; then
     echo "Redis server start successful! master: ${MASTER_PORT} slaves: [$SLAVES_PORT]"

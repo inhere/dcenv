@@ -36,6 +36,7 @@ COPY services/redis/tools/* /var/tools/
 
 # can also, use config for add a slave instance
 COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
+
 ##
 # Basic config
 # 1. change Timezone
