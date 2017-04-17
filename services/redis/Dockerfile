@@ -7,6 +7,13 @@ FROM redis
 
 MAINTAINER inhere<cloud798@126.com>
 
+ARG timezone
+ARG master_port
+ARG slaves_port
+
+ENV TIMEZONE=$timezone
+ENV MASTER_PORT=$master_port
+ENV SLAVES_PORT=$slaves_port
 ENV PATH /var/tools:$PATH
 # ENV REDIS_DOWNLOAD_URL http://download.redis.io/releases/redis-3.2.6.tar.gz
 
@@ -27,11 +34,16 @@ RUN mkdir /etc/redis /var/log/redis /var/tools
 # copy tools
 COPY services/redis/tools/* /var/tools/
 
-# simple add a slave redis instance
-# COPY services/redis/scripts/master-slave-by-cmd.sh /var/tools/redis-start.sh
-
 # can also, use config for add a slave instance
 COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
+##
+# Basic config
+# 1. change Timezone
+# 2. open some command alias
+##
+RUN echo "${TIMEZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
+  && sed -i 's/^# alias/alias/g' ~/.bashrc
 
 RUN chmod a+x /var/tools/* \
     # && echo never > /sys/kernel/mm/transparent_hugepage/enabled \
@@ -43,4 +55,4 @@ VOLUME [ "/data", "/etc/redis" , "/var/log/redis" ]
 
 # ENTRYPOINT redis-start.sh
 # CMD redis-server --port 7000
-CMD redis-start.sh 6380
+CMD redis-start.sh

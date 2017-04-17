@@ -2,6 +2,10 @@ FROM nginx
 
 MAINTAINER inhere<cloud798@126.com>
 
+ARG timezone
+
+ENV TIMEZONE=$timezone
+
 # Remove default nginx configs.
 RUN rm -f /etc/nginx/conf.d/*
 

@@ -154,6 +154,27 @@ service nginx reload
 - [workerman-statistics](https://github.com/walkor/workerman-statistics)
 - [swoole](https://github.com/swoole/swoole-src)
 
+### GearmanManager(php)
+
+[GearmanManager](https://github.com/brianlmoon/GearmanManager)
+
+运行Gearman的Worker是项比较让人讨厌的任务。千篇一律的代码...GearmanManager的目标是让运行worker成为一项运维性任务而不是开发任务。
+文件名直接对应于Gearmand服务器中的function，这种方式极大简化了function在worker中的注册。
+
+[中文介绍](http://www.cnblogs.com/x3d/p/gearman-worker-manager.html)
+
+### solariumphp/solarium
+
+[solariumphp/solarium](https://github.com/solariumphp/solarium)
+
+搜索引擎solr的php客户端
+
+### elastic/elasticsearch-php
+
+[elastic/elasticsearch-php](https://github.com/elastic/elasticsearch-php)
+
+搜索引擎elasticsearch的官方php客户端
+
 ## 工具
 
 ### 端口檢測 lsof

@@ -9,7 +9,7 @@ services:
   redis:
     build:
       context: .
-      dockerfile: ./redis/cluster.Dockerfile
+      dockerfile: ./redis/single-machine-cluster.Dockerfile
     volumes:
       - ./data/volumes/redis-cluster/redis_1:/data
     ports:

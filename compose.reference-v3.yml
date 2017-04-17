@@ -1,13 +1,17 @@
 #
-# 这是一份v2公共配置
-# v2 版本支持 `extends` 选项。可以把此文件当做公共文件继承。
+# 这是一份v3配置参考
+# NOTICE: v3 版本不再支持 `extends` 选项。不能再把此文件当做公共文件继承。
 #
 # 在生产环境不推荐暴露 mysql redis elasticsearch 等服务的端口
-# the service links can not be extended.
 # 注意： 相对路径是相对于当前配置文件
 #
+# 部署命令：
+# docker stack deploy
+# docker stack deploy -c redis.yml redis
+# docker stack deploy --compose-file=docker-compose.yml
+# docker stack services redis
 
-version: '2'
+version: '3'
 services:
   mysql:
     image: mysql
@@ -21,10 +25,12 @@ services:
       MYSQL_ROOT_PASSWORD: password
 
   mongo:
-    image: mongo
+    build:
+      context: .
+      dockerfile: ./services/mongo/Dockerfile
+      args:
+        timezone: Asia/Shanghai
     container_name: mongo
-    environment:
-      TIMEZONE: Asia/Shanghai
     ports:
       - "27017:27017"
     volumes:
@@ -45,8 +51,6 @@ services:
       dockerfile: ./services/redis/Dockerfile
       args:
         timezone: Asia/Shanghai
-        master_port: "6379"
-        slaves_port: "6380 6381"
     container_name: redis
     volumes:
       - redis-data:/data
@@ -59,6 +63,8 @@ services:
     build:
       context: .
       dockerfile: ./services/gearman/Dockerfile
+      args:
+        timezone: Asia/Shanghai
     container_name: gearman
     volumes:
       - ./data/volumes/gearman-latest:/data
@@ -176,3 +182,16 @@ services:
       # custom difine the www directory.
       - www-data:/var/www
 
+# data volumes
+volumes:
+  www-data: ./www
+  mysql-data: ./data/volumes/mysql-latest
+  mongo-data: ./data/volumes/mongo-latest
+  mongo-configdb: ./data/volumes/mongo-latest-configdb
+  redis-data: ./data/volumes/redis-latest
+  rq-data: ./data/volumes/rq-latest
+  es-data: ./data/volumes/es-latest
+
+# env config
+# 可以将一些公共环境变量配置到一个文件中载入
+env_file: .env

@@ -85,7 +85,7 @@ RUN pecl install swoole && docker-php-ext-enable swoole
 # hiredis - redis C client, provide async operate redis support
 RUN cd /tmp \
     # && curl -o hiredis-${HIREDIS_VERSION}.tar.gz https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
-    && wget -O 'hiredis-${HIREDIS_VERSION}.tar.gz' -c https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
+    && wget -O hiredis-${HIREDIS_VERSION}.tar.gz -c https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
     && tar -zxvf hiredis-0.13.3.tar.gz && cd hiredis-${HIREDIS_VERSION} && make -j && make install && ldconfig
 
 # Other extensions
@@ -124,7 +124,7 @@ RUN echo "date.timezone=$TIMEZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini
 ##
 # add php-fpm to service
 COPY data/resources/php/init.d.php-fpm /etc/init.d/php-fpm
-# open php-fpm pid file
+# open php-fpm pid file listen = 127.0.0.1:9000
 RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.conf \
     && chmod +x /etc/init.d/php-fpm
     # && chkconfig --add php-fpm
