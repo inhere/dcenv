@@ -2,6 +2,13 @@ FROM redis
 
 MAINTAINER inhere<cloud798@126.com>
 
+ARG timezone
+ARG master_port
+ARG slave_port
+
+ENV TIMEZONE=$timezone
+ENV MASTER_PORT=$master_port
+ENV SLAVE_PORT=$slave_port
 ENV PATH /var/tools:$PATH
 
 # 更换(debian 8)软件源

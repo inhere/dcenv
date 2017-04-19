@@ -1,7 +1,7 @@
 FROM redis
 
 #
-# master-slave
+# single machine master-slave
 # default is: one master one slave
 #
 
@@ -28,13 +28,14 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 # add a redis package from local
 # COPY data/packages/redis-3.2.3.tar.gz /usr/src/redis-3.2.3.tar.gz
 
+RUN apt-get update && apt-get install -y vim
+
 # create directory
-RUN mkdir /etc/redis /var/log/redis /var/tools
+RUN mkdir -p /etc/redis/conf.default /var/log/redis /var/tools
 
-# copy tools
+# copy config,tools,script
+COPY services/redis/conf/* /etc/redis/conf.default/
 COPY services/redis/tools/* /var/tools/
-
-# can also, use config for add a slave instance
 COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
 
 ##

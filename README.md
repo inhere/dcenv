@@ -4,13 +4,11 @@
 
 ---------------
 
-> Dockerized PHP development stack: Nginx, MySQL, MongoDB, PHP-FPM, Gearman, Memcached, Redis, Elasticsearch and RabbitMQ
+> PHP development stack: Nginx, MySQL, MongoDB, PHP-FPM, Gearman, Memcached, Redis, Elasticsearch and RabbitMQ
 
-[![Build Status](https://travis-ci.org/kasperisager/php-dockerized.svg)](https://travis-ci.org/kasperisager/php-dockerized)
+完整的一整套php开发环境。以及一些扩展的环境
 
-PHP Dockerized gives you everything you need for developing PHP applications locally. The idea came from the need of having an OS-agnostic and virtualized alternative to the great [MNPP](https://github.com/jyr/MNPP) stack as regular LAMP stacks quite simply can't keep up with the Nginx + PHP-FPM/HHVM combo in terms of performance. I hope you'll find it as useful an addition to your dev-arsenal as I've found it!
-
-## What's inside
+## 包含容器
 
 * [Nginx](http://nginx.org/)
 * [MySQL](http://www.mysql.com/)
@@ -22,24 +20,23 @@ PHP Dockerized gives you everything you need for developing PHP applications loc
 * [Redis](http://redis.io/)
 * [Elasticsearch](http://www.elasticsearch.org/)
 * [RabbitMQ](https://www.rabbitmq.com/)
+* 更多请查看 `services` 的子目录
 
-## Requirements
+## 运行需求
 
 * [Docker Engine](https://docs.docker.com/installation/)
 * [Docker Compose](https://docs.docker.com/compose/)
 * [Docker Machine](https://docs.docker.com/machine/) (If use Docker Toolbox)
 
-## Running
-
-Set up a Docker Machine and then run:
+## 获取 
 
 ```sh
-$ docker-compose up
+$ git clone https://github.com/inhere/dockerenv.git  
 ```
 
-That's it! You can now access your configured sites via the IP address of the Docker Machine or locally if you're running a Linux flavour and using Docker natively.
+## 运行 
 
-## use Docker For Windows/ Docker for Mac
+### use Docker For Windows/ Docker for Mac
 
 需要先下载 `Docker For Windows` 或者 `Docker for Mac`。
 
@@ -50,37 +47,62 @@ That's it! You can now access your configured sites via the IP address of the Do
 
 直接运行 `Docker For Windows` / `Docker for Mac`, 这个版本不需要 `docker-machine`.
 
-```
-$ git clone https://github.com/inhere/php-dockerized.git 
-$ cd php-dockerized && git checkout my
+启动docker，然后运行:
+
+```sh
 $ cp docker-compose.56.yml docker-compose.yml # 拷贝需要的配置
 $ docker-compose up
-// $ docker-compose up -d
+// $ docker-compose up -d // 后台运行
 $ docker ps // 查看正在运行的容器列表
 
 ```
 
-## Services exposed outside your environment
+## Questions - 问题
 
-You can access your application via **`localhost`**, if you're running the containers directly, or through **`192.168.33.152`** when run on a vm. nginx and mailhog both respond to any hostname, in case you want to add your own hostname on your `/etc/hosts` 
+- compose v3 版本不在支持 `extends` 项
 
-Service|Address outside containers|Address outside VM
-------|---------|-----------
-Webserver|[localhost](http://localhost)|[192.168.33.152](http://192.168.33.152)
+### 自定义构建参数
 
-## Hosts within your environment
+大部分自定义容器都添加了自定义构建参数，需要传入. 如：
 
-You'll need to configure your application to use any services you enabled:
+```yml
+php7:
+  build:
+    context: .
+    dockerfile: ./services/php/Dockerfile
+    args:
+      fpmport: "9001"
+      timezone: Asia/Shanghai 
+```
 
-Service|Hostname|Port number
-------|---------|-----------
-webapp(php-fpm)|webapp|`9000`
-webserver(nginx)|webserver|`80` (http) / `443` (ssl)
-MySQL|mysql|`3306` (default)
-Gearman|gearman|`4730` (default)
-Memcached|memcached|`11211` (default)
-Redis|redis|`6379` (default)
-Elasticsearch|elasticsearch|`9200` (HTTP default) / `9300` (ES transport default)
+
+### 配置文件不是默认的名称
+
+若要使用配置文件不是默认名称`docker-compose.yml`的，除了拷贝重命名为默认名称 `docker-compose.yml` 外，
+也可使用`-f {filename}`参数.
+
+```
+$ docker-compose -f docker-compose.70.yml up -d
+```
+
+- `-f {filename}` 指定 compose 配置文件
+- `-p {project name}` 指定项目名称，默认是文件夹的名称
+- `-d` 后台运行
+
+### nginx 站点配置
+
+若使用的是nginx和php分开的服务容器，注意站点配置中
+
+```
+    fastcgi_pass  unix:/var/run/php5-fpm.sock;
+```
+
+要换成访问php容器的9000端口
+
+```
+    fastcgi_pass  webapp:9000;
+```
+
 
 ## 一些有用的
 
@@ -128,36 +150,19 @@ Dockerfile
 
 > 注意：若文件夹中有文件被 Dockerfile 使用，则不能将此文件夹加入忽略，否则 docker 构建时会报找不到文件
 
-## Questions - 问题
+## 一些容器默认信息
 
-- compose v3 版本不在支持 `extends` 项
+You'll need to configure your application to use any services you enabled:
 
-### 配置文件不是默认的名称
-
-若要使用配置文件不是默认名称`docker-compose.yml`的，除了拷贝重命名为默认名称 `docker-compose.yml` 外，
-也可使用`-f {filename}`参数.
-
-```
-$ docker-compose -f docker-compose.70.yml up -d
-```
-
-- `-f {filename}` 指定 compose 配置文件
-- `-p {project name}` 指定项目名称，默认是文件夹的名称
-- `-d` 后台运行
-
-### nginx 站点配置
-
-若使用的是nginx和php分开的服务容器，注意站点配置中
-
-```
-    fastcgi_pass  unix:/var/run/php5-fpm.sock;
-```
-
-要换成访问php容器的9000端口
-
-```
-    fastcgi_pass  webapp:9000;
-```
+Service|Hostname|Port number
+------|---------|-----------
+webapp(php-fpm)|webapp|`9000`
+webserver(nginx)|webserver|`80` (http) / `443` (ssl)
+MySQL|mysql|`3306` (default)
+Gearman|gearman|`4730` (default)
+Memcached|memcached|`11211` (default)
+Redis|redis|`6379` (default)
+Elasticsearch|elasticsearch|`9200` (HTTP default) / `9300` (ES transport default)
 
 ## License
 

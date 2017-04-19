@@ -13,3 +13,6 @@ ENV TIMEZONE=$timezone
 RUN echo "${TIMEZONE}" > /etc/timezone \
   && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
   && sed -i 's/^# alias/alias/g' ~/.bashrc
+
+# extends parent
+# VOLUME /data/db /data/configdb
