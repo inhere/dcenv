@@ -135,7 +135,6 @@ services:
       context: .
       dockerfile: ./services/php/5.6/Dockerfile
       args:
-        fpmport: "9000"
         timezone: Asia/Shanghai
     container_name: php5
     hostname: php5-dev
@@ -160,7 +159,6 @@ services:
       context: .
       dockerfile: ./services/php/Dockerfile
       args:
-        fpmport: "9001"
         timezone: Asia/Shanghai
     container_name: php7
     hostname: php7-dev
