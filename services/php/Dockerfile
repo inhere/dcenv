@@ -5,7 +5,7 @@ FROM php:fpm
 MAINTAINER inhere<cloud798@126.com>
 
 ARG timezone
-ARG fpmport
+# ARG fpmport
 
 ENV TIMEZONE=$timezone
 ENV HIREDIS_VERSION=0.13.3
@@ -151,9 +151,8 @@ WORKDIR "/var/www"
 # Volumes
 ################################################################################
 
-VOLUME ["/var/www", "/var/log/php7"]
+VOLUME /var/www /var/log/php7
 
-EXPOSE $fpmport
 
 # extends from parent
 # EXPOSE 9000

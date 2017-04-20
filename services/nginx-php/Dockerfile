@@ -7,7 +7,7 @@ MAINTAINER inhere<cloud798@126.com>
 ################################################################################
 
 ARG timezone
-ARG fpmport
+# ARG fpmport
 
 ENV TIMEZONE=$timezone
 ENV PHP_VERSION=5.6.29
