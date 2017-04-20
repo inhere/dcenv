@@ -70,6 +70,12 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 # RUN pecl install trace-1.0.0 && docker-php-ext-enable trace
 # redis缓存扩展
 RUN pecl install redis && docker-php-ext-enable redis
+
+RUN pecl install msgpack && docker-php-ext-enable msgpack
+RUN pecl install yac && docker-php-ext-enable yac
+RUN pecl install yar && docker-php-ext-enable yar
+RUN pecl install yaconf && docker-php-ext-enable yaconf
+
 # 文件变动监控扩展
 RUN pecl install inotify && docker-php-ext-enable inotify
 # xhprof 与swoole有冲突

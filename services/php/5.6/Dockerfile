@@ -60,6 +60,9 @@ RUN pecl install seaslog && docker-php-ext-enable seaslog
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN pecl install redis-2.2.8 && docker-php-ext-enable redis
 RUN pecl install swoole && docker-php-ext-enable swoole
+RUN pecl install msgpack && docker-php-ext-enable msgpack
+RUN pecl install yac && docker-php-ext-enable yac
+RUN pecl install yar && docker-php-ext-enable yar
 # RUN pecl install trace && docker-php-ext-enable trace
 # RUN pecl install xhprof && docker-php-ext-enable xhprof
 RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof

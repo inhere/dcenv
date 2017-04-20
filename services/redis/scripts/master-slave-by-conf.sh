@@ -14,11 +14,11 @@ fi
 # NOTICE: must be create dir before start the redis-server
 
 # --daemonize no
-echo "Now, will start redis master server. RUN: redis-server /etc/redis/${MASTER_PORT}.conf"
+echo "Start master redis server. RUN: redis-server /etc/redis/${MASTER_PORT}.conf"
 [ ! -d $DATA_PATH$MASTER_PORT ] && mkdir $DATA_PATH$MASTER_PORT
 redis-server ${CONF_PATH}${MASTER_PORT}.conf
 
-echo "Now, will start redis slaves server. slaves: $SLAVES_PORT"
+echo "Start slaves redis server. slaves: $SLAVES_PORT"
 # PORTS=$(echo $SLAVES_PORT|tr " " "\n")
 
 for PORT in $SLAVES_PORT; do

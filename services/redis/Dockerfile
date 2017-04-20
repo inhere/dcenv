@@ -47,13 +47,15 @@ RUN echo "${TIMEZONE}" > /etc/timezone \
   && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
   && sed -i 's/^# alias/alias/g' ~/.bashrc
 
+# fix the redis warning
 RUN chmod a+x /var/tools/* \
-    # && echo never > /sys/kernel/mm/transparent_hugepage/enabled \
+    && sed -i '$i echo 511 > /proc/sys/net/core/somaxconn' /etc/rc.local \
+    && sed -i '$i echo never > /sys/kernel/mm/transparent_hugepage/enabled' /etc/rc.local \
     && echo "# add by inhere \nvm.overcommit_memory = 1" >> /etc/sysctl.conf
 
 # EXPOSE 6379 6380 26379
 
-VOLUME [ "/data", "/etc/redis" , "/var/log/redis" ]
+VOLUME /data /etc/redis /var/log/redis
 
 # ENTRYPOINT redis-start.sh
 # CMD redis-server --port 7000

@@ -21,15 +21,18 @@ services:
       MYSQL_ROOT_PASSWORD: password
 
   mongo:
-    image: mongo
+    # image: mongo
+    build:
+      context: .
+      dockerfile: ./services/mongo/Dockerfile
+      args:
+        timezone: Asia/Shanghai
     container_name: mongo
-    environment:
-      TIMEZONE: Asia/Shanghai
     ports:
       - "27017:27017"
     volumes:
-      - mongo-data:/data/db
-      - mongo-configdb:/data/configdb
+      - mongo-data:/data/db:rw
+      - mongo-configdb:/data/configdb:rw
 
   memcached:
     image: memcached

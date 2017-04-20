@@ -19,6 +19,10 @@ seaslog -- 日志扩展
 swoole -- 异步事件扩展
 xhprof -- 性能分析
 xdebug -- 调试工具
+yac -- 快速的用户数据共享内存缓存
+yar -- 快速并发的rpc
+msgpack  -- MessagePack 数据格式实现
+yaconf  -- 持久配置容器(php7+)
 ```
 
 ## add composer tool
