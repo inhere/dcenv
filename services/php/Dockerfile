@@ -123,7 +123,8 @@ RUN echo "${TIMEZONE}" > /etc/timezone \
 COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
 COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
-RUN echo "date.timezone=$TIMEZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini
+RUN echo "date.timezone=$TIMEZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini \
+  && echo "yaconf.directory=/tmp/yaconf" >> /usr/local/etc/php/conf.d/docker-php-ext-yaconf.ini
 
 ##
 # PHP-FPM Configuration

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # file: master-slave-by-cmd.sh
 # simple add a slave redis instance

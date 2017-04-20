@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 #
 # file: master-slave-by-conf.sh
 # use config for add a slave instance
