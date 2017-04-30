@@ -32,7 +32,7 @@ done
 # echo "Now, will start redis sentinel server. RUN: redis-server ${CONF_PATH}sentinel.conf  --sentinel"
 # redis-server ${CONF_PATH}sentinel.conf  --sentinel
 
-if [[ $?==0 ]]; then
+if [ $?==0 ]; then
     echo "Redis server start successful! master: ${MASTER_PORT} slaves: [$SLAVES_PORT]"
     echo "Now, will watch master log, by RUN: tail -f /var/log/redis/${MASTER_PORT}.log"
     tail -f /var/log/redis/${MASTER_PORT}.log
