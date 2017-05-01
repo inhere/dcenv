@@ -1,5 +1,12 @@
 # service folder
 
+复制tar包文件时，使用的Docker指令是COPY而不是ADD，这是由于ADD指令会自动解压tar文件。
+
+```
+COPY packages/redis.tgz /tmp/redis.tgz
+RUN pecl install /tmp/redis.tgz && echo "extension=redis.so" > /etc/php5/mods-available/redis.ini
+```
+
 ## 运行指定的单个服务
 
 ```
@@ -31,12 +38,32 @@ echo "deb-src http://mirrors.aliyun.com/debian-security/ jessie/updates main non
 } | tee /etc/apt/sources.list
 ```
 
+## 更换(alpine)软件源
 
-复制tar包文件时，使用的Docker指令是COPY而不是ADD，这是由于ADD指令会自动解压tar文件。
+拷贝配置：
 
 ```
-COPY packages/redis.tgz /tmp/redis.tgz
-RUN pecl install /tmp/redis.tgz && echo "extension=redis.so" > /etc/php5/mods-available/redis.ini
+RUN mv /etc/apk/repositories /etc/apk/repositories.bak
+COPY data/resources/alpine.repositories /etc/apk/repositories
+```
+
+也可直接写入：
+
+```sh 
+RUN mv /etc/apk/repositories /etc/apk/repositories.bak \
+    && { \
+    echo "http://mirrors.aliyun.com/alpine/edge/main"; \
+    echo "http://mirrors.aliyun.com/alpine/edge/community"; \
+    echo "http://mirrors.aliyun.com/alpine/edge/testing"; \
+    } | tee /etc/apk/repositories
+```
+
+> 使用 `edge`, 里面的软件包更丰富版本也更新
+
+也可不用 `edge` 下的, 仍使用原来版本下的：
+
+```sh
+sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 ```
 
 ## supervisor 管理进程
