@@ -37,7 +37,7 @@ RUN apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
 
     # no dependency extension
-    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets zip
+    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets pcntl zip
 
 ##
 # Install PECL extensions, have dependency
