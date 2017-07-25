@@ -19,8 +19,9 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 
 # Install packages
 # apache2-utils 包含 ab 压力测试工具
+# net-tools 包含 netstat工具
 RUN apt-get update && apt-get install -my \
-  supervisor openssl libssl-dev pkg-config vim curl telnet git zip unzip wget apache2-utils \
+  supervisor openssl libssl-dev pkg-config vim curl net-tools telnet git zip unzip wget apache2-utils \
 
   # 安装tzdata安装包
   tzdata \

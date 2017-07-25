@@ -16,8 +16,9 @@ ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install basic tool
 # apache2-utils 包含 ab 压力测试工具
+# net-tools 包含 netstat工具
 # 安装 mongodb 扩展 需要 libssl-dev pkg-config
-RUN apt-get update && apt-get -y install openssl libssl-dev pkg-config vim wget curl lsof telnet git zip unzip apache2-utils
+RUN apt-get update && apt-get -y install openssl libssl-dev pkg-config vim wget net-tools curl lsof telnet git zip unzip apache2-utils
 
 ##
 # Install core extensions for php
@@ -37,7 +38,7 @@ RUN apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
 
     # no dependency extension
-    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets pcntl zip
+    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets pcntl zip sysvmsg sysvsem sysvshm
 
 ##
 # Install PECL extensions, have dependency
