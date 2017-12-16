@@ -11,8 +11,8 @@ ARG timezone
 ENV TIMEZONE=$timezone
 
 # 更换(debian 8)软件源
-# RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
-# COPY data/resources/debian8.sources  /etc/apt/sources.list
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
+COPY data/resources/debian8.sources  /etc/apt/sources.list
 
 RUN apt-get update && apt-get install -y vim
 

@@ -13,7 +13,7 @@
 * [Nginx](http://nginx.org/)
 * [MySQL](http://www.mysql.com/)
 * [MongoDB](http://www.mongodb.org/)
-* [PHP-FPM](http://php-fpm.org/) -- 5.6/7.0
+* [PHP-FPM](http://php-fpm.org/) -- 5.6/7
 * ~~[HHVM](http://www.hhvm.com/)~~
 * [Gearman](http://gearman.org/)
 * [Memcached](http://memcached.org/)

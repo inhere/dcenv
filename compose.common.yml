@@ -36,6 +36,8 @@ services:
     build:
       context: .
       dockerfile: ./services/redis/Dockerfile
+      args:
+        timezone: Asia/Shanghai
     container_name: redis
     volumes:
       - ./data/volumes/redis-latest:/data

@@ -1,5 +1,5 @@
-FROM php:fpm
-# php fpm
+FROM php:7.1-fpm
+# php fpm 7.2 used system is debain 9
 # always use latest version php
 
 MAINTAINER inhere<cloud798@126.com>
@@ -14,11 +14,14 @@ ENV HIREDIS_VERSION=0.13.3
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 ADD data/resources/debian8.sources /etc/apt/sources.list
 
+RUN uname -a && php -v && apt-get update
+
 # Now,Install basic tool
 # apache2-utils 包含 ab 压力测试工具
 # net-tools 包含 netstat工具
-# 安装 mongodb 扩展 需要 libssl-dev pkg-config
-RUN apt-get update && apt-get -y install openssl libssl-dev pkg-config vim wget net-tools curl lsof telnet git zip unzip apache2-utils
+RUN apt-get install -y \
+    openssl pkg-config \
+    vim wget net-tools curl lsof telnet git zip unzip apache2-utils
 
 ##
 # Install core extensions for php
@@ -30,15 +33,15 @@ RUN apt-get update && apt-get -y install openssl libssl-dev pkg-config vim wget 
 # pspell readline recode reflection session shmop simplexml snmp soap sockets spl standard
 # sybase_ct sysvmsg sysvsem sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zip
 #
-# Must install dependencies for your extensions manually, if need.
+# Must install dependencies for your extensions manually, if need. libpng12-dev
 RUN apt-get install -y \
-    libfreetype6-dev libjpeg62-turbo-dev libmcrypt-dev libpng12-dev \
+    libfreetype6-dev zlib1g-dev zlib1g libjpeg62-turbo-dev libmcrypt-dev libpng-dev \
     && docker-php-ext-install -j$(nproc) mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install -j$(nproc) gd
 
-    # no dependency extension
-    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets pcntl zip sysvmsg sysvsem sysvshm
+# no dependency extension
+RUN docker-php-ext-install gettext mysqli opcache pdo_mysql sockets pcntl zip sysvmsg sysvsem sysvshm
 
 ##
 # Install PECL extensions, have dependency
@@ -61,10 +64,10 @@ RUN apt-get install -y \
 ##
 # PECL extensions, no dependency
 ##
-# mongodb 扩展
-RUN pecl install mongodb && docker-php-ext-enable mongodb
+# mongodb 扩展，需要 libssl-dev pkg-config
+RUN apt-get install -y libssl-dev && pecl install mongodb && docker-php-ext-enable mongodb
 # 日志扩展
-RUN pecl install seaslog && docker-php-ext-enable seaslog
+# RUN pecl install seaslog && docker-php-ext-enable seaslog
 # 调试扩展
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 # trace调试扩展
@@ -83,17 +86,29 @@ RUN pecl install inotify && docker-php-ext-enable inotify
 # RUN pecl install xhprof && docker-php-ext-enable xhprof
 # RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
 
-##
-# Swoole extension
-# 异步事件扩展
-##
-RUN pecl install swoole && docker-php-ext-enable swoole
-
 # hiredis - redis C client, provide async operate redis support
 RUN cd /tmp \
     # && curl -o hiredis-${HIREDIS_VERSION}.tar.gz https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
     && wget -O hiredis-${HIREDIS_VERSION}.tar.gz -c https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
-    && tar -zxvf hiredis-0.13.3.tar.gz && cd hiredis-${HIREDIS_VERSION} && make -j && make install && ldconfig
+    && tar -zxvf hiredis-${HIREDIS_VERSION}.tar.gz && cd hiredis-${HIREDIS_VERSION} && make -j && make install && ldconfig
+
+##
+# Swoole extension
+# 异步事件扩展
+##
+# RUN pecl install swoole && docker-php-ext-enable swoole
+RUN wget https://github.com/swoole/swoole-src/archive/v2.0.10-stable.tar.gz -O swoole.tar.gz \
+    && mkdir -p swoole \
+    && tar -xf swoole.tar.gz -C swoole --strip-components=1 \
+    && rm swoole.tar.gz \
+    && ( \
+        cd swoole \
+        && phpize \
+        && ./configure --enable-async-redis --enable-mysqlnd --enable-coroutine \
+        && make -j$(nproc) && make install \
+    ) \
+    && rm -r swoole \
+    && docker-php-ext-enable swoole
 
 # Other extensions
 # RUN curl -fsSL 'https://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz' -o xcache.tar.gz \
@@ -121,7 +136,7 @@ RUN echo "${TIMEZONE}" > /etc/timezone \
 # PHP Configuration
 # Override configurtion
 ##
-COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
+# COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
 COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
 RUN echo "date.timezone=$TIMEZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini \
@@ -143,7 +158,7 @@ RUN docker-php-source delete \
     && echo -e "\033[42;37m PHP letest installed.\033[0m"
 
 # Install composer
-ADD data/packages/php-tools/composer.phar /usr/local/bin/composer
+ADD data/packages/php-composer/composer.phar /usr/local/bin/composer
 RUN chmod 755 /usr/local/bin/composer
 
 WORKDIR "/var/www"
