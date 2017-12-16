@@ -1,0 +1,195 @@
+#
+# 这是一份v3配置参考
+# NOTICE: v3 版本不再支持 `extends` 选项。不能再把此文件当做公共文件继承。
+#
+# 在生产环境不推荐暴露 mysql redis elasticsearch 等服务的端口
+# 注意： 相对路径是相对于当前配置文件
+#
+# 部署命令：
+# docker stack deploy
+# docker stack deploy -c redis.yml redis
+# docker stack deploy --compose-file=docker-compose.yml
+# docker stack services redis
+
+version: '3'
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    environment:
+      TIMEZONE: Asia/Shanghai
+      MYSQL_ROOT_PASSWORD: password
+
+  mongo:
+    build:
+      context: .
+      dockerfile: ./services/mongo/Dockerfile
+      args:
+        timezone: Asia/Shanghai
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+      - mongo-configdb:/data/configdb
+
+  memcached:
+    image: memcached
+    container_name: memcached
+    # ports:
+    #   - "11211:11211"
+
+  redis:
+    # image: redis
+    build:
+      # define the context dir, copy and move file will reference it on the Dockerfile.
+      context: .
+      dockerfile: ./services/redis/Dockerfile
+      args:
+        timezone: Asia/Shanghai
+    container_name: redis
+    volumes:
+      - redis-data:/data
+      - ./conf/redis:/etc/redis
+      - ./logs/redis:/var/log/redis
+    # ports:
+    #   - "6379:6379"
+
+  gearman:
+    build:
+      context: .
+      dockerfile: ./services/gearman/Dockerfile
+      args:
+        timezone: Asia/Shanghai
+    container_name: gearman
+    volumes:
+      - ./data/volumes/gearman-latest:/data
+      - ./logs/gearmand:/var/log/gearmand
+    # ports:
+    #   - "4730:4730"
+
+  elasticsearch:
+    image: elasticsearch
+    container_name: elasticsearch
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+
+  kibana:
+    image: kibana
+    container_name: kibana
+    ports:
+      - 5601:5601
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+
+  logstash:
+    image: logstash
+    container_name: logstash
+
+  gogs:
+    image: gogs/gogs
+    container_name: gogs
+    volumes:
+      - ./data/volumes/gogs:/var/gogs
+    ports:
+      - "10022:22"
+      - "10080:3000"
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    volumes:
+      - rq-data:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
+  nginx:
+    build:
+      context: .
+      dockerfile: ./services/nginx/Dockerfile
+      args:
+        timezone: Asia/Shanghai
+    container_name: nginx
+    environment:
+      TIMEZONE: Asia/Shanghai
+    ports:
+      - "80:80"
+      - "443:443"
+    # links:
+    #   - php5:php5
+    volumes:
+      - www-data:/var/www
+      - ./conf/vhosts:/etc/nginx/conf.d
+      - ./logs/nginx:/var/log/nginx
+
+  php5:
+    build:
+      context: .
+      dockerfile: ./services/php/5.6/Dockerfile
+      args:
+        timezone: Asia/Shanghai
+    container_name: php5
+    hostname: php5-dev
+    environment:
+      HOSTNAME: php5-dev
+    volumes:
+      - www-data:/var/www
+    # ports:
+    #   - "9000:9000"
+    # NOTICE: the links can not be extended.
+    # links:
+    #   - mysql:mysql
+    #   - mongo:mongo
+    #   - gearman:gearman
+    #   - memcached:memcached
+    #   - redis:redis
+    #   - rabbitmq:rabbitmq
+    #   - elasticsearch:elasticsearch
+
+  php7:
+    build:
+      context: .
+      dockerfile: ./services/php/Dockerfile
+      args:
+        timezone: Asia/Shanghai
+    container_name: php7
+    hostname: php7-dev
+    environment:
+      HOSTNAME: php7-dev
+    volumes:
+      - www-data:/var/www
+    # NOTICE: the links can not be extended.
+    # links:
+    #   - mysql:mysql
+    #   - mongo:mongo
+    #   - redis:redis
+    #   - memcached:memcached
+    #   - gearman:gearman
+    #   - elasticsearch:elasticsearch
+    # ports:
+    #   - "9001:9000"
+    volumes:
+      # custom difine the www directory.
+      - www-data:/var/www
+
+# data volumes
+volumes:
+  www-data: ./www
+  mysql-data: ./data/volumes/mysql-latest
+  mongo-data: ./data/volumes/mongo-latest
+  mongo-configdb: ./data/volumes/mongo-latest-configdb
+  redis-data: ./data/volumes/redis-latest
+  rq-data: ./data/volumes/rq-latest
+  es-data: ./data/volumes/es-latest
+
+# env config
+# 可以将一些公共环境变量配置到一个文件中载入
+env_file: .env

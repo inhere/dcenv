@@ -1,5 +1,6 @@
-# Redis 3.2 configuration file example.
-# form @link https://github.com/antirez/redis
+# Redis configuration file example.
+# @from https://raw.githubusercontent.com/antirez/redis/3.2.8/redis.conf
+#
 # Note that in order to read the configuration file, Redis must be
 # started with the file path as first argument:
 #

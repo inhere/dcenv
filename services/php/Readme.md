@@ -19,6 +19,10 @@ seaslog -- 日志扩展
 swoole -- 异步事件扩展
 xhprof -- 性能分析
 xdebug -- 调试工具
+yac -- 快速的用户数据共享内存缓存
+yar -- 快速并发的rpc
+msgpack  -- MessagePack 数据格式实现
+yaconf  -- 持久配置容器(php7+)
 ```
 
 ## add composer tool
@@ -44,6 +48,56 @@ RUN chmod 755 /usr/local/bin/composer
 
 ```
 composer up nothing
+```
+
+## 下载安装xhprof
+
+from http://www.open-open.com/lib/view/open1453899928714.html
+
+- 下载编译安装的命令如下：
+
+```
+$ wget https://github.com/phacility/xhprof/archive/master.zip
+$ unzip ./xhprof_master.zip
+$ cd ./xhprof_master/extension
+$ /usr/local/php/bin/phpize
+$ ./configure --with-php-config=/usr/local/php/bin/php-config
+$ make
+$ make install
+```
+
+- 启用 xhprof 扩展， 检查安装 `php -m`
+
+- 拷贝xhprof相关程序到指定目录:
+
+```
+$ mkdir -p /www/sites/xhprof
+$ cp -r ./xhprof_master/xhprof_html /www/sites/xhprof
+$ cp -r ./xhprof_master/xhprof_lib /www/sites/xhprof
+```
+
+- 修改nginx配置，以便通过url访问性能数据:
+
+在nginx中增加如下代码：
+
+```
+server {
+    listen  8999;
+    root    /opt/sites/xhprof/;
+    index  index.php index.html;
+    location ~ .*\.php$ {
+        add_header  Cache-Control "no-cache, no-store, max-age=0, must-revalidate";
+        add_header  Pragma  no-cache;
+        add_header Access-Control-Allow-Origin *;
+        add_header      Via "1.0 xgs-150";
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        include fastcgi.conf;
+        fastcgi_connect_timeout 300; 
+        fastcgi_send_timeout 300;
+        fastcgi_read_timeout 300;
+    }
+}
 ```
 
 ## install swoole 
@@ -153,6 +207,27 @@ service nginx reload
 - [workerman](https://github.com/walkor/workerman)
 - [workerman-statistics](https://github.com/walkor/workerman-statistics)
 - [swoole](https://github.com/swoole/swoole-src)
+
+### GearmanManager(php)
+
+[GearmanManager](https://github.com/brianlmoon/GearmanManager)
+
+运行Gearman的Worker是项比较让人讨厌的任务。千篇一律的代码...GearmanManager的目标是让运行worker成为一项运维性任务而不是开发任务。
+文件名直接对应于Gearmand服务器中的function，这种方式极大简化了function在worker中的注册。
+
+[中文介绍](http://www.cnblogs.com/x3d/p/gearman-worker-manager.html)
+
+### solariumphp/solarium
+
+[solariumphp/solarium](https://github.com/solariumphp/solarium)
+
+搜索引擎solr的php客户端
+
+### elastic/elasticsearch-php
+
+[elastic/elasticsearch-php](https://github.com/elastic/elasticsearch-php)
+
+搜索引擎elasticsearch的官方php客户端
 
 ## 工具
 

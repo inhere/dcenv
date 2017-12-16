@@ -1,0 +1,8 @@
+# alpine repositories
+#
+# the edge library packages are more and also updated
+#
+
+http://mirrors.aliyun.com/alpine/edge/main
+http://mirrors.aliyun.com/alpine/edge/community
+http://mirrors.aliyun.com/alpine/edge/testing

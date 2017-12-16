@@ -2,13 +2,19 @@ FROM php:5.6-fpm
 
 MAINTAINER inhere<cloud798@126.com>
 
+ARG timezone
+# ARG fpmport
+
+ENV TIMEZONE=$timezone
+
 # 更换(debian 8)软件源
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/debian8.sources    /etc/apt/sources.list
 
 # Now,Install basic tool
 # apache2-utils 包含 ab 压力测试工具
-RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip wget apache2-utils
+# net-tools 包含 netstat工具
+RUN apt-get update && apt-get -y install openssl libssl-dev pkg-config vim curl telnet net-tools git zip unzip wget apache2-utils
 
 ##
 # Install core extensions for php
@@ -28,7 +34,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
 
     # no dependency extension
-    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets
+    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets pcntl zip sysvmsg sysvsem sysvshm
 
 ##
 # Install PECL extensions, have dependency
@@ -44,8 +50,8 @@ RUN apt-get install -y \
     # for gearman
     libgearman-dev \
 
-    && pecl install memcache && docker-php-ext-enable memcache \
-    && pecl install memcached && docker-php-ext-enable memcached \
+    # && pecl install memcache && docker-php-ext-enable memcache \
+    && pecl install memcached-2.2.0 && docker-php-ext-enable memcached \
     && pecl install gearman && docker-php-ext-enable gearman
 
 ##
@@ -55,7 +61,10 @@ RUN pecl install seaslog && docker-php-ext-enable seaslog
 RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN pecl install redis-2.2.8 && docker-php-ext-enable redis
 RUN pecl install swoole && docker-php-ext-enable swoole
-RUN pecl install trace && docker-php-ext-enable trace
+RUN pecl install msgpack && docker-php-ext-enable msgpack
+RUN pecl install yac && docker-php-ext-enable yac
+RUN pecl install yar && docker-php-ext-enable yar
+# RUN pecl install trace && docker-php-ext-enable trace
 # RUN pecl install xhprof && docker-php-ext-enable xhprof
 RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
 
@@ -72,14 +81,22 @@ RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xh
 #     && rm -r xcache \
 #     && docker-php-ext-enable xcache
 
-# open pid file
-RUN sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf \
-    && sed -i 's/^# alias/alias/g' ~/.bashrc
+##
+# Basic config
+# 1. change Timezone
+# 2. open some command alias
+# 3. open php-fpm pid file
+##
+RUN echo "${TIMEZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
+  && sed -i 's/^# alias/alias/g' ~/.bashrc \
+  && sed -i '/^;pid\s*=\s*/s/\;//g' /usr/local/etc/php-fpm.d/www.conf
 
 # Override configurtion
 COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
 COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
+RUN echo "date.timezone=$TIMEZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini
 
 # add php-fpm to service
 COPY data/resources/php/init.d.php-fpm /etc/init.d/php-fpm

@@ -6,8 +6,11 @@ MAINTAINER inhere<cloud798@126.com>
 # Build instructions
 ################################################################################
 
+ARG timezone
+# ARG fpmport
+
+ENV TIMEZONE=$timezone
 ENV PHP_VERSION=5.6.29
-ENV TIME_ZONE=Asia/Shanghai
 
 # Remove default nginx configs.
 RUN rm -f /etc/nginx/conf.d/* \
@@ -16,8 +19,9 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 
 # Install packages
 # apache2-utils 包含 ab 压力测试工具
+# net-tools 包含 netstat工具
 RUN apt-get update && apt-get install -my \
-  supervisor openssl curl wget vim apache2-utils \
+  supervisor openssl libssl-dev pkg-config vim curl net-tools telnet git zip unzip wget apache2-utils \
 
   # 安装tzdata安装包
   tzdata \
@@ -48,9 +52,13 @@ RUN pecl install trace && echo "extension=trace.so" > /etc/php5/mods-available/t
 
 RUN apt-get clean; rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /usr/share/doc/*
 
-#设置时区
-RUN echo "${TIME_ZONE}" > /etc/timezone \
-  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
+##
+## Basic config
+# 1. change Timezone
+# 2. open some command alias
+##
+RUN echo "${TIMEZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
   && sed -i 's/^# alias/alias/g' ~/.bashrc
 
 # Ensure that PHP5 FPM is run as root.

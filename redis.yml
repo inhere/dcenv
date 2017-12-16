@@ -1,0 +1,28 @@
+# docker stack deploy -c redis.yml redis
+# docker stack deploy --compose-file=docker-compose.yml
+# docker stack services redis
+version: "3"
+
+services:
+  redis-master:
+    image: redis
+    deploy:
+      restart_policy:
+        condition: on-failure
+  redis-slave:
+    image: redis
+    command: redis-server --slaveof redis-master 6379
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+  sentinel:
+    # image: registry.aliyuncs.com/acs-sample/redis-sentinel:3
+    image: acs-sample/redis-sentinel
+    environment:
+      - SENTINEL_DOWN_AFTER=5000
+      - SENTINEL_FAILOVER=5000
+    deploy:
+      replicas: 3
+      restart_policy:
+        condition: on-failure

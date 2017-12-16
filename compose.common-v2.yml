@@ -1,4 +1,7 @@
 #
+# 这是一份v2公共配置
+# v2 版本支持 `extends` 选项。可以把此文件当做公共文件继承。
+#
 # 在生产环境不推荐暴露 mysql redis elasticsearch 等服务的端口
 # the service links can not be extended.
 # 注意： 相对路径是相对于当前配置文件
@@ -9,21 +12,27 @@ services:
   mysql:
     image: mysql
     container_name: mysql
-    # ports:
-    #   - "3306:3306"
-    # volumes:
-    #   - ./data/volumes/mysql-latest:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
     environment:
+      TIMEZONE: Asia/Shanghai
       MYSQL_ROOT_PASSWORD: password
 
   mongo:
-    image: mongo
+    # image: mongo
+    build:
+      context: .
+      dockerfile: ./services/mongo/Dockerfile
+      args:
+        timezone: Asia/Shanghai
     container_name: mongo
-    # ports:
-    #   - "27017:27017"
-    # volumes:
-    #   - ./data/volumes/mongo-latest:/data/db
-    #   - ./data/volumes/mongo-latest-configdb:/data/configdb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db:rw
+      - mongo-configdb:/data/configdb:rw
 
   memcached:
     image: memcached
@@ -34,11 +43,16 @@ services:
   redis:
     # image: redis
     build:
+      # define the context dir, copy and move file will reference it on the Dockerfile.
       context: .
       dockerfile: ./services/redis/Dockerfile
+      args:
+        timezone: Asia/Shanghai
+        master_port: "6379"
+        slaves_port: "6380 6381"
     container_name: redis
     volumes:
-      - ./data/volumes/redis-latest:/data
+      - redis-data:/data
       - ./conf/redis:/etc/redis
       - ./logs/redis:/var/log/redis
     # ports:
@@ -58,11 +72,11 @@ services:
   elasticsearch:
     image: elasticsearch
     container_name: elasticsearch
-    # volumes:
-    #   - ./data/volumes/es-latest:/usr/share/elasticsearch/data
-    # ports:
-    #   - "9200:9200"
-    #   - "9300:9300"
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
 
   kibana:
     image: kibana
@@ -79,26 +93,27 @@ services:
   gogs:
     image: gogs/gogs
     container_name: gogs
-    # volumes:
-    #   - ./data/volumes/gogs:/var/gogs
-    # ports:
-    #   - "10022:22"
-    #   - "10080:3000"
+    volumes:
+      - ./data/volumes/gogs:/var/gogs
+    ports:
+      - "10022:22"
+      - "10080:3000"
 
   rabbitmq:
     image: rabbitmq:management
     container_name: rabbitmq
-    # volumes:
-    #   - ./data/volumes/rabbitmq-latest:/var/lib/rabbitmq
-    # ports:
-    #   - "15672:15672"
-    #   - "5672:5672"
+    volumes:
+      - rq-data:/var/lib/rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
 
   nginx:
     build:
       context: .
-      #dockerfile: ./services/nginx/alpine/Dockerfile
       dockerfile: ./services/nginx/Dockerfile
+      args:
+        timezone: Asia/Shanghai
     container_name: nginx
     ports:
       - "80:80"
@@ -113,15 +128,18 @@ services:
   php5:
     build:
       context: .
-      # dockerfile: ./services/php/7.0/alpine/Dockerfile
-      # dockerfile: ./services/php/7.0/Dockerfile
       dockerfile: ./services/php/5.6/Dockerfile
+      args:
+        timezone: Asia/Shanghai
     container_name: php5
+    hostname: php5-dev
+    environment:
+      HOSTNAME: php5-dev
     volumes:
       - ./www:/var/www
     # ports:
     #   - "9000:9000"
-    # the links can not be extended.
+    # NOTICE: the links can not be extended.
     # links:
     #   - mysql:mysql
     #   - mongo:mongo
@@ -135,16 +153,25 @@ services:
     build:
       context: .
       dockerfile: ./services/php/Dockerfile
-    container_name: inhere-php7
-    links:
-      # - mysql:mysql
-      - redis:redis
-      - memcached:memcached
-      # - gearman:gearman
-      # - elasticsearch:elasticsearch
+      args:
+        timezone: Asia/Shanghai
+    container_name: php7
+    hostname: php7-dev
+    environment:
+      HOSTNAME: php7-dev
+    volumes:
+      - ./www:/var/www
+    # NOTICE: the links can not be extended.
+    # links:
+    #   - mysql:mysql
+    #   - mongo:mongo
+    #   - redis:redis
+    #   - memcached:memcached
+    #   - gearman:gearman
+    #   - elasticsearch:elasticsearch
+    # ports:
+    #   - "9001:9000"
     volumes:
       # custom difine the www directory.
       - ./www:/var/www
-    # ports:
-    #   - "9001:9000"
 

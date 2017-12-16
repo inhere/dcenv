@@ -1,11 +1,26 @@
-FROM alpine:3.4
+FROM alpine:latest
 
-RUN { echo "http://mirrors.ustc.edu.cn/alpine/latest-stable/main/"; cat /etc/apk/repositories; } \
-    | tee /etc/apk/repositories && \
-    echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories \
-    && apk update && apk add --no-cache gearmand@testing \
+MAINTAINER inhere<cloud798@126.com>
+
+ARG timezone
+
+# ENV TIMEZONE=$timezone
+ENV TIMEZONE=Asia/Shanghai
+
+RUN mv /etc/apk/repositories /etc/apk/repositories.bak
+COPY data/resources/alpine.repositories /etc/apk/repositories
+
+# Install base packages
+RUN apk update && apk add curl tzdata \
+    && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
+    && echo "${TIMEZONE}" >  /etc/timezone \
+    && alias ll='ls -al'
+
+# Install gearman
+# RUN apk add --no-cache gearmand@testing \
+RUN apk add --no-cache gearmand \
     && mkdir -p /var/log/gearmand && touch /var/log/gearmand/gearmand.log \
-    && gearmand -V && echo "   \n    Gearman Install Successful.\n"
+    && gearmand -V && echo "\n\n    Gearman Install Successful.\n\n"
 
 VOLUME [ "/data", "/var/log/gearmand"]
 

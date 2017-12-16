@@ -2,6 +2,13 @@ FROM redis
 
 MAINTAINER inhere<cloud798@126.com>
 
+ARG timezone
+ARG master_port
+ARG slave_port
+
+ENV TIMEZONE=$timezone
+ENV MASTER_PORT=$master_port
+ENV SLAVE_PORT=$slave_port
 ENV PATH /var/tools:$PATH
 
 # 更换(debian 8)软件源
@@ -21,7 +28,11 @@ COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
 # NOTICE: must be create dir before start the redis-server
 RUN mkdir /data/6379 /data/6380
 
-RUN chmod a+x /var/tools/*
+# fix the redis warning
+RUN chmod a+x /var/tools/* \
+    && sed -i '$i echo 511 > /proc/sys/net/core/somaxconn' /etc/rc.local \
+    && sed -i '$i echo never > /sys/kernel/mm/transparent_hugepage/enabled' /etc/rc.local \
+    && echo "# add by inhere \nvm.overcommit_memory = 1" >> /etc/sysctl.conf
 
 # EXPOSE 6379
 

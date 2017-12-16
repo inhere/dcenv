@@ -2,14 +2,22 @@ FROM nginx
 
 MAINTAINER inhere<cloud798@126.com>
 
+ARG timezone
+
+ENV TIMEZONE=$timezone
+
 # Remove default nginx configs.
 RUN rm -f /etc/nginx/conf.d/*
+
+# Install basic tools
+# apache2-utils 包含 ab 压力测试工具
+RUN apt-get update && apt-get install -my curl wget lsof vim apache2-utils
 
 ##
 ## Basic config
 ##
-RUN echo "${TIME_ZONE}" > /etc/timezone \
-  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
+RUN echo "${TIMEZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
   && sed -i 's/^# alias/alias/g' ~/.bashrc
 
 # change some config

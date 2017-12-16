@@ -4,7 +4,9 @@ FROM php:latest
 
 MAINTAINER inhere<cloud798@126.com>
 
-ENV TIME_ZONE=Asia/Shanghai
+ARG timezone
+
+ENV TIMEZONE=$timezone
 ENV HIREDIS_VERSION=0.13.3
 
 # 更换(debian 8)软件源
@@ -13,7 +15,8 @@ ADD data/resources/debian8.sources /etc/apt/sources.list
 
 # Now,Install basic tool
 # apache2-utils 包含 ab 压力测试工具
-RUN apt-get update && apt-get -y install openssl vim curl telnet git zip unzip wget apache2-utils
+# net-tools 包含 netstat工具
+RUN apt-get update && apt-get -y install openssl libssl-dev pkg-config vim curl net-tools telnet git zip unzip wget lsof apache2-utils
 
 ##
 # Install core extensions for php
@@ -25,45 +28,60 @@ RUN apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
 
     # no dependency extension
-    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets
+    && docker-php-ext-install gettext mysqli opcache pdo_mysql sockets pcntl zip sysvmsg sysvsem sysvshm
 
 ##
 # Install PECL extensions, have dependency
 ##
-# RUN apt-get install -y \
+RUN apt-get install -y \
 
     # for memcache
     # zlib1g-dev \
 
-    # for memcached 此php扩展不支持 php7
-    # libmemcached-dev \
+    # for memcached
+    libmemcached-dev \
 
-    # for gearman 此php扩展不支持 php7
+    # for gearman
     # libgearman-dev \
 
     # && pecl install memcache && docker-php-ext-enable memcache \
-    # && pecl install memcached && docker-php-ext-enable memcached \
     # && pecl install gearman && docker-php-ext-enable gearman \
+    && pecl install memcached && docker-php-ext-enable memcached
+
+##
+# PECL extensions, no dependency
+##
+# mongodb 扩展
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+# 日志扩展
+RUN pecl install seaslog && docker-php-ext-enable seaslog
+# 调试扩展
+RUN pecl install xdebug && docker-php-ext-enable xdebug
+# trace调试扩展
+RUN pecl install trace-1.0.0 && docker-php-ext-enable trace
+# redis缓存扩展
+RUN pecl install redis && docker-php-ext-enable redis
+
+RUN pecl install msgpack && docker-php-ext-enable msgpack
+RUN pecl install yac && docker-php-ext-enable yac
+RUN pecl install yaconf && docker-php-ext-enable yaconf
+
+# 文件变动监控扩展
+RUN pecl install inotify && docker-php-ext-enable inotify
+# RUN pecl install xhprof && docker-php-ext-enable xhprof
+# RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
 
 ##
 # Swoole extension
+# 异步事件扩展
 ##
-RUN pecl install swoole && docker-php-ext-enable swoole \
+RUN pecl install swoole && docker-php-ext-enable swoole
 
 # hiredis - redis C client, provide async operate redis support
 RUN cd /tmp \
     # && curl -o hiredis-${HIREDIS_VERSION}.tar.gz https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
     && wget -O 'hiredis-${HIREDIS_VERSION}.tar.gz' -c https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz \
     && tar -zxvf hiredis-0.13.3.tar.gz && cd hiredis-${HIREDIS_VERSION} && make -j && make install && ldconfig
-
-##
-# PECL extensions, no dependency
-##
-RUN pecl install seaslog && docker-php-ext-enable seaslog
-RUN pecl install xdebug && docker-php-ext-enable xdebug
-RUN pecl install redis && docker-php-ext-enable redis
-# RUN pecl install xhprof && docker-php-ext-enable xhprof
-# RUN pecl install channel://pecl.php.net/xhprof-0.9.4 && docker-php-ext-enable xhprof
 
 # Other extensions
 # RUN curl -fsSL 'https://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz' -o xcache.tar.gz \
@@ -80,9 +98,11 @@ RUN pecl install redis && docker-php-ext-enable redis
 
 ##
 ## Basic config
+# 1. change Timezone
+# 2. open some command alias
 ##
-RUN echo "${TIME_ZONE}" > /etc/timezone \
-  && ln -sf /usr/share/zoneinfo/${TIME_ZONE} /etc/localtime \
+RUN echo "${TIMEZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
   && sed -i 's/^# alias/alias/g' ~/.bashrc
 
 ##
@@ -92,7 +112,8 @@ RUN echo "${TIME_ZONE}" > /etc/timezone \
 COPY data/resources/php/php-seaslog.ini /usr/local/etc/php/conf.d/docker-php-ext-seaslog.ini
 COPY data/resources/php/php-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 COPY data/resources/php/php-ini-overrides.ini /usr/local/etc/php/conf.d/99-overrides.ini
-RUN echo "date.timezone=$TIME_ZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini
+RUN echo "date.timezone=$TIMEZONE" >> /usr/local/etc/php/conf.d/99-overrides.ini \
+  && echo "yaconf.directory=/tmp/yaconf" >> /usr/local/etc/php/conf.d/docker-php-ext-yaconf.ini
 
 # clear temp files
 RUN docker-php-source delete \

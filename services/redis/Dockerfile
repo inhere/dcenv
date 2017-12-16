@@ -1,12 +1,19 @@
 FROM redis
 
 #
-# master-slave
+# single machine master-slave
 # default is: one master one slave
 #
 
 MAINTAINER inhere<cloud798@126.com>
 
+ARG timezone
+ARG master_port
+ARG slaves_port
+
+ENV TIMEZONE=$timezone
+ENV MASTER_PORT=$master_port
+ENV SLAVES_PORT=$slaves_port
 ENV PATH /var/tools:$PATH
 # ENV REDIS_DOWNLOAD_URL http://download.redis.io/releases/redis-3.2.6.tar.gz
 
@@ -21,26 +28,35 @@ COPY data/resources/debian8.sources  /etc/apt/sources.list
 # add a redis package from local
 # COPY data/packages/redis-3.2.3.tar.gz /usr/src/redis-3.2.3.tar.gz
 
+RUN apt-get update && apt-get install -y vim
+
 # create directory
-RUN mkdir /etc/redis /var/log/redis /var/tools
+RUN mkdir -p /etc/redis/conf.default /var/log/redis /var/tools
 
-# copy tools
+# copy config,tools,script
+COPY services/redis/conf/* /etc/redis/conf.default/
 COPY services/redis/tools/* /var/tools/
-
-# simple add a slave redis instance
-# COPY services/redis/scripts/master-slave-by-cmd.sh /var/tools/redis-start.sh
-
-# can also, use config for add a slave instance
 COPY services/redis/scripts/master-slave-by-conf.sh /var/tools/redis-start.sh
 
+##
+# Basic config
+# 1. change Timezone
+# 2. open some command alias
+##
+RUN echo "${TIMEZONE}" > /etc/timezone \
+  && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
+  && sed -i 's/^# alias/alias/g' ~/.bashrc
+
+# fix the redis warning
 RUN chmod a+x /var/tools/* \
-    # && echo never > /sys/kernel/mm/transparent_hugepage/enabled \
+    && sed -i '$i echo 511 > /proc/sys/net/core/somaxconn' /etc/rc.local \
+    && sed -i '$i echo never > /sys/kernel/mm/transparent_hugepage/enabled' /etc/rc.local \
     && echo "# add by inhere \nvm.overcommit_memory = 1" >> /etc/sysctl.conf
 
 # EXPOSE 6379 6380 26379
 
-VOLUME [ "/data", "/etc/redis" , "/var/log/redis" ]
+VOLUME /data /etc/redis /var/log/redis
 
 # ENTRYPOINT redis-start.sh
 # CMD redis-server --port 7000
-CMD redis-start.sh 6379 6380
+CMD redis-start.sh
