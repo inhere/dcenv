@@ -111,10 +111,11 @@ $ docker-compose -f docker-compose.70.yml up -d
 in the `~/.bashrc`
 
 ```
-alias dcm=docker-machine
+alias dc=docker
+#alias dcm=docker-machine
 alias dcc=docker-compose
-# 指定了配置的 docker-compose
-alias dccloc='docker-compose -f docker-compose.loc.yml -p ugirls'
+# 快速进入一个常用容器
+alias gophp='docker exec -ti dev-php bash'
 # 杀死所有正在运行的容器.
 alias dockerkill='docker kill $(docker ps -a -q)'
 # 删除所有已经停止的容器.

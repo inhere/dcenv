@@ -21,7 +21,7 @@ RUN uname -a && php -v && apt-get update
 # net-tools 包含 netstat工具
 RUN apt-get install -y \
     openssl pkg-config \
-    vim wget net-tools curl lsof telnet git zip unzip apache2-utils
+    vim wget net-tools curl lsof telnet tmux git zip unzip apache2-utils
 
 ##
 # Install core extensions for php
@@ -76,9 +76,9 @@ RUN pecl install xdebug && docker-php-ext-enable xdebug
 RUN pecl install redis && docker-php-ext-enable redis
 
 RUN pecl install msgpack && docker-php-ext-enable msgpack
-RUN pecl install yac && docker-php-ext-enable yac
-RUN pecl install yar && docker-php-ext-enable yar
-RUN pecl install yaconf && docker-php-ext-enable yaconf
+# RUN pecl install yac && docker-php-ext-enable yac
+# RUN pecl install yar && docker-php-ext-enable yar
+# RUN pecl install yaconf && docker-php-ext-enable yaconf
 
 # 文件变动监控扩展
 RUN pecl install inotify && docker-php-ext-enable inotify
