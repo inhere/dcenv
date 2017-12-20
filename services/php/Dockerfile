@@ -21,7 +21,7 @@ RUN uname -a && php -v && apt-get update
 # net-tools 包含 netstat工具
 RUN apt-get install -y \
     openssl pkg-config \
-    vim wget net-tools curl lsof telnet tmux git zip unzip apache2-utils
+    vim wget net-tools curl lsof telnet git zip unzip apache2-utils
 
 ##
 # Install core extensions for php
@@ -43,29 +43,22 @@ RUN apt-get install -y \
 # no dependency extension
 RUN docker-php-ext-install gettext mysqli opcache pdo_mysql sockets pcntl zip sysvmsg sysvsem sysvshm
 
-##
-# Install PECL extensions, have dependency
-##
-RUN apt-get install -y \
-
-    # for memcache
-    # zlib1g-dev \
-
-    # for memcached
-    libmemcached-dev \
-
-    # for gearman 此php扩展不支持 php7
-    # libgearman-dev \
-
-    # && pecl install memcache && docker-php-ext-enable memcache \
-    && pecl install memcached && docker-php-ext-enable memcached
-    # && pecl install gearman && docker-php-ext-enable gearman \
+# update pecl
+RUN pecl update-channels
 
 ##
-# PECL extensions, no dependency
+# Install PECL extensions: memcached
 ##
-# mongodb 扩展，需要 libssl-dev pkg-config
+RUN apt-get install -y libmemcached-dev && pecl install memcached && docker-php-ext-enable memcached
+
+##
+# Install PECL extensions: mongodb 扩展，需要 libssl-dev pkg-config
+##
 RUN apt-get install -y libssl-dev && pecl install mongodb && docker-php-ext-enable mongodb
+
+# gearman 此php扩展不支持 php7
+# libgearman-dev  && pecl install gearman && docker-php-ext-enable gearman
+
 # 日志扩展
 # RUN pecl install seaslog && docker-php-ext-enable seaslog
 # 调试扩展
