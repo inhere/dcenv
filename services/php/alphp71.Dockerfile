@@ -1,10 +1,10 @@
-#           some information
+# @description php 7.1 image base on the alpine 3.7 镜像更小，构建完成只有46M
+#                       some information
 # ------------------------------------------------------------------------------------
 # @link https://hub.docker.com/_/alpine/      alpine image
 # @link https://hub.docker.com/_/php/         php image
 # @link https://github.com/docker-library/php php dockerfiles
 # ------------------------------------------------------------------------------------
-# @description php 7.1 image base on the alpine 3.7
 # @build-example build . -f alphp71.Dockerfile -t alphp:71 --build-arg app_env=dev
 #
 
