@@ -1,5 +1,23 @@
 # PHP service
 
+## 基于alpine的环境
+
+- 构建基础镜像
+
+```sh
+cd services/php 
+docker build . -f alphp-base.Dockerfile -t alphp:base
+```
+
+- 添加额外扩展
+
+ext: `swoole, mongodb`
+
+```sh
+docker build . -f alphp-cli.Dockerfile -t alphp:cli
+docker build . -f alphp-fpm.Dockerfile -t alphp:fpm
+```
+
 ## 更改时区
 
 ```
