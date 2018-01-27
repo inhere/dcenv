@@ -19,6 +19,7 @@ LABEL maintainer="inhere <cloud798@126.com>" version="1.0"
 ARG timezone
 # pdt pre test dev
 ARG app_env=pdt
+ARG add_user=www
 
 ENV APP_ENV=${app_env:-"pdt"} \
     TIMEZONE=${timezone:-"Asia/Shanghai"} \
@@ -66,7 +67,7 @@ RUN set -ex \
         php7-pdo \
         php7-pdo_mysql \
         php7-pdo_sqlite \
-        # php7-phar \
+        php7-phar \
         php7-posix \
         php7-redis \
         php7-simplexml \
@@ -75,6 +76,7 @@ RUN set -ex \
         php7-sysvshm \
         php7-sysvmsg \
         php7-sysvsem \
+        php7-tokenizer \
         php7-zip \
         php7-zlib \
         && apk del --purge *-dev \
@@ -97,8 +99,17 @@ RUN set -ex \
         && ln -sf /usr/share/zoneinfo/${TIMEZONE} /etc/localtime \
         && echo "${TIMEZONE}" > /etc/timezone \
 
+        # ---------- some config work ----------
+        # - ensure 'www' user exists
+        && addgroup -S ${add_user} \
+        && adduser -D -S -G ${add_user} ${add_user} \
+
+        # - create user dir
+        && mkdir -p /data \
+        && chown -R ${add_user}:${add_user} /data \
+
         && echo -e "\033[42;37m Build Completed :).\033[0m\n"
 
 # EXPOSE 9000
-VOLUME ["/var/www", "/data/tmp"]
+VOLUME ["/var/www", "/data"]
 WORKDIR "/var/www"

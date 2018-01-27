@@ -14,7 +14,6 @@ LABEL maintainer="inhere <cloud798@126.com>" version="1.0"
 ##
 # ---------- env settings ----------
 ##
-ARG add_user=www
 
 ENV HIREDIS_VERSION=0.13.3 \
     PHALCON_VERSION=3.3.1 \
@@ -83,17 +82,8 @@ RUN set -ex \
         && apk del .phpize-deps \
         && rm -rf /var/cache/apk/* /tmp/* /usr/share/man \
 
-        # ---------- some config work ----------
-        # - ensure 'www' user exists
-        && addgroup -S ${add_user} \
-        && adduser -D -S -G ${add_user} ${add_user} \
-
-        # - create user dir
-        && mkdir -p /data/tmp \
-        && chown -R ${add_user}:${add_user} /data/tmp \
-
         && echo -e "\033[42;37m Build Completed :).\033[0m\n"
 
 EXPOSE 9501
-VOLUME ["/var/www", "/data/tmp"]
+
 WORKDIR "/var/www"
