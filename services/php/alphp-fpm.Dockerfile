@@ -26,6 +26,7 @@ RUN set -ex \
         && rm -rf /var/cache/apk/* /tmp/* /usr/share/man /usr/share/php7 \
 
         # - config PHP-FPM
+        && cd /etc/php7 \
         && { \
             echo "[global]"; \
             echo "pid = /var/run/php-fpm.pid"; \
