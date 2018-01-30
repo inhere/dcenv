@@ -15,7 +15,12 @@ ext: `swoole, mongodb`
 
 ```sh
 docker build . -f alphp-cli.Dockerfile -t alphp:cli
+
+// 含有 nginx php-fpm
 docker build . -f alphp-fpm.Dockerfile -t alphp:fpm
+
+// 含有 nginx php-fpm 额外包含一些常用工具： vim wget git zip telnet ab 等
+docker build . -f alphp-dev.Dockerfile -t alphp:dev
 ```
 
 ## 更改时区
