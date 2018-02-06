@@ -8,7 +8,7 @@
 # @build-example docker build . -f alphp-fpm.Dockerfile -t alphp:fpm
 #
 
-FROM alphp:71 as builder
+FROM alphp:cli as builder
 
 
 FROM alphp:base
@@ -46,7 +46,7 @@ RUN set -ex \
 
 VOLUME ["/var/www", "/data"]
 
-EXPOSE 9501 9502
+EXPOSE 9501 9502 80
 
 # COPY docker/config/nginx.conf /etc/nginx/nginx.conf
 # COPY docker/config/app-vhost.conf /etc/nginx/conf.d/app-vhost.conf
