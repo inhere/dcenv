@@ -5,7 +5,7 @@
 - 构建基础镜像
 
 ```sh
-cd services/php 
+cd services/php
 docker build . -f alphp-base.Dockerfile -t alphp:base
 ```
 
@@ -16,10 +16,10 @@ ext: `swoole, mongodb`
 ```sh
 docker build . -f alphp-cli.Dockerfile -t alphp:cli
 
-// 含有 nginx php-fpm
+// 在alphp:cli 的基础上，含有 nginx php-fpm
 docker build . -f alphp-fpm.Dockerfile -t alphp:fpm
 
-// 含有 nginx php-fpm 额外包含一些常用工具： vim wget git zip telnet ab 等
+// 在alphp:cli 的基础上，含有 nginx php-fpm 额外包含一些常用工具： vim wget git zip telnet ab 等
 docker build . -f alphp-dev.Dockerfile -t alphp:dev
 ```
 
@@ -116,19 +116,19 @@ server {
         fastcgi_pass   127.0.0.1:9000;
         fastcgi_index  index.php;
         include fastcgi.conf;
-        fastcgi_connect_timeout 300; 
+        fastcgi_connect_timeout 300;
         fastcgi_send_timeout 300;
         fastcgi_read_timeout 300;
     }
 }
 ```
 
-## install swoole 
+## install swoole
 
 官网 swoole.com
 安装相关扩展 redis, zip, mbstring, inotify, pdo_mysql
 
-### 相关库 
+### 相关库
 
 - hiredis https://github.com/redis/hiredis
 - nghttp2 https://github.com/tatsuhiro-t/nghttp2
@@ -177,7 +177,7 @@ $ ./vendor/bin/phpDocumentor.phar run -d {source code dir} -t {doc generate dir}
 
 ```
 $ ./vendor/bin/sami.phar -V
- 
+
 // The parse command parses a project and generates a database
 $ php ./vendor/bin/sami.phar parse config/symfony.php
 
@@ -196,7 +196,7 @@ $ php ./vendor/bin/sami.phar update build/sami.conf.php
 ```
 #关闭php-fpm
 kill -INT `cat /usr/local/php/var/run/php-fpm.pid`
- 
+
 #重启php-fpm
 kill -USR2 `cat /usr/local/php/var/run/php-fpm.pid`
 ```

@@ -2,7 +2,7 @@ FROM php:7.1-fpm
 # php fpm 7.2 used system is debain 9
 # always use latest version php
 
-MAINTAINER inhere<cloud798@126.com>
+LABEL maintainer="inhere <cloud798@126.com>" version="1.0"
 
 ARG timezone
 # ARG fpmport
