@@ -17,24 +17,25 @@ LABEL maintainer="inhere <cloud798@126.com>" version="1.0"
 
 ENV HIREDIS_VERSION=0.13.3 \
     PHALCON_VERSION=3.3.1 \
-    SWOOLE_VERSION=2.0.12 \
-    MONGO_VERSION=1.3.4
+    SWOOLE_VERSION=2.1.0 \
+    MONGO_VERSION=1.4.0
 
 ##
 # install php extensions
 ##
 
-# 下载太慢，所以推荐先下载好
-# COPY services/php/deps/hiredis-${HIREDIS_VERSION}.tar.gz hiredis.tar.gz
-# COPY services/php/deps/swoole-${SWOOLE_VERSION}.tar.gz swoole.tar.gz
-# COPY services/php/deps/cphalcon-${PHALCON_VERSION}.tar.gz cphalcon.tar.gz
-# COPY services/php/deps/mongodb-${MONGO_VERSION}.tgz mongodb.tgz
+# 下载太慢，所以可以先下载好
+# COPY deps/hiredis-${HIREDIS_VERSION}.tar.gz hiredis.tar.gz
+# COPY deps/swoole-${SWOOLE_VERSION}.tar.gz swoole.tar.gz
+# COPY deps/cphalcon-${PHALCON_VERSION}.tar.gz cphalcon.tar.gz
+# COPY deps/mongodb-${MONGO_VERSION}.tgz mongodb.tgz
 RUN set -ex \
         && cd /tmp \
         && curl -SL "https://github.com/redis/hiredis/archive/v${HIREDIS_VERSION}.tar.gz" -o hiredis.tar.gz \
         && curl -SL "https://github.com/swoole/swoole-src/archive/v${SWOOLE_VERSION}.tar.gz" -o swoole.tar.gz \
         # && curl -SL "https://github.com/phalcon/cphalcon/archive/v${PHALCON_VERSION}.tar.gz" -o cphalcon.tar.gz \
-        && curl -SL "http://pecl.php.net/get/mongodb-${MONGO_VERSION}.tgz" -o mongodb.tgz \
+        # && curl -SL "https://github.com/mongodb/mongo-php-driver/archive/v${MONGO_VERSION}.tgz" -o mongodb.tgz \
+        # && curl -SL "http://pecl.php.net/get/mongodb-${MONGO_VERSION}.tgz" -o mongodb.tgz \
         && ls -alh \
         && apk update \
         && apk add --no-cache --virtual .phpize-deps \
@@ -45,7 +46,8 @@ RUN set -ex \
         libaio linux-headers libaio-dev \
 
         # php extension: mongodb
-        && pecl install ./mongodb.tgz \
+        # && pecl install mongodb.tgz \
+        && pecl install mongodb \
         && echo "extension=mongodb.so" > /etc/php7/conf.d/20_mongodb.ini  \
 
         # php extension: phalcon framework
