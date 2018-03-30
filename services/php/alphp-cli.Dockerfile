@@ -16,9 +16,9 @@ LABEL maintainer="inhere <cloud798@126.com>" version="1.0"
 ##
 
 ENV HIREDIS_VERSION=0.13.3 \
-    PHALCON_VERSION=3.3.1 \
-    SWOOLE_VERSION=2.1.0 \
-    MONGO_VERSION=1.4.0
+    PHALCON_VERSION=3.3.2 \
+    SWOOLE_VERSION=2.1.1 \
+    MONGO_VERSION=1.4.2
 
 ##
 # install php extensions
