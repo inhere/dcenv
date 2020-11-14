@@ -14,6 +14,8 @@
 # slim image size ~=50M
 FROM debian:buster-slim
 
+LABEL maintainer="inhere <in.798@qq.com>" version="1.0"
+
 # dependencies required for running "phpize"
 # (see persistent deps below)
 ENV PHPIZE_DEPS \

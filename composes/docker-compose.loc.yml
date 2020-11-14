@@ -1,0 +1,12 @@
+version: '2'
+services:
+  redis:
+    extends:
+      file: ./compose.common.yml
+      service: redis
+    container_name: test-redis
+    ports:
+      - "6379:6379"
+
+
+
