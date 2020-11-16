@@ -8,7 +8,7 @@
 # @link https://hub.docker.com/_/debian/
 # @link https://hub.docker.com/_/php/
 # @build-example
-#   docker build -f php-72-fpm.Dockerfile -t phpenv:fpm72 .
+#   docker build -f dockerfiles/php/debian-slim/php-72-fpm.Dockerfile -t inhere/dcenv:php72fmp .
 ########################################
 
 # slim image size ~=50M

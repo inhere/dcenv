@@ -21,4 +21,5 @@ Dockerfile
 *.tar.gz
 *.tgz
 *.zip
+*.phar
 *.md
