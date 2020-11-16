@@ -48,8 +48,8 @@ ENV PHP_VERSION 7.2.34
 ENV PHP_URL="https://www.php.net/distributions/php-7.2.34.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-7.2.34.tar.xz.asc"
 ENV PHP_SHA256="409e11bc6a2c18707dfc44bc61c820ddfd81e17481470f3405ee7822d8379903"
 
-# COPY docker-php-source /usr/local/bin/
-COPY docker-php-ext-* docker-php-source docker-php-entrypoint /usr/local/bin/
+# COPY docker-php-source docker-php-source docker-php-entrypoint /usr/local/bin/
+COPY dockerfiles/php/scripts/docker-php-* /usr/local/bin/
 
 # persistent / runtime deps
 RUN set -eux; \
