@@ -70,6 +70,7 @@ RUN set -eux; \
     mkdir -p /var/www/html; \
     chown www-data:www-data /var/www/html; \
     chmod 777 /var/www/html; \
+    chmod a+x /usr/local/bin/docker-php-*; \
 
 # RUN set -eux; \ merge to one RUN
     set -eux; \
