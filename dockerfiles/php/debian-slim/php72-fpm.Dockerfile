@@ -205,6 +205,8 @@ RUN set -eux; \
     \
 # smoke test
     php --version; \
+# clear works
+    rm -rf /usr/share/doc/*; \
 
 # sodium was built as a shared module (so that it can be replaced later if so desired), so let's enable it too (https://github.com/docker-library/php/issues/598)
     docker-php-ext-enable sodium; \

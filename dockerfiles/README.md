@@ -13,20 +13,29 @@ RUN pecl install /tmp/redis.tgz && echo "extension=redis.so" > /etc/php5/mods-av
 $ docker-compose run web bash
 ```
 
-## 更换(debain 8)软件源
+## 更换debain软件源
 
 在 Dockerfile 中添加
 
 拷贝配置：
 
-```
+```bash
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak
 COPY data/resources/debian8.sources    /etc/apt/sources.list
 ```
 
-也可直接写入：
+直接替换：
 
+```bash
+sed -i 's/deb.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list; \
+    sed -i 's/security.debian.org/mirrors.aliyun.com/' /etc/apt/sources.list;
 ```
+
+也可完整的重新写入：
+
+- debian 8:
+
+```bash
 RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak \
 && { \
 echo "deb http://mirrors.aliyun.com/debian/ jessie main non-free contrib"; \
@@ -38,11 +47,25 @@ echo "deb-src http://mirrors.aliyun.com/debian-security/ jessie/updates main non
 } | tee /etc/apt/sources.list
 ```
 
+- debian 9:
+
+```bash
+RUN mv /etc/apt/sources.list /etc/apt/sources.list.bak \
+&& { \
+echo "deb http://mirrors.aliyun.com/debian/ stretch main non-free contrib"; \
+echo "deb http://mirrors.aliyun.com/debian/ stretch-proposed-updates main non-free contrib"; \
+echo "deb-src http://mirrors.aliyun.com/debian/ stretch main non-free contrib"; \
+echo "deb-src http://mirrors.aliyun.com/debian/ stretch-proposed-updates main non-free contrib"; \
+echo "deb http://mirrors.aliyun.com/debian-security/ stretch/updates main non-free contrib"; \
+echo "deb-src http://mirrors.aliyun.com/debian-security/ stretch/updates main non-free contrib"; \
+} | tee /etc/apt/sources.list
+```
+
 ## 更换(alpine)软件源
 
 拷贝配置：
 
-```
+```bash
 RUN mv /etc/apk/repositories /etc/apk/repositories.bak
 COPY data/resources/alpine.repositories /etc/apk/repositories
 ```
