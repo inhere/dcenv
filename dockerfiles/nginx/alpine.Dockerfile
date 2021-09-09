@@ -1,6 +1,6 @@
 FROM nginx:alpine
 
-MAINTAINER inhere<cloud798@126.com>
+LABEL maintainer="inhere <cloud798@126.com>" version="1.0"
 
 ################################################################################
 # Volumes

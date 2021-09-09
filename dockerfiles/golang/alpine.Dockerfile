@@ -1,6 +1,6 @@
 FROM golang:alpine
 
-MAINTAINER inhere<cloud798@126.com>
+LABEL maintainer="inhere <cloud798@126.com>" version="1.0"
 
 RUN { echo "http://mirrors.aliyun.com/alpine/latest-stable/main"; \
     echo "http://mirrors.aliyun.com/alpine/edge/testing/"; \

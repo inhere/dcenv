@@ -1,5 +1,7 @@
 # php tool
 
+phive - https://phar.io/#Install
+
 ## composer.phar
 
 下载地址 [getcomposer.org](https://getcomposer.org/composer.phar)
@@ -24,28 +26,32 @@ Behat是行为驱动开发（BDD）的工具。在BDD中，你可以用对人友
 
 `go-pear.phar`  pear 包下载安装工具
 
-## pyrus.phar 
+## pyrus.phar
 
 下载地址： [pear2.php.net](pear2.php.net/pyrus.phar)
 
 `pyrus.phar`  pear 包下载安装工具（php 5.3+）
 
-## phpmd.phar 
+## php 代码检查
+
+- psalm
+- phpstan
+- phpmd
 
 下载地址： [phpmd.org](http://phpmd.org/download/index.html)
 
 php 代码检查,这个工具能够探测PHP源代码中一些潜在的问题。
 如:可能存在的Bug;未达最佳标准的代码;过于复杂的语法;从未使用过的参数、方法、属性。
 
-## apigen 
+## apigen
 
 API文档生成
 
-## phpDocumentor 
+## phpDocumentor
 
 API文档生成
 
-## sami 
+## sami/doctum
 
 API文档生成
 
