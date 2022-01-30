@@ -61,7 +61,6 @@ RUN set -eux; \
         xz-utils \
     ; \
     rm -rf /var/lib/apt/lists/*; \
-
 # RUN set -eux; \ merge to one RUN
     set -eux; \
     mkdir -p "$PHP_INI_DIR/conf.d"; \
@@ -71,7 +70,6 @@ RUN set -eux; \
     chown www-data:www-data /var/www/html; \
     chmod 777 /var/www/html; \
     chmod a+x /usr/local/bin/docker-php-*; \
-
 # RUN set -eux; \ merge to one RUN
     set -eux; \
     \
@@ -207,13 +205,10 @@ RUN set -eux; \
     php --version; \
 # clear works
     rm -rf /usr/share/doc/*; \
-
 # sodium was built as a shared module (so that it can be replaced later if so desired), so let's enable it too (https://github.com/docker-library/php/issues/598)
     docker-php-ext-enable sodium; \
-
 # temporary "freetype-config" workaround for https://github.com/docker-library/php/issues/865 (https://bugs.php.net/bug.php?id=76324)
     { echo '#!/bin/sh'; echo 'exec pkg-config "$@" freetype2'; } > /usr/local/bin/freetype-config && chmod +x /usr/local/bin/freetype-config; \
-
     set -eux; \
     cd /usr/local/etc; \
     if [ -d php-fpm.d ]; then \
